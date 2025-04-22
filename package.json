@@ -1,5 +1,5 @@
 {
-  "name": "my-turborepo",
+  "name": "furever_home",
   "private": true,
   "scripts": {
     "build": "turbo run build",
