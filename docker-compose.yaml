@@ -1,0 +1,28 @@
+services:
+  customer_backend:
+    container_name: customer_backend
+    build:
+      context: .
+      dockerfile: ./apps/backend/customer/Dockerfile
+    restart: always
+    ports:
+      - 3001:3001
+    networks:
+      - app_network
+    env_file:
+      - .env
+      - .env.user
+    healthcheck:
+      test: curl -f localhost:3001/health || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    # depends_on:
+    # mysql:
+    #   condition: service_healthy
+    # redis:
+    #   condition: service_healthy
+
+networks:
+  app_network:
+    external: true

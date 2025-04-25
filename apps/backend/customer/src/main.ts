@@ -67,6 +67,6 @@ async function bootstrap() {
   // setupSwagger(app);
 
   const port = configService.get<number>('app.port')!;
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
 }
 bootstrap();
