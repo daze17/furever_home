@@ -31,7 +31,6 @@ export default function Home() {
           height={38}
           priority
         />
-        test
         <ol>
           <li>
             Get started by editing <code>apps/web/app/page.tsx</code>
