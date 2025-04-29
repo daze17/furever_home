@@ -4,11 +4,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
+import { configuration } from '@/common/config/configuration';
 import { JwtAuthGuard } from '@/common/guards/jwt_auth.guard';
 // import { GoogleStrategy } from '@/common/strategies/google_oauth.strategy';
 import { JwtStrategy } from '@/common/strategies/jwt.strategy';
 import { LocalStrategy } from '@/common/strategies/local.strategy';
-import { configuration } from '@/common/config/configuration';
 
 import { EmailQueueModule } from '../email_queue/email_queue.module';
 import { AuthController } from './auth.controller';

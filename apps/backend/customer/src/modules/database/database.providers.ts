@@ -1,18 +1,18 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import type { Schema } from 'database';
+import { schema } from 'database';
 import type { ExtractTablesWithRelations } from 'drizzle-orm';
 import type { PgTransaction } from 'drizzle-orm/pg-core';
-import { drizzle } from 'drizzle-orm/postgres-js';
 import type {
   PostgresJsDatabase,
   PostgresJsQueryResultHKT,
 } from 'drizzle-orm/postgres-js';
+import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres, { type Sql } from 'postgres';
-import { schema } from 'database';
-import type { Schema } from 'database';
 
 import {
-  databaseProviderToken,
   databaseClientProviderToken,
+  databaseProviderToken,
 } from '@/common/constants/provider_tokens.constants';
 
 export const databaseProviders = [

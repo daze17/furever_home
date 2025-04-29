@@ -4,10 +4,11 @@ import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcryptjs";
 import { Queue } from "bullmq";
+import { RegisterGoogleRequestBody } from "customer_api";
+import { customer_accounts, customers } from "database";
 import { eq, exists } from "drizzle-orm";
 import type { JWTPayload } from "jose";
 import { SignJWT } from "jose";
-import { RegisterGoogleRequestBody } from "customer_api";
 
 import {
   EMAIL_PROCESS_NAMES,
@@ -15,7 +16,6 @@ import {
 } from "@/common/constants/queue.constants";
 // import { EmailVerification } from '@/common/interfaces/email.interface';
 import type { Database } from "@/modules/database/database.providers";
-import { customer_accounts, customers } from "database";
 
 @Injectable()
 export class AuthService {

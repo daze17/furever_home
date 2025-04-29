@@ -1,1 +1,1 @@
-export { default } from '@repo/eslint-config/nest.js';
+export { default } from "@repo/eslint-config/nestjs";

@@ -1,14 +1,16 @@
+import { BullModule } from '@nestjs/bullmq';
 import { Module, RequestMethod } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ClsModule } from 'nestjs-cls';
+import { LoggerModule } from 'nestjs-pino';
+
+import { configuration, validate } from '@/common/config/configuration';
+import { AuthModule } from '@/modules/auth/auth.module';
+import { EmailQueueModule } from '@/modules/email_queue/email_queue.module';
+
+import { DatabaseModule } from '../database/database.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { configuration, validate } from '@/common/config/configuration';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { LoggerModule } from 'nestjs-pino';
-import { EmailQueueModule } from '@/modules/email_queue/email_queue.module';
-import { AuthModule } from '@/modules/auth/auth.module';
-import { DatabaseModule } from '../database/database.module';
-import { ClsModule } from 'nestjs-cls';
-import { BullModule } from '@nestjs/bullmq';
 
 @Module({
   imports: [
