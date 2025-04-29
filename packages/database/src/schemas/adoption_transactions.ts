@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgTable, serial, uuid, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, serial, uuid, timestamp, integer } from "drizzle-orm/pg-core";
 
 import { timestamps } from "./time_stamps";
 import { adoption_posts } from "./adoption_posts";
@@ -8,7 +8,7 @@ import { customers } from "./customers";
 
 export const adoption_transactions = pgTable("adoption_transactions", {
   id: serial("id").primaryKey(),
-  adoption_post_id: uuid("adoption_post_id").references(
+  adoption_post_id: integer("adoption_post_id").references(
     () => adoption_posts.id
   ),
   old_user_id: uuid("old_user_id").references(() => customers.id),
