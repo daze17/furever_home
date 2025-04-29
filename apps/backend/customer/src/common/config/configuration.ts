@@ -26,10 +26,10 @@ export const configuration = (overrides?: Partial<ENV>) => {
     //   port: env.MINIO_PORT,
     //   bucket: env.MINIO_BUCKET,
     // },
-    // redis: {
-    //   host: env.REDIS_HOST,
-    //   port: env.REDIS_PORT,
-    // },
+    redis: {
+      host: env.REDIS_HOST,
+      port: env.REDIS_PORT,
+    },
     // sentry: {
     //   dsn: env.SENTRY_DSN,
     // },

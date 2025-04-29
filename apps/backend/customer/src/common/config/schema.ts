@@ -4,6 +4,8 @@ const commonSchema = z.object({
   APP_ENV: z.enum(['development', 'production', 'staging']),
   APP_PORT: z.coerce.number(),
   DATABASE_URL: z.string(),
+  REDIS_HOST: z.string(),
+  REDIS_PORT: z.coerce.number(),
 });
 
 const developmentSchema = z.object({

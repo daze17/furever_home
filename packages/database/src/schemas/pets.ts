@@ -15,16 +15,16 @@ export const pets = pgTable("pets", {
   pet_image_url: text("pet_image_url"),
   size: size("size"),
   pet_status: pet_status("pet_status").notNull(),
-  customerId: uuid("customer_id").references(() => customers.id),
+  customer_id: uuid("customer_id").references(() => customers.id),
   pet_extra_information_id: uuid("pet_extra_information_id").references(
-    () => pet_extra_informations.id
+    () => pet_extra_informations.id,
   ),
   ...timestamps,
 });
 
 export const petsRelations = relations(pets, ({ one }) => ({
   customer: one(customers, {
-    fields: [pets.customerId],
+    fields: [pets.customer_id],
     references: [customers.id],
   }),
   pet_extra_information: one(pet_extra_informations, {

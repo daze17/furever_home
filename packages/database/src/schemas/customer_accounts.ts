@@ -1,12 +1,14 @@
 import { relations } from "drizzle-orm";
-import { pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { pgTable, text, uuid, varchar } from "drizzle-orm/pg-core";
 
 import { timestamps } from "./time_stamps";
 import { customers } from "./customers";
 import { status } from "./enums";
 
 export const customer_accounts = pgTable("customer_accounts", {
-  id: uuid("id").defaultRandom().primaryKey(),
+  id: varchar("id", {
+    length: 255,
+  }).primaryKey(),
   email: text("email").notNull(),
   hash: text("hash").notNull(),
   status: status("status").notNull(),
@@ -21,5 +23,5 @@ export const customer_accountsRelations = relations(
       fields: [customer_accounts.customerId],
       references: [customers.id],
     }),
-  })
+  }),
 );

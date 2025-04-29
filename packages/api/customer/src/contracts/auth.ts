@@ -1,0 +1,88 @@
+import { z } from "zod";
+
+import { c } from "@/contract";
+import {
+  LoginCredentialsRequestBody,
+  LoginGoogleRequestBody,
+  RegisterGoogleRequestBody,
+  RegisterWithEmailRequestBody,
+  TokenResponseBody,
+  VerifyAccountRequestBody,
+} from "../schemas/dtos/auth";
+import { CustomError } from "@/models/custom_error";
+
+export const authContract = c.router({
+  loginGoogle: {
+    method: "POST",
+    path: "/login/google",
+    body: LoginGoogleRequestBody,
+    responses: {
+      201: TokenResponseBody,
+      400: CustomError,
+    },
+    summary: "login google",
+  },
+  loginCredentials: {
+    method: "POST",
+    path: "/login/credentials",
+    body: LoginCredentialsRequestBody,
+    responses: {
+      201: TokenResponseBody,
+      400: CustomError,
+    },
+    summary: "login credentials",
+  },
+  registerGoogle: {
+    method: "POST",
+    path: "/register/google",
+    body: RegisterGoogleRequestBody,
+    responses: {
+      // TODO: check?
+      201: TokenResponseBody,
+      400: CustomError,
+    },
+    summary: "register google",
+  },
+  registerCredentials: {
+    method: "POST",
+    path: "/register/credentials",
+    body: RegisterWithEmailRequestBody,
+    responses: {
+      201: z.object({}),
+      400: CustomError,
+    },
+    summary: "register google",
+  },
+  verifyAccount: {
+    method: "POST",
+    path: "/register/verify",
+    body: VerifyAccountRequestBody,
+    responses: {
+      200: z.object({}),
+      400: CustomError,
+    },
+    summary: "verify email by verify url",
+  },
+  // createProfile: {
+  //   method: "POST",
+  //   path: "/register/create_profile",
+  //   body: CreateProfileSchema,
+  //   responses: {
+  //     201: z.object({}),
+  //     400: CustomError,
+  //   },
+  //   summary: "create profile",
+  // },
+  // getProfile: {
+  //   method: "GET",
+  //   path: "/profile",
+  //   responses: {
+  //     200: UserProfileResponse,
+  //     400: CustomError,
+  //   },
+  //   summary: "get profile",
+  // },
+
+  // TODO: resend password
+  // TODO: change password
+});

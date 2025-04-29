@@ -16,7 +16,6 @@ export const customers = pgTable("customers", {
   profile_image_url: text("profile_image_url"),
   gender: gender("gender").default("other"),
   zip_code: text("zip_code"),
-  pets_ids: uuid("pets").references(() => pets.id),
   ...timestamps,
 });
 
