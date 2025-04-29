@@ -1,13 +1,16 @@
-import { Processor, WorkerHost } from '@nestjs/bullmq';
-import { Injectable } from '@nestjs/common';
-import type { Job } from 'bullmq';
+import { Processor, WorkerHost } from "@nestjs/bullmq";
+import { Injectable } from "@nestjs/common";
+import type { Job } from "bullmq";
 
 import {
   EMAIL_PROCESS_NAMES,
   QUEUE_PROCESSOR_NAMES,
-} from '@/common/constants/queue.constants';
-import { ResetPasswordEmailToCustomer } from '@/common/interfaces/email.interface';
-import { EmailService } from '@/modules/email/email.service';
+} from "@/common/constants/queue.constants";
+import {
+  RegisterVerificationEmailToCustomer,
+  ResetPasswordEmailToCustomer,
+} from "@/common/interfaces/email.interface";
+import { EmailService } from "@/modules/email/email.service";
 
 @Injectable()
 @Processor(QUEUE_PROCESSOR_NAMES.EMAIL_PROCESSOR)
@@ -19,10 +22,12 @@ export class EmailQueueProcessor extends WorkerHost {
   async process(job: Job): Promise<void> {
     const { name } = job;
 
-    console.log('email process is working?');
+    console.log("email process is working?");
     switch (name) {
       case EMAIL_PROCESS_NAMES.RESET_PASSWORD_EMAIL_TO_CUSTOMER_PROCESS:
         return await this.resetPasswordEmailToCustomer(job);
+      case EMAIL_PROCESS_NAMES.REGISTER_VERIFICATION_EMAIL_TO_CUSTOMER_PROCESS:
+        return await this.registerVerificationEmailToCustomer(job);
     }
   }
 
@@ -39,7 +44,25 @@ export class EmailQueueProcessor extends WorkerHost {
       });
     } catch (error) {
       console.error(
-        'Error processing queue to send verification email to customer:',
+        "Error processing queue to send verification email to customer:",
+        error,
+      );
+    }
+  }
+
+  private async registerVerificationEmailToCustomer(
+    job: Job<RegisterVerificationEmailToCustomer>,
+  ) {
+    const { email, context } = job.data;
+
+    try {
+      await this.emailService.registerVerificationEmailToCustomer({
+        email,
+        context,
+      });
+    } catch (error) {
+      console.error(
+        "Error processing queue to send verification email to customer:",
         error,
       );
     }

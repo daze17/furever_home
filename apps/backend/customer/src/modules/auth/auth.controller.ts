@@ -3,12 +3,16 @@ import { ConfigService } from "@nestjs/config";
 import { TsRestHandler, tsRestHandler } from "@ts-rest/nest";
 import { customerContract } from "customer_api";
 
+import { LocalAuthGuard } from "@/common/guards/local_auth.guard";
+
+import { AuthRepository } from "./auth.repository";
 import { AuthService } from "./auth.service";
 
 @Controller()
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
+    private readonly authRepository: AuthRepository,
     private readonly configService: ConfigService,
   ) {}
 
@@ -18,10 +22,13 @@ export class AuthController {
       customerContract.auth.loginGoogle,
       async ({ body }) => {
         // TODO: move logic to guard
-        const googleAccount = await this.authService.getAccountById(
+        const googleAccount = await this.authRepository.getAccountById(
           `google_${body.sub}`,
         );
         if (!googleAccount || !googleAccount.customer) {
+          throw new BadRequestException();
+        }
+        if (googleAccount.status !== "active") {
           throw new BadRequestException();
         }
         const token = await this.authService.generateJWT({
@@ -41,44 +48,47 @@ export class AuthController {
     );
   }
 
-  // @UseGuards(LocalAuthGuard)
-  // @TsRestHandler(fureverHomeContract.auth.loginCredentials)
-  // async loginCredentials() {
-  //   return tsRestHandler(
-  //     fureverHomeContract.auth.loginCredentials,
-  //     async ({ body }) => {
-  //       const userAccount = await this.authService.getAccountById(
-  //         `email_${body.email}`,
-  //       );
-  //       if (!userAccount) {
-  //         throw new BadRequestException();
-  //       }
+  @UseGuards(LocalAuthGuard)
+  @TsRestHandler(customerContract.auth.loginCredentials)
+  async loginCredentials() {
+    return tsRestHandler(
+      customerContract.auth.loginCredentials,
+      async ({ body }) => {
+        const userAccount = await this.authRepository.getAccountById(
+          `email_${body.email}`,
+        );
+        if (!userAccount) {
+          throw new BadRequestException();
+        }
+        if (userAccount.status !== "active") {
+          throw new BadRequestException();
+        }
 
-  //       const token = await this.authService.generateJWT({
-  //         expirationTime: this.configService.get<string>(
-  //           'jwt.expiresIn.accessToken',
-  //         ),
-  //         payload: {
-  //           sub: userAccount.id,
-  //           user: userAccount.user,
-  //         },
-  //         secret: this.configService.get<string>('jwt.secret.accessToken'),
-  //       });
+        const token = await this.authService.generateJWT({
+          expirationTime: this.configService.get<string>(
+            "jwt.expiresIn.accessToken",
+          )!,
+          payload: {
+            sub: userAccount.id,
+            user: userAccount.customer,
+          },
+          secret: this.configService.get<string>("jwt.secret.accessToken"),
+        });
 
-  //       return {
-  //         status: 201,
-  //         body: { token },
-  //       };
-  //     },
-  //   );
-  // }
+        return {
+          status: 201,
+          body: { token },
+        };
+      },
+    );
+  }
 
   @TsRestHandler(customerContract.auth.registerGoogle)
   async registerGoogle() {
     return tsRestHandler(
       customerContract.auth.registerGoogle,
       async ({ body }) => {
-        const createdUser = await this.authService.createUserWithGoogle(body);
+        const createdUser = await this.authService.registerGoogle(body);
 
         const token = await this.authService.generateJWT({
           expirationTime: this.configService.get<string>("jwt.expiresIn")!,
@@ -96,19 +106,19 @@ export class AuthController {
     );
   }
 
-  // @TsRestHandler(fureverHomeContract.auth.registerCredentials)
-  // async registerCredentials() {
-  //   return tsRestHandler(
-  //     fureverHomeContract.auth.registerCredentials,
-  //     async ({ body }) => {
-  //       await this.authService.registerCredentials(body);
-  //       return {
-  //         status: 201,
-  //         body: {},
-  //       };
-  //     },
-  //   );
-  // }
+  @TsRestHandler(customerContract.auth.registerCredentials)
+  async registerCredentials() {
+    return tsRestHandler(
+      customerContract.auth.registerCredentials,
+      async ({ body }) => {
+        await this.authService.registerCredentials(body);
+        return {
+          status: 201,
+          body: {},
+        };
+      },
+    );
+  }
 
   // @UseGuards(AccountStatusJwtAuthGuard)
   // @TsRestHandler(fureverHomeContract.auth.createProfile)

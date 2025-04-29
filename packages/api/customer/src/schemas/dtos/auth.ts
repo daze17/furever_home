@@ -48,9 +48,22 @@ export type GoogleRegisterResponseBody = z.infer<
   typeof GoogleRegisterResponseBody
 >;
 
+export const CreateProfileRequestBody = CustomerModel.pick({
+  first_name: true,
+  last_name: true,
+  nickname: true,
+  address: true,
+  phone: true,
+  profile_image_url: true,
+  gender: true,
+  zip_code: true,
+});
+export type CreateProfileRequestBody = z.infer<typeof CreateProfileRequestBody>;
+
 export const VerifyAccountRequestBody = z.object({
   token: z.string(),
   newPassword: z.string().regex(passwordRegex),
+  profile: CreateProfileRequestBody,
 });
 export type VerifyAccountRequestBody = z.infer<typeof VerifyAccountRequestBody>;
 

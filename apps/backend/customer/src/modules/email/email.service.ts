@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { MailerService } from '@nestjs-modules/mailer';
-import fs from 'fs';
-import { I18nService } from 'nestjs-i18n';
-import path from 'path';
+import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { MailerService } from "@nestjs-modules/mailer";
+import path from "path";
 
-import { ResetPasswordEmailToCustomer } from '@/common/interfaces/email.interface';
-// import { I18nTranslations } from '@/generated/i18n.generated';
+import {
+  RegisterVerificationEmailToCustomer,
+  ResetPasswordEmailToCustomer,
+} from "@/common/interfaces/email.interface";
 
 interface EmailProps {
   to: string;
@@ -14,7 +14,6 @@ interface EmailProps {
   template: string;
   context: object | null | any;
   bcc?: string;
-  locale: string;
 }
 
 @Injectable()
@@ -22,7 +21,6 @@ export class EmailService {
   constructor(
     private mailerService: MailerService,
     private readonly configService: ConfigService,
-    // private readonly i18n: I18nService<I18nTranslations>,
   ) {}
 
   // Sent reset url email to customer
@@ -33,31 +31,38 @@ export class EmailService {
   }: ResetPasswordEmailToCustomer) {
     await this.sendEmail({
       to: email,
-      title: '[Furever Home] Password Reset',
-      template: 'reset_email',
+      title: "[Furever Home] Password Reset",
+      template: "reset_email",
       context: {
         year: new Date().getFullYear(),
         url: reset_url,
       },
-      locale,
     });
   }
 
-  private async sendEmail({
-    to,
-    title,
-    template,
+  // verify account
+  async registerVerificationEmailToCustomer({
+    email,
     context,
-    bcc,
-    locale,
-  }: EmailProps) {
-    const templatePath = this.getTemplatePath(locale, template);
+  }: RegisterVerificationEmailToCustomer) {
+    const frontendUrl = this.configService.get<string>("frontend.url");
+    await this.sendEmail({
+      to: email,
+      title: "[Furever Home] Verify Account",
+      template: "register_verify",
+      context: {
+        year: new Date().getFullYear(),
+        url: `${frontendUrl}/verify?token=${context.token}`,
+      },
+    });
+  }
 
+  private async sendEmail({ to, title, template, context, bcc }: EmailProps) {
     const params = {
       to,
       bcc,
       subject: title,
-      template: templatePath, // `.hbs` extension is appended automatically
+      template: path.join(__dirname, `/templates/${template}`), // `.hbs` extension is appended automatically
       context,
     };
 
@@ -67,16 +72,5 @@ export class EmailService {
       console.error(error);
       // throw new Error("EMAIL_SENDING_FAILED");
     }
-  }
-
-  // Check if template exists for requested locale, if not fallback to ja
-  private getTemplatePath(locale: string, template: string) {
-    let templatePath = path.join(__dirname, `/templates/${locale}/${template}`);
-
-    if (!fs.existsSync(`${templatePath}.hbs`)) {
-      templatePath = path.join(__dirname, `/templates/e/${template}`);
-    }
-
-    return templatePath;
   }
 }

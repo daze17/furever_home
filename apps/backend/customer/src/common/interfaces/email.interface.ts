@@ -4,3 +4,11 @@ export interface ResetPasswordEmailToCustomer {
   reset_url: string;
   bcc?: string;
 }
+
+export interface RegisterVerificationEmailToCustomer {
+  email: string;
+  context: {
+    token: string;
+  };
+  bcc?: string;
+}

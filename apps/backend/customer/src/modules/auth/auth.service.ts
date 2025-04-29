@@ -1,12 +1,19 @@
 import { InjectQueue } from "@nestjs/bullmq";
-import { Inject, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcryptjs";
 import { Queue } from "bullmq";
-import { RegisterGoogleRequestBody } from "customer_api";
-import { customer_accounts, customers } from "database";
-import { eq, exists } from "drizzle-orm";
+import {
+  CreateProfileRequestBody,
+  RegisterGoogleRequestBody,
+  RegisterWithEmailRequestBody,
+  VerifyAccountRequestBody,
+} from "customer_api";
 import type { JWTPayload } from "jose";
 import { SignJWT } from "jose";
 
@@ -14,136 +21,55 @@ import {
   EMAIL_PROCESS_NAMES,
   QUEUE_PROCESSOR_NAMES,
 } from "@/common/constants/queue.constants";
-// import { EmailVerification } from '@/common/interfaces/email.interface';
-import type { Database } from "@/modules/database/database.providers";
+import { RegisterVerificationEmailToCustomer } from "@/common/interfaces/email.interface";
+
+import { AuthRepository } from "./auth.repository";
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectQueue(QUEUE_PROCESSOR_NAMES.EMAIL_PROCESSOR)
     private readonly emailQueue: Queue,
-    private readonly jwtService: JwtService,
+    private readonly: JwtService,
     private readonly configService: ConfigService,
-    @Inject("DATABASE") private readonly db: Database,
+    private readonly authRepository: AuthRepository,
   ) {}
 
-  async getProfileById(id: string) {
-    const profile = await this.db.query.customers.findFirst({
-      where: eq(customers.id, id),
-    });
-
-    return profile;
+  async registerGoogle(body: RegisterGoogleRequestBody) {
+    const response = await this.authRepository.createCustomerWithGoogle(body);
+    return response;
   }
 
-  // async getAccountByEmail(email: string) {
-  //   const account = await this.db.query.user_key.findFirst({
-  //     where: eq(user_key.email, email),
-  //   });
-  //   return account;
-  // }
+  async registerCredentials(body: RegisterWithEmailRequestBody) {
+    const existingCustomerAccount = await this.authRepository.getAccountByEmail(
+      body.email,
+    );
 
-  async getAccountById(id: string) {
-    return await this.db.query.customer_accounts.findFirst({
-      where: eq(customer_accounts.id, id),
-      with: {
-        customer: true,
-      },
-    });
+    if (existingCustomerAccount) {
+      const { status } = existingCustomerAccount;
+      switch (status) {
+        case "inactive":
+          throw new BadRequestException("ACCOUNT_IS_INACTIVE");
+        case "active":
+          throw new ConflictException("ACCOUNT_ALREADY_EXISTS");
+        case "pending":
+          await this.sendVerificationEmail(
+            existingCustomerAccount.id,
+            body.email,
+          );
+          return;
+      }
+    }
+
+    const customerAccountId =
+      await this.authRepository.createCustomerAccountByCredential(body);
+    await this.sendVerificationEmail(customerAccountId, body.email);
   }
 
-  async createUserWithGoogle(body: RegisterGoogleRequestBody) {
-    return await this.db.transaction(async (transaction) => {
-      const user = (
-        await transaction
-          .insert(customers)
-          .values({
-            first_name: body.given_name,
-            last_name: body.family_name,
-            address: null,
-            profile_image_url: body.picture,
-          })
-          .returning()
-      ).find(Boolean)!;
-
-      await transaction.insert(customer_accounts).values({
-        id: `google_${body.sub}`,
-        customerId: user.id,
-        email: body.email,
-        hash: "hash",
-        status: "active",
-      });
-
-      return user;
-    });
+  async createProfile(body: VerifyAccountRequestBody, accountId: string) {
+    // TODO:
+    // await this.authRepository.createProfile(body.profile, accountId);
   }
-
-  async generateJWT({
-    expirationTime,
-    payload,
-    secret,
-  }: {
-    expirationTime: string | number | Date;
-    payload?: JWTPayload;
-    secret?: string;
-  }) {
-    const encodedSecret = new TextEncoder().encode(secret);
-
-    const token = await new SignJWT(payload)
-      .setProtectedHeader({ alg: "HS256" })
-      .setExpirationTime(expirationTime)
-      .sign(encodedSecret);
-
-    return token;
-  }
-
-  // async registerCredentials(props: RegisterWithEmailSchema) {
-  //   const existingUserKey = await this.getAccountByEmail(props.email);
-  //   if (existingUserKey) {
-  //     await this.sendVerificationEmail(existingUserKey);
-  //     return;
-  //   }
-
-  //   const userKey = await this.db
-  //     .insert(user_key)
-  //     .values({
-  //       id: `email_${props.email}`,
-  //       userId: null,
-  //       isVerified: false,
-  //       email: props.email,
-  //       status: 'pending_verify',
-  //     })
-  //     .returning()
-  //     .then((userKey) => userKey.find(Boolean)!);
-  //   await this.sendVerificationEmail(userKey);
-  // }
-
-  // async createProfile(props: CreateProfileSchema, accountId: string) {
-  //   await this.db.transaction(async (transaction) => {
-  //     const userIds = await transaction
-  //       .insert(users)
-  //       .values(props)
-  //       .returning({ id: users.id });
-  //     const userId = userIds.find(Boolean)!.id;
-
-  //     await transaction
-  //       .update(user_key)
-  //       .set({ userId, status: 'active' })
-  //       .where(eq(user_key.id, accountId));
-  //   });
-  // }
-
-  // // async updateProfile(props: CreateProfileSchema) {
-  // //   await this.db.insert(users).values(props);
-  // // }
-
-  // async getProfile(id: string) {
-  //   const user = await this.db.query.users.findFirst({
-  //     where: exists(this.db.select().from(user_key).where(eq(user_key.id, id))),
-  //   });
-  //   if (!user) throw new NotFoundException();
-
-  //   return user;
-  // }
 
   // async verifyAccount({ token, newPassword }: VerifyAccountSchema) {
   //   const payload = await this.jwtService
@@ -196,30 +122,51 @@ export class AuthService {
   //     if (!updatedUserProfile) throw new Error();
   //   });
   // }
+  //
+  async generateJWT({
+    expirationTime,
+    payload,
+    secret,
+  }: {
+    expirationTime: string | number | Date;
+    payload?: JWTPayload;
+    secret?: string;
+  }) {
+    const encodedSecret = new TextEncoder().encode(secret);
 
-  // private async sendVerificationEmail(userKey: UserKeyModel) {
-  //   const token = await this.generateJWT({
-  //     expirationTime: this.configService.get<string>(
-  //       'jwt.expiresIn.emailVerification',
-  //     ),
-  //     payload: {
-  //       sub: userKey.id,
-  //       user: null,
-  //     },
-  //     secret: this.configService.get<string>('jwt.secret.emailVerification'),
-  //   });
+    const token = await new SignJWT(payload)
+      // .setProtectedHeader({ alg: "HS256" })
+      .setExpirationTime(expirationTime)
+      .sign(encodedSecret);
 
-  //   const emailBody: EmailVerification = {
-  //     title: 'Email verification',
-  //     email: userKey.email,
-  //     context: {
-  //       token,
-  //     },
-  //   };
+    return token;
+  }
 
-  //   await this.emailQueue.add(
-  //     EMAIL_PROCESS_NAMES.SEND_EMAIL_VERIFICATION_CODE_TO_USER_PROCESS,
-  //     emailBody,
-  //   );
-  // }
+  private async sendVerificationEmail(
+    customerAccountId: string,
+    email: string,
+  ) {
+    const token = await this.generateJWT({
+      expirationTime: this.configService.get<string>(
+        "jwt.expiresIn.emailVerification",
+      )!,
+      payload: {
+        sub: customerAccountId,
+        user: null,
+      },
+      secret: this.configService.get<string>("jwt.secret.emailVerification"),
+    });
+
+    const emailBody: RegisterVerificationEmailToCustomer = {
+      email: email,
+      context: {
+        token,
+      },
+    };
+
+    await this.emailQueue.add(
+      EMAIL_PROCESS_NAMES.REGISTER_VERIFICATION_EMAIL_TO_CUSTOMER_PROCESS,
+      emailBody,
+    );
+  }
 }
