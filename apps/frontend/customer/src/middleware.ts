@@ -1,4 +1,4 @@
-// import { UserModel, UserRoleEnum } from "api/customer";
+// import { UserModel, UserRoleEnum } from "customer_api";
 import type { NextMiddleware, NextRequest } from "next/server";
 
 import { allowedRoutes, authRoutes, publicRoutes } from "@/configs/default";

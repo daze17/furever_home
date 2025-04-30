@@ -1,6 +1,6 @@
 "use client";
 
-// import { PetsResponse } from "api/customer";
+// import { PetsResponse } from "customer_api";
 import { Heart } from "lucide-react";
 import Link from "next/link";
 import {

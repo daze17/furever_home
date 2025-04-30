@@ -1,4 +1,4 @@
-// import { SpeciesModel } from "api/customer";
+// import { SpeciesModel } from "customer_api";
 
 // export const SpeciesTag: React.FC<{ species: SpeciesModel }> = ({
 //   species,

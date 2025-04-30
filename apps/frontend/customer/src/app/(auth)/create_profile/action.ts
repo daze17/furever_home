@@ -1,6 +1,6 @@
 "use server";
 
-import { CreateProfileRequestBody } from "api/customer";
+import { CreateProfileRequestBody } from "customer_api";
 import { redirect, RedirectType } from "next/navigation";
 
 import { client } from "@/services/client";

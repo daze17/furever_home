@@ -13,7 +13,7 @@ import { GoogleLogin } from "./google_login";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { z } from "zod";
-import { LoginCredentialsRequestBody } from "api/customer";
+import { LoginCredentialsRequestBody } from "customer_api";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 type Props = {

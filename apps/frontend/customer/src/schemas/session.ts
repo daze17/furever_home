@@ -1,4 +1,4 @@
-import { SessionSchema } from "api/customer";
+import { SessionSchema } from "customer_api";
 import { z } from "zod";
 
 export const Session = z.object({

@@ -1,4 +1,4 @@
-import { RegisterGoogleRequestBody } from "api/customer";
+import { RegisterGoogleRequestBody } from "customer_api";
 import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 

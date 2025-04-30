@@ -1,5 +1,5 @@
 import { type ApiFetcherArgs, initClient, tsRestFetchApi } from "@ts-rest/core";
-import { customerContract } from "api/customer";
+import { customerContract } from "customer_api";
 import { cookies } from "next/headers";
 
 import { backend } from "@/configs/default";

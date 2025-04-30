@@ -1,6 +1,6 @@
 "server-only";
 
-import { isCustomError } from "api/customer";
+import { isCustomError } from "customer_api";
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
