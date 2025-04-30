@@ -82,12 +82,11 @@ export type VerifyAccountRequestBody = z.infer<typeof VerifyAccountRequestBody>;
 // }).extend({ birthdate: z.coerce.date(), profileImage: z.string().nullable() });
 // export type CreateProfileSchema = z.infer<typeof CreateProfileSchema>;
 
-// export const SessionSchema = z.object({
-//   role: UserRoleEnum,
-//   // user: UserModel.nullable(),
-//   sub: z.string(),
-// });
-// export type SessionSchema = z.infer<typeof SessionSchema>;
+export const SessionSchema = z.object({
+  // user: UserModel.nullable(),
+  sub: z.string(),
+});
+export type SessionSchema = z.infer<typeof SessionSchema>;
 
 // export const UserProfileResponse = UserModel;
 // export type UserProfileResponse = z.infer<typeof UserProfileResponse>;
