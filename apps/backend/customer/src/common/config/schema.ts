@@ -1,18 +1,28 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 const commonSchema = z.object({
-  APP_ENV: z.enum(['development', 'production', 'staging']),
+  APP_ENV: z.enum(["development", "production", "staging"]),
   APP_PORT: z.coerce.number(),
   DATABASE_URL: z.string(),
+  EMAIL_FROM_ADDRESS: z.string().email(),
+  EMAIL_FROM_NAME: z.string(),
   REDIS_HOST: z.string(),
   REDIS_PORT: z.coerce.number(),
+  JWT_EXPIRES_IN_ACCESS_TOKEN: z.string(),
+  JWT_EXPIRES_IN_EMAIL_VERIFICATION: z.string(),
+  JWT_SECRET_ACCESS_TOKEN: z.string(),
+  JWT_SECRET_EMAIL_VERIFICATION: z.string(),
 });
 
 const developmentSchema = z.object({
-  //   MINIO_USER: z.string(),
-  //   MINIO_PASSWORD: z.string(),
-  //   MINIO_BUCKET: z.string(),
-  //   MINIO_PORT: z.coerce.number(),
+  EMAIL_HOST: z.string(),
+  EMAIL_PORT: z.coerce.number(),
+  EMAIL_USER: z.string(),
+  EMAIL_PASSWORD: z.string(),
+  MINIO_USER: z.string(),
+  MINIO_PASSWORD: z.string(),
+  MINIO_BUCKET: z.string(),
+  MINIO_PORT: z.coerce.number(),
 });
 const productionSchema = z.object({
   //   AWS_ACCESS_KEY: z.string(),

@@ -6,22 +6,19 @@ import {
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
-import * as bcrypt from "bcryptjs";
 import { Queue } from "bullmq";
 import {
-  CreateProfileRequestBody,
   RegisterGoogleRequestBody,
   RegisterWithEmailRequestBody,
   VerifyAccountRequestBody,
 } from "customer_api";
-import type { JWTPayload } from "jose";
-import { SignJWT } from "jose";
 
 import {
   EMAIL_PROCESS_NAMES,
   QUEUE_PROCESSOR_NAMES,
 } from "@/common/constants/queue.constants";
 import { RegisterVerificationEmailToCustomer } from "@/common/interfaces/email.interface";
+import { generateJWT } from "@/common/utils";
 
 import { AuthRepository } from "./auth.repository";
 
@@ -123,30 +120,12 @@ export class AuthService {
   //   });
   // }
   //
-  async generateJWT({
-    expirationTime,
-    payload,
-    secret,
-  }: {
-    expirationTime: string | number | Date;
-    payload?: JWTPayload;
-    secret?: string;
-  }) {
-    const encodedSecret = new TextEncoder().encode(secret);
-
-    const token = await new SignJWT(payload)
-      // .setProtectedHeader({ alg: "HS256" })
-      .setExpirationTime(expirationTime)
-      .sign(encodedSecret);
-
-    return token;
-  }
 
   private async sendVerificationEmail(
     customerAccountId: string,
     email: string,
   ) {
-    const token = await this.generateJWT({
+    const token = await generateJWT({
       expirationTime: this.configService.get<string>(
         "jwt.expiresIn.emailVerification",
       )!,

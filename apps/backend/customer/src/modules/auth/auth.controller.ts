@@ -2,8 +2,11 @@ import { BadRequestException, Controller, UseGuards } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { TsRestHandler, tsRestHandler } from "@ts-rest/nest";
 import { customerContract } from "customer_api";
+import { ClsService } from "nestjs-cls";
 
+import { CLS_KEYS } from "@/common/constants/cls.constants";
 import { LocalAuthGuard } from "@/common/guards/local_auth.guard";
+import { generateJWT } from "@/common/utils";
 
 import { AuthRepository } from "./auth.repository";
 import { AuthService } from "./auth.service";
@@ -14,6 +17,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly authRepository: AuthRepository,
     private readonly configService: ConfigService,
+    private readonly cls: ClsService,
   ) {}
 
   @TsRestHandler(customerContract.auth.loginGoogle)
@@ -31,7 +35,7 @@ export class AuthController {
         if (googleAccount.status !== "active") {
           throw new BadRequestException();
         }
-        const token = await this.authService.generateJWT({
+        const token = await generateJWT({
           expirationTime: this.configService.get<string>("jwt.expiresIn")!,
           payload: {
             sub: googleAccount.customer.id,
@@ -51,36 +55,14 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @TsRestHandler(customerContract.auth.loginCredentials)
   async loginCredentials() {
-    return tsRestHandler(
-      customerContract.auth.loginCredentials,
-      async ({ body }) => {
-        const userAccount = await this.authRepository.getAccountById(
-          `email_${body.email}`,
-        );
-        if (!userAccount) {
-          throw new BadRequestException();
-        }
-        if (userAccount.status !== "active") {
-          throw new BadRequestException();
-        }
+    return tsRestHandler(customerContract.auth.loginCredentials, async () => {
+      const accessToken = this.cls.get(CLS_KEYS.ACCESS_TOKEN);
 
-        const token = await this.authService.generateJWT({
-          expirationTime: this.configService.get<string>(
-            "jwt.expiresIn.accessToken",
-          )!,
-          payload: {
-            sub: userAccount.id,
-            user: userAccount.customer,
-          },
-          secret: this.configService.get<string>("jwt.secret.accessToken"),
-        });
-
-        return {
-          status: 201,
-          body: { token },
-        };
-      },
-    );
+      return {
+        status: 201,
+        body: { token: accessToken },
+      };
+    });
   }
 
   @TsRestHandler(customerContract.auth.registerGoogle)
@@ -90,7 +72,7 @@ export class AuthController {
       async ({ body }) => {
         const createdUser = await this.authService.registerGoogle(body);
 
-        const token = await this.authService.generateJWT({
+        const token = await generateJWT({
           expirationTime: this.configService.get<string>("jwt.expiresIn")!,
           payload: {
             sub: createdUser.id,
