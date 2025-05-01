@@ -1,8 +1,13 @@
 "use client";
 
+import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+
+import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import { cn } from "utils";
-import { GoogleRegister } from "./google_register";
+import { useRouter } from "next/navigation";
+import { z } from "zod";
+
 import {
   Button,
   Card,
@@ -15,12 +20,11 @@ import {
   Input,
   toast,
 } from "ui";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { cn } from "utils";
+
 import { client } from "@/services/client";
-import { z } from "zod";
+
+import { GoogleRegister } from "./google_register";
 
 type Props = {
   redirectTo?: string;

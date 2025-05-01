@@ -1,5 +1,13 @@
 "use client";
 
+import { Loader2Icon } from "lucide-react";
+import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { z } from "zod";
+
 import {
   Button,
   Form,
@@ -11,13 +19,8 @@ import {
   toast,
 } from "ui";
 import { cn } from "utils";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+
 import { client } from "@/services/client";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Loader2Icon } from "lucide-react";
 
 type Props = {
   token: string;
