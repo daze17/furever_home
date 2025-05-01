@@ -1,4 +1,4 @@
-import { LoginForm } from "./login_form_hook";
+import { LoginForm } from "./login_form";
 
 const AdminLoginPage: React.Page = () => {
   return (

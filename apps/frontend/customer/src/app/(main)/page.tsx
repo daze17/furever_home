@@ -3,7 +3,6 @@ import { cn } from "utils";
 import Donation from "@/components/donation";
 import Event from "@/components/event";
 import { serverErrorMap } from "@/components/server_error";
-import { client } from "@/services/client";
 
 // import AnimalsNeededSupportCarousel from "./animal_support_list_carousel";
 import HeroSection from "./hero_section";

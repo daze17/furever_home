@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 
 import { backend } from "@/configs/default";
 import { sessionName } from "@/utils/create_session";
+import { Session } from "@/schemas/session";
 
 export const client = initClient(
   {
@@ -24,7 +25,10 @@ export const client = initClient(
 );
 type CustomRequestHandlerArgs = ApiFetcherArgs;
 const requestInterceptor = async (_args: CustomRequestHandlerArgs) => {
-  const session = cookies().get(sessionName)?.value;
+  // const session = cookies().get(sessionName)?.value;
+  const _session = await fetch(`/api/session`);
+  const session: Session | null = await _session.json();
+
   const args = _args;
 
   if (session) {
