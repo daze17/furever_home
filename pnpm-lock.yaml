@@ -90,8 +90,8 @@ importers:
         specifier: ^5.1.1
         version: 5.1.1
       drizzle-orm:
-        specifier: ^0.43.1
-        version: 0.43.1(postgres@3.4.5)
+        specifier: ^0.38.4
+        version: 0.38.4(@types/react@18.3.20)(postgres@3.4.5)(react@18.3.1)
       fastify:
         specifier: ^5.3.2
         version: 5.3.2
@@ -374,11 +374,11 @@ importers:
         specifier: workspace:*
         version: link:../../database
       drizzle-orm:
-        specifier: ^0.43.1
-        version: 0.43.1(postgres@3.4.5)
+        specifier: ^0.38.4
+        version: 0.38.4(@types/react@18.3.20)(postgres@3.4.5)(react@18.3.1)
       drizzle-zod:
-        specifier: ^0.7.1
-        version: 0.7.1(drizzle-orm@0.43.1(postgres@3.4.5))(zod@3.24.3)
+        specifier: 0.5.1
+        version: 0.5.1(drizzle-orm@0.38.4(@types/react@18.3.20)(postgres@3.4.5)(react@18.3.1))(zod@3.24.3)
       zod:
         specifier: ^3.24.3
         version: 3.24.3
@@ -402,8 +402,8 @@ importers:
         specifier: ^16.5.0
         version: 16.5.0
       drizzle-orm:
-        specifier: ^0.43.1
-        version: 0.43.1(postgres@3.4.5)
+        specifier: ^0.38.4
+        version: 0.38.4(@types/react@18.3.20)(postgres@3.4.5)(react@18.3.1)
       postgres:
         specifier: ^3.4.5
         version: 3.4.5
@@ -4853,8 +4853,8 @@ packages:
     resolution: {integrity: sha512-pcKVT+GbfPA+bUovPIilgVOoq+onNBo/YQBG86sf3/GFHkN6lRJPm1l7dKN0IMAk57RQoIm4GUllRrasLlcaSg==}
     hasBin: true
 
-  drizzle-orm@0.43.1:
-    resolution: {integrity: sha512-dUcDaZtE/zN4RV/xqGrVSMpnEczxd5cIaoDeor7Zst9wOe/HzC/7eAaulywWGYXdDEc9oBPMjayVEDg0ziTLJA==}
+  drizzle-orm@0.38.4:
+    resolution: {integrity: sha512-s7/5BpLKO+WJRHspvpqTydxFob8i1vo2rEx4pY6TGY7QSMuUfWUuzaY0DIpXCkgHOo37BaFC+SJQb99dDUXT3Q==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=4'
@@ -4864,24 +4864,25 @@ packages:
       '@neondatabase/serverless': '>=0.10.0'
       '@op-engineering/op-sqlite': '>=2'
       '@opentelemetry/api': ^1.4.1
-      '@planetscale/database': '>=1.13'
+      '@planetscale/database': '>=1'
       '@prisma/client': '*'
       '@tidbcloud/serverless': '*'
       '@types/better-sqlite3': '*'
       '@types/pg': '*'
+      '@types/react': '>=18'
       '@types/sql.js': '*'
       '@vercel/postgres': '>=0.8.0'
       '@xata.io/client': '*'
       better-sqlite3: '>=7'
       bun-types: '*'
       expo-sqlite: '>=14.0.0'
-      gel: '>=2'
       knex: '*'
       kysely: '*'
       mysql2: '>=2'
       pg: '>=8'
       postgres: '>=3'
       prisma: '*'
+      react: '>=18'
       sql.js: '>=1'
       sqlite3: '>=5'
     peerDependenciesMeta:
@@ -4911,6 +4912,8 @@ packages:
         optional: true
       '@types/pg':
         optional: true
+      '@types/react':
+        optional: true
       '@types/sql.js':
         optional: true
       '@vercel/postgres':
@@ -4922,8 +4925,6 @@ packages:
       bun-types:
         optional: true
       expo-sqlite:
-        optional: true
-      gel:
         optional: true
       knex:
         optional: true
@@ -4937,16 +4938,18 @@ packages:
         optional: true
       prisma:
         optional: true
+      react:
+        optional: true
       sql.js:
         optional: true
       sqlite3:
         optional: true
 
-  drizzle-zod@0.7.1:
-    resolution: {integrity: sha512-nZzALOdz44/AL2U005UlmMqaQ1qe5JfanvLujiTHiiT8+vZJTBFhj3pY4Vk+L6UWyKFfNmLhk602Hn4kCTynKQ==}
+  drizzle-zod@0.5.1:
+    resolution: {integrity: sha512-C/8bvzUH/zSnVfwdSibOgFjLhtDtbKYmkbPbUCq46QZyZCH6kODIMSOgZ8R7rVjoI+tCj3k06MRJMDqsIeoS4A==}
     peerDependencies:
-      drizzle-orm: '>=0.36.0'
-      zod: '>=3.0.0'
+      drizzle-orm: '>=0.23.13'
+      zod: '*'
 
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
@@ -14103,13 +14106,15 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.43.1(postgres@3.4.5):
+  drizzle-orm@0.38.4(@types/react@18.3.20)(postgres@3.4.5)(react@18.3.1):
     optionalDependencies:
+      '@types/react': 18.3.20
       postgres: 3.4.5
+      react: 18.3.1
 
-  drizzle-zod@0.7.1(drizzle-orm@0.43.1(postgres@3.4.5))(zod@3.24.3):
+  drizzle-zod@0.5.1(drizzle-orm@0.38.4(@types/react@18.3.20)(postgres@3.4.5)(react@18.3.1))(zod@3.24.3):
     dependencies:
-      drizzle-orm: 0.43.1(postgres@3.4.5)
+      drizzle-orm: 0.38.4(@types/react@18.3.20)(postgres@3.4.5)(react@18.3.1)
       zod: 3.24.3
 
   dunder-proto@1.0.1:

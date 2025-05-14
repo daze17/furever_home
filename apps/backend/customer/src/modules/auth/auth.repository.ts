@@ -1,5 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import {
+  CreateProfileRequestBody,
   CustomerModel,
   RegisterGoogleRequestBody,
   RegisterWithEmailRequestBody,
@@ -86,8 +87,8 @@ export class AuthRepository {
   }
 
   // TODO: drizzle zod returns unknown degrade version
-  // async createProfile(body: CreateProfileRequestBody, accountId: string) {
-  async createProfile(body: CustomerModel, accountId: string) {
+  async createProfile(body: CreateProfileRequestBody, accountId: string) {
+    // async createProfile(body: CustomerModel, accountId: string) {
     await this.db.transaction(async (transaction) => {
       const customerIds = await transaction
         .insert(customers)

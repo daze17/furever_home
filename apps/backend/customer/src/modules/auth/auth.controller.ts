@@ -36,7 +36,9 @@ export class AuthController {
           throw new BadRequestException();
         }
         const token = await generateJWT({
-          expirationTime: this.configService.get<string>("jwt.expiresIn")!,
+          expirationTime: this.configService.get<string>(
+            "jwt.expiresIn.accessToken",
+          )!,
           payload: {
             sub: googleAccount.customer.id,
             user: googleAccount.customer,
@@ -103,13 +105,13 @@ export class AuthController {
   }
 
   // @UseGuards(AccountStatusJwtAuthGuard)
-  // @TsRestHandler(fureverHomeContract.auth.createProfile)
-  // async createProfile(@RequestUser() account: UserJoinedUserKey) {
+  // @TsRestHandler(customerContract.auth.createProfile)
+  // async createProfile() {
   //   return tsRestHandler(
-  //     fureverHomeContract.auth.createProfile,
+  //     customerContract.auth.createProfile,
   //     async ({ body }) => {
-  //       const userKeyId = account.id;
-  //       await this.authService.createProfile(body, userKeyId);
+  //       // const userKeyId = account.id;
+  //       // await this.authService.createProfile(body, userKeyId);
 
   //       return {
   //         status: 201,

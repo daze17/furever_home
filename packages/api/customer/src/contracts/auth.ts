@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { c } from "@/contract";
 import {
+  CreateProfileRequestBody,
   LoginCredentialsRequestBody,
   LoginGoogleRequestBody,
   RegisterGoogleRequestBody,
@@ -63,16 +64,16 @@ export const authContract = c.router({
     },
     summary: "verify email by verify url",
   },
-  // createProfile: {
-  //   method: "POST",
-  //   path: "/register/create_profile",
-  //   body: CreateProfileSchema,
-  //   responses: {
-  //     201: z.object({}),
-  //     400: CustomError,
-  //   },
-  //   summary: "create profile",
-  // },
+  createProfile: {
+    method: "POST",
+    path: "/register/create_profile",
+    body: CreateProfileRequestBody,
+    responses: {
+      201: z.object({}),
+      400: CustomError,
+    },
+    summary: "create profile",
+  },
   // getProfile: {
   //   method: "GET",
   //   path: "/profile",

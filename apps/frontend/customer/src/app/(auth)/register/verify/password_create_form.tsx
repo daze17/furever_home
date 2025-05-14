@@ -72,7 +72,16 @@ export const PasswordCreateForm: React.FC<Props> = ({ token }) => {
         body: {
           token,
           newPassword: data.password,
-          profile: {},
+          profile: {
+            first_name: "",
+            last_name: "",
+            nickname: "",
+            address: "",
+            phone: "",
+            profile_image_url: "",
+            gender: "other",
+            zip_code: "",
+          },
         },
       });
 
