@@ -1,5 +1,8 @@
+import "./src/env.ts";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone",
   experimental: {
     missingSuspenseWithCSRBailout: false,
   },
@@ -15,6 +18,7 @@ const nextConfig = {
       },
     ],
   },
+  transpilePackages: ["@t3-oss/env-nextjs"],
 };
 
 export default nextConfig;

@@ -2,16 +2,19 @@
   "name": "customer_front",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "eslint": "eslint \"src/**/*.{ts,tsx,mdx}\""
+    "eslint": "eslint \"src/**/*.{ts,tsx,mdx}\"",
+    "eslint:fix": "eslint \"src/**/*.{ts,tsx,mdx}\" --fix"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",
     "@radix-ui/themes": "^3.2.1",
+    "@t3-oss/env-nextjs": "^0.13.8",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@ts-rest/core": "^3.30.5",
     "@types/crypto-js": "^4.2.2",
@@ -47,7 +50,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "eslint": "^8",
+    "eslint": "^9",
     "eslint-config-next": "14.2.4",
     "postcss": "^8",
     "prettier-plugin-tailwindcss": "^0.6.5",
