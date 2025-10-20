@@ -93,7 +93,14 @@ export class AuthRepository {
       const customerIds = await transaction
         .insert(customers)
         .values({
-          ...body,
+          first_name: body.first_name || "",
+          last_name: body.last_name || "",
+          nickname: body.nickname,
+          address: body.address,
+          phone: body.phone,
+          profile_image_url: body.profile_image_url,
+          gender: body.gender || "other",
+          zip_code: body.zip_code,
         })
         .returning({ id: customers.id });
       const customerId = customerIds.find(Boolean)!.id;

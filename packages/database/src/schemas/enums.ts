@@ -20,3 +20,27 @@ export const pet_status = pgEnum("pet_status", [
   "has_owner",
   "inactive",
 ]);
+
+// New enums for adoption applications
+export const application_status = pgEnum("application_status", [
+  "pending",
+  "reviewing",
+  "approved",
+  "rejected",
+  "withdrawn",
+]);
+
+// New enums for pet extra information
+export const energy_level = pgEnum("energy_level", ["low", "medium", "high"]);
+export const friendliness = pgEnum("friendliness", [
+  "poor",
+  "fair",
+  "good",
+  "excellent",
+]);
+export const training_level = pgEnum("training_level", [
+  "none",
+  "basic",
+  "intermediate",
+  "advanced",
+]);
