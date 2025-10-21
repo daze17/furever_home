@@ -90,14 +90,15 @@ const HeroSection: React.FC = () => {
               {/* Decorative blob behind image */}
               <div className="absolute inset-0 -z-10 scale-110 rounded-full bg-gradient-to-br from-orange-300/50 to-pink-300/50 blur-2xl" />
 
-              <div className="relative overflow-hidden rounded-3xl bg-white p-2 shadow-2xl">
+              <div className="relative overflow-hidden shadow-2xl">
                 <Image
-                  src={"/dog.jpg"}
+                  // src="/hero_dog.jpg"
+                  src="/hero_dog.jpg"
+                  alt="hero dog"
                   width={600}
                   height={600}
-                  alt="hero dog"
-                  className="rounded-2xl object-cover"
-                  // priority
+                  className="object-cover"
+                  priority
                 />
               </div>
 

@@ -1,17 +1,19 @@
 "use client";
 
 import {
+  ArrowRight,
+  Check,
+  Copy,
   Heart,
   Shield,
   TrendingUp,
   Users,
-  ArrowRight,
-  Copy,
-  Check,
 } from "lucide-react";
+import { useState } from "react";
+
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+
 import { Button } from "ui";
 import { cn } from "utils";
 
@@ -55,33 +57,28 @@ const Donation: React.FC<{
   ];
 
   return (
-    <div className="flex-1 space-y-8 rounded-2xl bg-white p-8 shadow-lg md:w-2/3">
+    <div className="flex-1 space-y-6 rounded-2xl bg-white p-6 shadow-lg md:w-2/3">
       {/* Header */}
       <div className="space-y-4 text-center">
-        <div className="inline-flex items-center gap-2 rounded-full bg-orange-100 px-4 py-2 text-sm font-medium text-orange-600">
-          <Heart className="h-4 w-4" />
-          <span>Хамтдаа амьтдыг аврацгаая</span>
-        </div>
         <h1 className="text-4xl font-bold text-gray-900 md:text-5xl">
           GTN Mongolia
         </h1>
-        <p className="mx-auto max-w-2xl text-lg leading-relaxed text-gray-600">
-          Гэрийн тэжээвэр амьтдыг хамгаалах, нийгэмд эерэг, зөв ойлголт түгээх,
-          гудамжинд зовсон амьтныг жаргалтай нийгэм бий болгох зорилгоор үйл
-          ажиллагаа явуулж байна.
+        <p className="mx-auto max-w-2xl leading-relaxed text-gray-600">
+          Гэрийн тэжээвэр амьтдыг хамгаалах, гудамжинд зовсон амьтныг жаргалтай
+          нийгэм бий болгох зорилгоор үйл ажиллагаа явуулж байна.
         </p>
       </div>
 
       {/* Impact Stats */}
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-3">
         {impactStats.map((stat, idx) => (
           <div
             key={idx}
-            className="group rounded-xl border border-gray-100 bg-gradient-to-br from-white to-gray-50 p-6 text-center shadow-sm transition-all hover:shadow-md"
+            className="rounded-xl border border-gray-100 bg-gradient-to-br from-white to-gray-50 p-6 text-center shadow-sm transition-all hover:shadow-md"
           >
             <div
               className={cn(
-                "mx-auto mb-4 inline-flex rounded-full p-3",
+                "mx-auto mb-3 inline-flex rounded-full p-3",
                 stat.bgColor,
               )}
             >
@@ -105,28 +102,14 @@ const Donation: React.FC<{
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-gray-700">
               Таны өгсөн{" "}
-              <span className="font-bold text-orange-600">хандив зуун хувь</span>
-              , зөвхөн зүдэрсэн амьтдыг аврах, эзэнтэй болгох, спэй засвар болон
-              эмчилгээний зардалдаа зарцуулагдана.
+              <span className="font-bold text-orange-600">
+                хандив зуун хувь
+              </span>
+              , зөвхөн амьтдыг аврах, эзэнтэй болгох, эмчилгээний зардалдаа
+              зарцуулагдана.
             </p>
           </div>
         </div>
-      </div>
-
-      {/* CTA Buttons */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-        <Button asChild variant="outline">
-          <Link href="/about" className="flex items-center gap-2">
-            Бидний тухай
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </Button>
-        <Button asChild variant="outline">
-          <Link href="/contact" className="flex items-center gap-2">
-            Бидэнтэй холбогдох
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </Button>
       </div>
 
       {/* Divider */}
@@ -140,7 +123,7 @@ const Donation: React.FC<{
       </div>
 
       {/* Bank Accounts */}
-      <div className="space-y-6 rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-6">
+      <div className="space-y-4 rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-6">
         <div className="space-y-2">
           <h2 className="text-xl font-bold text-gray-900">Дансны мэдээлэл</h2>
           <div className="space-y-1 text-sm text-gray-600">
@@ -154,14 +137,14 @@ const Donation: React.FC<{
           </div>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-3">
           {accounts.map(({ name, qr, account }, idx) => (
             <div
               key={idx}
               className="group rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-all hover:shadow-md"
             >
               {/* QR Code */}
-              <div className="relative mx-auto mb-4 h-32 w-32 overflow-hidden rounded-lg bg-gray-100">
+              <div className="relative mx-auto mb-4 h-28 w-28 overflow-hidden rounded-lg bg-gray-100">
                 <Image
                   src={qr}
                   alt={`${name} QR`}
@@ -200,15 +183,15 @@ const Donation: React.FC<{
       </div>
 
       {/* Trust Badge */}
-      <div className="rounded-lg border border-orange-200 bg-orange-50/50 p-4">
-        <div className="flex items-center justify-center gap-2 text-sm text-gray-700">
-          <Shield className="h-5 w-5 text-orange-600" />
+      {/*<div className="rounded-lg border border-orange-200 bg-orange-50/50 p-3">
+        <div className="flex items-center justify-center gap-2 text-xs text-gray-700">
+          <Shield className="h-4 w-4 text-orange-600" />
           <span>
             Бүх хандив хяналттай, ил тод байдлаар амьтдын эрүүл мэндэд
             зарцуулагдана
           </span>
         </div>
-      </div>
+      </div>*/}
     </div>
   );
 };
