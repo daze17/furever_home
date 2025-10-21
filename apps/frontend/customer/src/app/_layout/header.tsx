@@ -1,6 +1,6 @@
 // import { User } from "api/furever-home";
 import { jwtDecode } from "jwt-decode";
-import { CircleUserRound, Heart } from "lucide-react";
+import { CircleUserRound, Heart, PawPrint } from "lucide-react";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,56 +19,49 @@ export const Header: React.FC = () => {
   //   ? jwtDecode<{ user: User }>(appSession?.value)
   //   : null;
   return (
-    <header className="fixed top-0 z-50 w-full border-b bg-white">
-      <div className="container mx-auto flex h-[80px] items-center justify-between">
-        <Image
-          src="/logo.svg"
-          alt="logo"
-          width={40}
-          height={40}
-          className="py-4"
-        />
+    <header className="fixed top-0 z-50 w-full border-b border-orange-100 bg-white/95 shadow-sm backdrop-blur-md">
+      <div className="container mx-auto flex h-[80px] items-center justify-between px-5">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2 transition-transform hover:scale-105">
+          <div className="rounded-full bg-gradient-to-br from-orange-500 to-pink-500 p-2">
+            <PawPrint className="h-6 w-6 text-white" />
+          </div>
+          <span className="hidden text-xl font-bold text-gray-900 sm:block">
+            Furever Home
+          </span>
+        </Link>
+
+        {/* Desktop Navigation */}
         <Navigation />
 
-        <div className="hidden sm:gap-1 md:flex">
-          <Button variant="ghost" asChild>
-            <Link
-              href="/favorites"
-              className="flex flex-col items-center text-xs"
-            >
-              <Heart size={24} className="flex-shrink-0" strokeWidth={1} />
-              <span>Хадгалах</span>
+        {/* Right Actions */}
+        <div className="hidden items-center gap-2 md:flex">
+          <Button variant="ghost" size="sm" asChild>
+            <Link href="/favorites" className="flex items-center gap-2">
+              <Heart size={20} strokeWidth={2} />
+              <span className="font-medium">Хадгалах</span>
             </Link>
           </Button>
 
-          <Button variant="ghost" asChild>
-            <Link href="/login" className="flex flex-col items-center text-xs">
-              <CircleUserRound
-                size={24}
-                className="flex-shrink-0"
-                strokeWidth={1}
-              />
-              <span>Нэвтрэх</span>
+          <Button asChild>
+            <Link href="/login" className="flex items-center gap-2">
+              <CircleUserRound size={20} strokeWidth={2} />
+              <span className="font-medium">Нэвтрэх</span>
             </Link>
           </Button>
           {/* {decodedToken ? (
             <ProfileSection user={decodedToken.user} />
           ) : (
-            <Button variant="ghost" asChild>
-              <Link
-                href="/login"
-                className="flex flex-col items-center text-xs"
-              >
-                <CircleUserRound
-                  size={24}
-                  className="flex-shrink-0"
-                  strokeWidth={1}
-                />
-                <span>Нэвтрэх</span>
+            <Button asChild>
+              <Link href="/login" className="flex items-center gap-2">
+                <CircleUserRound size={20} strokeWidth={2} />
+                <span className="font-medium">Нэвтрэх</span>
               </Link>
             </Button>
           )} */}
         </div>
+
+        {/* Mobile Menu */}
         <MobileNav />
       </div>
     </header>

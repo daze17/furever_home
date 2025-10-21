@@ -1,13 +1,14 @@
 "use client";
-import { CircleUserRound, Heart } from "lucide-react";
-import Image from "next/image";
+import { CircleUserRound, Heart, Menu, X } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Button } from "ui";
 import { cn } from "utils";
 
 export const MobileNav: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const pathname = usePathname();
 
   const navItems = [
     {
@@ -34,42 +35,83 @@ export const MobileNav: React.FC = () => {
 
   return (
     <>
+      {/* Hamburger Button */}
       <button
-        className="absolute right-8 top-1/2 z-30 -translate-y-1/2 md:hidden"
+        className="relative z-30 rounded-lg p-2 text-gray-700 transition-colors hover:bg-orange-50 hover:text-orange-600 md:hidden"
         onClick={() => setIsOpen((cur) => !cur)}
+        aria-label="Toggle menu"
       >
-        <Image src="/menu.svg" alt="Burger menu icon" width={32} height={32} />
+        {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
+
+      {/* Mobile Menu */}
       <nav
         className={cn(
-          "fixed top-0 z-10 flex h-0 w-full flex-col items-center justify-center space-y-6 overflow-hidden bg-white/20 backdrop-blur-lg transition-all",
-          isOpen && "h-screen",
+          "fixed left-0 top-[80px] z-40 flex h-0 w-full flex-col items-center justify-start overflow-hidden bg-gradient-to-b from-white via-orange-50/50 to-pink-50/30 pt-8 backdrop-blur-xl transition-all duration-300",
+          isOpen && "h-[calc(100vh-80px)]",
         )}
-        onClick={() => setIsOpen(false)}
       >
-        <ul className="flex flex-col gap-4">
-          {navItems.map((item, index) => (
-            <li key={index} className="w-full border-b border-gray-400 pb-2">
-              <Link href={item.href}>{item.label}</Link>
-            </li>
-          ))}
+        <ul className="flex w-full flex-col gap-2 px-6">
+          {navItems.map((item, index) => {
+            const isActive = pathname === item.href;
+            return (
+              <li key={index} className="w-full">
+                <Link
+                  href={item.href}
+                  onClick={() => setIsOpen(false)}
+                  className={cn(
+                    "block w-full rounded-lg px-4 py-3 font-medium transition-all",
+                    isActive
+                      ? "bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-md"
+                      : "text-gray-700 hover:bg-orange-50 hover:text-orange-600",
+                  )}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
 
-        <div className="flex flex-col gap-3">
-          <Button asChild>
-            <Link className="flex items-center gap-2" href="/login">
-              <CircleUserRound className="size-6" />
+        {/* Action Buttons */}
+        <div className="mt-8 flex w-full flex-col gap-3 px-6">
+          <Button
+            asChild
+            className="w-full"
+          >
+            <Link
+              className="flex items-center justify-center gap-2"
+              href="/login"
+              onClick={() => setIsOpen(false)}
+            >
+              <CircleUserRound className="size-5" />
               Нэвтрэх
             </Link>
           </Button>
-          <Button variant="secondary" asChild>
-            <Link className="flex items-center gap-2" href="/favorite">
-              <Heart className="size-6" />
+          <Button
+            variant="outline"
+            asChild
+            className="w-full"
+          >
+            <Link
+              className="flex items-center justify-center gap-2"
+              href="/favorites"
+              onClick={() => setIsOpen(false)}
+            >
+              <Heart className="size-5" />
               Таалагдсан
             </Link>
           </Button>
         </div>
       </nav>
+
+      {/* Overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 top-[80px] z-30 bg-black/20 backdrop-blur-sm md:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
     </>
   );
 };
