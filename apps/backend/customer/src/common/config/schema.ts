@@ -12,6 +12,7 @@ const commonSchema = z.object({
   JWT_EXPIRES_IN_EMAIL_VERIFICATION: z.string(),
   JWT_SECRET_ACCESS_TOKEN: z.string(),
   JWT_SECRET_EMAIL_VERIFICATION: z.string(),
+  CUSTOMER_FRONTEND_URL: z.string(),
 });
 
 const developmentSchema = z.object({
