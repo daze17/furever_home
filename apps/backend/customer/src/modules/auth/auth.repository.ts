@@ -1,12 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
 import {
   CreateProfileRequestBody,
-  CustomerModel,
   RegisterGoogleRequestBody,
   RegisterWithEmailRequestBody,
 } from "customer_api";
 import { customer_accounts, customers } from "database";
-import { and, eq, exists, ne } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 import type { Database } from "@/modules/database/database.providers";
 
@@ -57,7 +56,6 @@ export class AuthRepository {
       ).find(Boolean)!;
 
       await transaction.insert(customer_accounts).values({
-        id: `google_${body.sub}`,
         customerId: customer.id,
         email: body.email,
         hash: "hash",
@@ -74,7 +72,6 @@ export class AuthRepository {
     const customerAccounts = await this.db
       .insert(customer_accounts)
       .values({
-        id: `email_${body.email}`,
         customerId: null,
         email: body.email,
         hash: "hash",
@@ -88,7 +85,6 @@ export class AuthRepository {
 
   // TODO: drizzle zod returns unknown degrade version
   async createProfile(body: CreateProfileRequestBody, accountId: string) {
-    // async createProfile(body: CustomerModel, accountId: string) {
     await this.db.transaction(async (transaction) => {
       const customerIds = await transaction
         .insert(customers)
@@ -112,68 +108,13 @@ export class AuthRepository {
     });
   }
 
-  // // async updateProfile(props: CreateProfileSchema) {
-  // //   await this.db.insert(users).values(props);
-  // // }
-
-  // async getProfile(id: string) {
-  //   const user = await this.db.query.users.findFirst({
-  //     where: exists(this.db.select().from(user_key).where(eq(user_key.id, id))),
-  //   });
-  //   if (!user) throw new NotFoundException();
-
-  //   return user;
-  // }
-
-  // async verifyAccount({ token, newPassword }: VerifyAccountSchema) {
-  //   const payload = await this.jwtService
-  //     .verifyAsync<{ email: string }>(token, {
-  //       secret: this.configService.get<string>('jwt.secret.emailVerification'),
-  //     })
-  //     .then((payload) => payload)
-  //     .catch((error) => {
-  //       if (error instanceof Error) {
-  //         console.log(error, 'error');
-  //       }
-  //       return null;
-  //     });
-
-  //   if (!payload) {
-  //     throw new BadRequestException('INVALID_TOKEN');
-  //   }
-
-  //   const { sub } = payload;
-
-  //   const account = await this.db.query.user_key.findFirst({
-  //     where: eq(user_key.id, sub),
-  //     with: {
-  //       user: true,
-  //     },
-  //   });
-
-  //   if (!account) {
-  //     throw new BadRequestException('INVALID_TOKEN');
-  //   }
-
-  //   const salt = await bcrypt.genSalt(10);
-  //   const hash = await bcrypt.hash(newPassword, salt);
-
-  //   await this.db.transaction(async (transaction) => {
-  //     const _updatedUserProfile = await transaction
-  //       .update(user_key)
-  //       .set({
-  //         hashedPassword: hash,
-  //         status: 'pending_profile',
-  //         isVerified: true,
-  //       })
-  //       .where(eq(user_key.id, account.id))
-  //       .returning({
-  //         email: user_key.email,
-  //         phoneNumber: user_key.phoneNumber,
-  //       });
-
-  //     const updatedUserProfile = _updatedUserProfile.find(Boolean);
-  //     if (!updatedUserProfile) throw new Error();
-  //   });
-  // }
+  async verifyAccount(accountId: string, newHash: string) {
+    await this.db
+      .update(customer_accounts)
+      .set({
+        status: "active",
+        hash: newHash,
+      })
+      .where(eq(customer_accounts.id, accountId));
+  }
 }

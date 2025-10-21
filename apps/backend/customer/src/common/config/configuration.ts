@@ -19,6 +19,8 @@ export const configuration = (overrides?: Partial<ENV>) => {
       port: env.EMAIL_PORT,
       user: env.EMAIL_USER,
       password: env.EMAIL_PASSWORD,
+      // urls
+      customerFrontendUrl: env.CUSTOMER_FRONTEND_URL,
     },
     minio: {
       user: env.MINIO_USER,

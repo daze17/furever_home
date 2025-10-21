@@ -1,5 +1,5 @@
 {
-  "id": "5a550fae-75f7-4380-89d0-fedeb5afbbdc",
+  "id": "784ba08e-5d41-4cb9-96a4-78feab97e12e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -488,9 +488,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(255)",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "email": {
           "name": "email",

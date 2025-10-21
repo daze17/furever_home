@@ -54,7 +54,7 @@ CREATE TABLE "adoption_transactions" (
 );
 --> statement-breakpoint
 CREATE TABLE "customer_accounts" (
-	"id" varchar(255) PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"email" text NOT NULL,
 	"hash" text NOT NULL,
 	"status" "status" NOT NULL,

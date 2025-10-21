@@ -18,8 +18,7 @@ import {
 } from "./schemas";
 
 // Password: "password123" hashed with bcrypt
-const HASHED_PASSWORD =
-  "$2b$10$YourHashedPasswordHere.REPLACE.WITH.REAL.HASH";
+const HASHED_PASSWORD = "$2b$10$YourHashedPasswordHere.REPLACE.WITH.REAL.HASH";
 
 async function seed() {
   console.log("🌱 Starting database seed...");
@@ -108,35 +107,30 @@ async function seed() {
       .insert(customer_accounts)
       .values([
         {
-          id: "john_smith_001",
           email: "john.smith@example.com",
           hash: HASHED_PASSWORD,
           status: "active",
           customerId: customersData[0].id,
         },
         {
-          id: "sarah_johnson_002",
           email: "sarah.johnson@example.com",
           hash: HASHED_PASSWORD,
           status: "active",
           customerId: customersData[1].id,
         },
         {
-          id: "michael_chen_003",
           email: "michael.chen@example.com",
           hash: HASHED_PASSWORD,
           status: "active",
           customerId: customersData[2].id,
         },
         {
-          id: "emily_rodriguez_004",
           email: "emily.rodriguez@example.com",
           hash: HASHED_PASSWORD,
           status: "active",
           customerId: customersData[3].id,
         },
         {
-          id: "david_williams_005",
           email: "david.williams@example.com",
           hash: HASHED_PASSWORD,
           status: "active",
@@ -154,7 +148,7 @@ async function seed() {
         customer_id: customer.id,
         receive_email_notification: true,
         receive_sms_notification: true,
-      }))
+      })),
     );
 
     console.log(`✅ Created ${customersData.length} customer settings`);
@@ -256,7 +250,9 @@ async function seed() {
       ])
       .returning();
 
-    console.log(`✅ Created ${petExtraInfos.length} pet extra information records`);
+    console.log(
+      `✅ Created ${petExtraInfos.length} pet extra information records`,
+    );
 
     // 6. Create Pets
     console.log("🐕 Creating pets...");
@@ -268,7 +264,8 @@ async function seed() {
           birth_date: "2020-03-15",
           species: "dog",
           notes: "Friendly golden retriever, loves to play fetch",
-          pet_image_url: "https://images.dog.ceo/breeds/retriever-golden/n02099601_1003.jpg",
+          pet_image_url:
+            "https://images.dog.ceo/breeds/retriever-golden/n02099601_1003.jpg",
           size: "large",
           pet_status: "adopting",
           customer_id: customersData[0].id,
@@ -290,7 +287,8 @@ async function seed() {
           birth_date: "2021-01-10",
           species: "dog",
           notes: "Well-trained beagle, great with kids",
-          pet_image_url: "https://images.dog.ceo/breeds/beagle/n02088364_11136.jpg",
+          pet_image_url:
+            "https://images.dog.ceo/breeds/beagle/n02088364_11136.jpg",
           size: "medium",
           pet_status: "adopting",
           customer_id: customersData[0].id,
@@ -301,7 +299,8 @@ async function seed() {
           birth_date: "2022-05-18",
           species: "dog",
           notes: "Energetic husky puppy, needs active family",
-          pet_image_url: "https://images.dog.ceo/breeds/husky/n02110185_10047.jpg",
+          pet_image_url:
+            "https://images.dog.ceo/breeds/husky/n02110185_10047.jpg",
           size: "large",
           pet_status: "adopting",
           customer_id: customersData[2].id,
@@ -323,7 +322,8 @@ async function seed() {
           birth_date: "2017-09-12",
           species: "dog",
           notes: "Senior dog looking for a quiet home",
-          pet_image_url: "https://images.dog.ceo/breeds/labrador/n02099712_3503.jpg",
+          pet_image_url:
+            "https://images.dog.ceo/breeds/labrador/n02099712_3503.jpg",
           size: "medium",
           pet_status: "adopting",
           customer_id: customersData[1].id,
@@ -400,13 +400,15 @@ async function seed() {
     await db.insert(pet_images).values([
       {
         pet_id: petsData[0].id,
-        image_url: "https://images.dog.ceo/breeds/retriever-golden/n02099601_1003.jpg",
+        image_url:
+          "https://images.dog.ceo/breeds/retriever-golden/n02099601_1003.jpg",
         is_primary: true,
         display_order: 1,
       },
       {
         pet_id: petsData[0].id,
-        image_url: "https://images.dog.ceo/breeds/retriever-golden/n02099601_2209.jpg",
+        image_url:
+          "https://images.dog.ceo/breeds/retriever-golden/n02099601_2209.jpg",
         is_primary: false,
         display_order: 2,
       },
@@ -648,7 +650,9 @@ async function seed() {
     console.log("   - 5 messages");
     console.log("   - 5 favorites");
 
-    console.log("\n⚠️  NOTE: Update HASHED_PASSWORD constant with a real bcrypt hash for testing authentication");
+    console.log(
+      "\n⚠️  NOTE: Update HASHED_PASSWORD constant with a real bcrypt hash for testing authentication",
+    );
   } catch (error) {
     console.error("❌ Error seeding database:", error);
     throw error;

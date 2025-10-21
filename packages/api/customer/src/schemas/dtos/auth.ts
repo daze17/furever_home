@@ -63,7 +63,7 @@ export type CreateProfileRequestBody = z.infer<typeof CreateProfileRequestBody>;
 export const VerifyAccountRequestBody = z.object({
   token: z.string(),
   newPassword: z.string().regex(passwordRegex),
-  profile: CreateProfileRequestBody,
+  // profile: CreateProfileRequestBody,
 });
 export type VerifyAccountRequestBody = z.infer<typeof VerifyAccountRequestBody>;
 

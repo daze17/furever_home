@@ -104,48 +104,18 @@ export class AuthController {
     );
   }
 
-  // @UseGuards(AccountStatusJwtAuthGuard)
-  // @TsRestHandler(customerContract.auth.createProfile)
-  // async createProfile() {
-  //   return tsRestHandler(
-  //     customerContract.auth.createProfile,
-  //     async ({ body }) => {
-  //       // const userKeyId = account.id;
-  //       // await this.authService.createProfile(body, userKeyId);
+  @TsRestHandler(customerContract.auth.verifyAccount)
+  async verifyAccount() {
+    return tsRestHandler(
+      customerContract.auth.verifyAccount,
+      async ({ body }) => {
+        await this.authService.verifyAccount(body);
 
-  //       return {
-  //         status: 201,
-  //         body: {},
-  //       };
-  //     },
-  //   );
-  // }
-
-  // @TsRestHandler(fureverHomeContract.auth.verifyAccount)
-  // async verifyAccount() {
-  //   return tsRestHandler(
-  //     fureverHomeContract.auth.verifyAccount,
-  //     async ({ body }) => {
-  //       await this.authService.verifyAccount(body);
-
-  //       return {
-  //         status: 200,
-  //         body: {},
-  //       };
-  //     },
-  //   );
-  // }
-
-  // @UseGuards(JwtAuthGuard)
-  // @TsRestHandler(fureverHomeContract.auth.getProfile)
-  // async getProfile(@RequestUser() account: UserJoinedUserKey) {
-  //   return tsRestHandler(fureverHomeContract.auth.getProfile, async () => {
-  //     const profile = await this.authService.getProfile(account.id);
-
-  //     return {
-  //       status: 200,
-  //       body: profile,
-  //     };
-  //   });
-  // }
+        return {
+          status: 200,
+          body: {},
+        };
+      },
+    );
+  }
 }

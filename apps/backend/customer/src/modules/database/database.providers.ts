@@ -22,7 +22,6 @@ export const databaseProviders = [
     provide: databaseClientProviderToken,
     useFactory: (configService: ConfigService) => {
       const url = configService.get<string>("database.url")!;
-      console.log(url, "urlurlurlurlurlurlurl");
 
       // Disable prefetch as it is not supported for "Transaction" pool mode
       const client = postgres(url, { prepare: false });

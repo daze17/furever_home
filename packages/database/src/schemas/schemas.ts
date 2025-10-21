@@ -51,9 +51,7 @@ export const customers = pgTable("customers", {
  * Separate from customers table to isolate auth logic
  */
 export const customer_accounts = pgTable("customer_accounts", {
-  id: varchar("id", {
-    length: 255,
-  }).primaryKey(),
+  id: uuid("id").defaultRandom().primaryKey(),
   email: text("email").notNull().unique(),
   hash: text("hash").notNull(),
   status: status("status").notNull(),

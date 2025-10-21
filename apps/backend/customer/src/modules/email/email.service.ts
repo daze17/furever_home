@@ -45,7 +45,9 @@ export class EmailService {
     email,
     context,
   }: RegisterVerificationEmailToCustomer) {
-    const frontendUrl = this.configService.get<string>("frontend.url");
+    const frontendUrl = this.configService.get<string>(
+      "email.customerFrontendUrl",
+    );
     await this.sendEmail({
       to: email,
       title: "[Furever Home] Verify Account",

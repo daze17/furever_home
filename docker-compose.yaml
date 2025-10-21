@@ -35,6 +35,16 @@ services:
       timeout: 5s
       retries: 5
 
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mailhog_fureverhome
+    restart: always
+    ports:
+      - 1025:1025 # SMTP server
+      - 8025:8025 # Web UI
+    networks:
+      - app_network
+
   customer_backend:
     container_name: customer_backend
     build:
