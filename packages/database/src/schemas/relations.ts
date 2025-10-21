@@ -42,7 +42,7 @@ export const customer_accountsRelations = relations(
   customer_accounts,
   ({ one }) => ({
     customer: one(customers, {
-      fields: [customer_accounts.customerId],
+      fields: [customer_accounts.customer_id],
       references: [customers.id],
     }),
   }),

@@ -110,31 +110,31 @@ async function seed() {
           email: "john.smith@example.com",
           hash: HASHED_PASSWORD,
           status: "active",
-          customerId: customersData[0].id,
+          customer_id: customersData[0].id,
         },
         {
           email: "sarah.johnson@example.com",
           hash: HASHED_PASSWORD,
           status: "active",
-          customerId: customersData[1].id,
+          customer_id: customersData[1].id,
         },
         {
           email: "michael.chen@example.com",
           hash: HASHED_PASSWORD,
           status: "active",
-          customerId: customersData[2].id,
+          customer_id: customersData[2].id,
         },
         {
           email: "emily.rodriguez@example.com",
           hash: HASHED_PASSWORD,
           status: "active",
-          customerId: customersData[3].id,
+          customer_id: customersData[3].id,
         },
         {
           email: "david.williams@example.com",
           hash: HASHED_PASSWORD,
           status: "active",
-          customerId: customersData[4].id,
+          customer_id: customersData[4].id,
         },
       ])
       .returning();

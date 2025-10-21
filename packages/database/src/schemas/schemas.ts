@@ -55,7 +55,7 @@ export const customer_accounts = pgTable("customer_accounts", {
   email: text("email").notNull().unique(),
   hash: text("hash").notNull(),
   status: status("status").notNull(),
-  customerId: uuid("customer_id").references(() => customers.id, {
+  customer_id: uuid("customer_id").references(() => customers.id, {
     onDelete: "cascade",
   }),
   ...timestamps,
