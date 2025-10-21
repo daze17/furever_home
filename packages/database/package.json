@@ -14,7 +14,9 @@
   "scripts": {
     "build": "tsup",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit push"
+    "db:migrate": "drizzle-kit push",
+    "db:seed": "tsx src/seed.ts",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "dotenv": "^16.5.0",
@@ -26,6 +28,7 @@
     "@types/node": "^22.14.1",
     "drizzle-kit": "^0.31.0",
     "tsup": "^8.4.0",
+    "tsx": "^4.19.2",
     "typescript": "^5.8.3"
   }
 }

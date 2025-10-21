@@ -1,4 +1,24 @@
 services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres_db
+    restart: always
+    ports:
+      - ${POSTGRES_PORT:-5432}:5432
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-furever_home}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   customer_backend:
     container_name: customer_backend
     build:
@@ -16,9 +36,9 @@ services:
       interval: 5s
       timeout: 5s
       retries: 3
-    # depends_on:
-    # mysql:
-    #   condition: service_healthy
+    depends_on:
+      postgres:
+        condition: service_healthy
     # redis:
     #   condition: service_healthy
   minio:
@@ -45,6 +65,9 @@ services:
       ]
     networks:
       - app_network
+
+volumes:
+  postgres_data:
 
 networks:
   app_network:
