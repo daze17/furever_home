@@ -2,14 +2,14 @@ import { z } from "zod";
 
 import { c } from "@/contract";
 import {
-  CreateProfileRequestBody,
+  CreateCustomerProfileRequestBody,
   LoginCredentialsRequestBody,
   LoginGoogleRequestBody,
   RegisterGoogleRequestBody,
   RegisterWithEmailRequestBody,
   TokenResponseBody,
   VerifyAccountRequestBody,
-} from "../schemas/dtos/auth";
+} from "@/schemas/dtos";
 import { CustomError } from "@/models/custom_error";
 
 export const authContract = c.router({
@@ -64,17 +64,17 @@ export const authContract = c.router({
     },
     summary: "verify email by verify url",
   },
-  createProfile: {
+  createCustomerProfile: {
     method: "POST",
-    path: "/register/create_profile",
-    body: CreateProfileRequestBody,
+    path: "/register/create_customer_profile",
+    body: CreateCustomerProfileRequestBody,
     responses: {
       201: z.object({}),
       400: CustomError,
     },
-    summary: "create profile",
+    summary: "create customer profile",
   },
-  // getProfile: {
+  // getCustomerProfile: {
   //   method: "GET",
   //   path: "/profile",
   //   responses: {

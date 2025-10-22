@@ -104,6 +104,22 @@ export class AuthController {
     );
   }
 
+  @TsRestHandler(customerContract.auth.createCustomerProfile)
+  async createProfile() {
+    return tsRestHandler(
+      customerContract.auth.createCustomerProfile,
+      async ({ body }) => {
+        // TODO: take account id from cls
+        await this.authService.createCustomerProfile("account_id", body);
+
+        return {
+          status: 201,
+          body: {},
+        };
+      },
+    );
+  }
+
   @TsRestHandler(customerContract.auth.verifyAccount)
   async verifyAccount() {
     return tsRestHandler(
