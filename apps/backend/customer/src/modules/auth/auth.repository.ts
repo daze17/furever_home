@@ -1,5 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import {
+  CreateCustomerProfileRequestBody,
   CustomerAccountModel,
   RegisterGoogleRequestBody,
   RegisterWithEmailRequestBody,
@@ -73,6 +74,47 @@ export class AuthRepository {
       .then((userKey) => userKey.find(Boolean)!);
 
     return customerAccounts.id;
+  }
+
+  async createCustomerProfileAndAssignToAccount(
+    accountId: string,
+    data: CreateCustomerProfileRequestBody,
+  ) {
+    const {
+      first_name,
+      last_name,
+      nickname,
+      address,
+      phone,
+      profile_image_url,
+      gender,
+      zip_code,
+    } = data;
+
+    await this.db.transaction(async (transaction) => {
+      const customerIds = await transaction
+        .insert(customers)
+        .values({
+          first_name,
+          last_name,
+          nickname,
+          address,
+          phone,
+          profile_image_url,
+          gender,
+          zip_code,
+        })
+        .returning({ id: customers.id });
+      const customerId = customerIds.find(Boolean)!.id;
+
+      await transaction
+        .update(customer_accounts)
+        .set({
+          status: "active",
+          customer_id: customerId,
+        })
+        .where(eq(customer_accounts.id, accountId));
+    });
   }
 
   async updateCustomerAccount(

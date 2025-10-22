@@ -71,12 +71,15 @@ export class AuthService {
     accountId: string,
     body: CreateCustomerProfileRequestBody,
   ) {
-    const customerProfileId =
-      await this.customerRepository.createCustomerProfile(body);
-    await this.authRepository.updateCustomerAccount(accountId, {
-      status: "active",
-      customer_id: customerProfileId,
-    });
+    const profile =
+      await this.customerRepository.getCustomerProfileByAccountId(accountId);
+    if (profile) {
+      throw new BadRequestException("PROFILE_ALREADY_EXISTS");
+    }
+    await this.authRepository.createCustomerProfileAndAssignToAccount(
+      accountId,
+      body,
+    );
   }
 
   async verifyAccount({ token, newPassword }: VerifyAccountRequestBody) {

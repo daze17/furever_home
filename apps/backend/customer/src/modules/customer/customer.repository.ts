@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { CreateCustomerProfileRequestBody } from "customer_api";
-import { customers } from "database";
-import { and, eq } from "drizzle-orm";
+import { customer_accounts, customers } from "database";
+import { and, eq, exists } from "drizzle-orm";
 
 import type { Database } from "@/modules/database/database.providers";
 
@@ -17,6 +17,25 @@ export class CustomerRepository {
     return profile;
   }
 
+  async getCustomerProfileByAccountId(accountId: string) {
+    const profile = await this.db.query.customers.findFirst({
+      where: exists(
+        this.db
+          .select()
+          .from(customer_accounts)
+          .where(
+            and(
+              eq(customer_accounts.customer_id, customers.id),
+              eq(customer_accounts.id, accountId),
+            ),
+          ),
+      ),
+    });
+    if (!profile) return null;
+
+    return profile;
+  }
+
   async createCustomerProfile(data: CreateCustomerProfileRequestBody) {
     const {
       first_name,
@@ -28,20 +47,15 @@ export class CustomerRepository {
       gender,
       zip_code,
     } = data;
-    const customerIds = await this.db
-      .insert(customers)
-      .values({
-        first_name,
-        last_name,
-        nickname,
-        address,
-        phone,
-        profile_image_url,
-        gender,
-        zip_code,
-      })
-      .returning({ id: customers.id });
-    const customerId = customerIds.find(Boolean)!.id;
-    return customerId;
+    await this.db.insert(customers).values({
+      first_name,
+      last_name,
+      nickname,
+      address,
+      phone,
+      profile_image_url,
+      gender,
+      zip_code,
+    });
   }
 }
