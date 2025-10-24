@@ -36,14 +36,21 @@ Review all staged and unstaged changes in the current branch, then create a pull
    - Push to remote repository
    - Create pull request with comprehensive description
 
-5. **Review Output**:
+5. **Issue and PR Creation**:
+   - If critical issues are found, create a GitHub issue documenting all high-severity problems
+   - Include issue number in PR description
+   - ALWAYS create the PR regardless of issues found
+   - Link the GitHub issue in the PR description if critical issues exist
+
+6. **Review Output**:
    - Provide detailed code review feedback
    - List strengths, issues (by severity), and suggestions
    - Include checklist for type safety, error handling, tests, docs, security, performance
-   - Only create PR if no high-severity issues found
-   - Return PR link when complete
+   - Return both issue link (if created) and PR link when complete
 
 **IMPORTANT**:
-- Block PR creation if high-severity security vulnerabilities, breaking changes without migration path, or broken core functionality are present
+- If high-severity issues are found, create a GitHub issue first, then proceed with PR creation
+- Always create the PR - do not block PR creation
+- Link any critical issues in the PR description for visibility
 - Provide constructive, educational feedback
 - Ensure all changes align with Furever Home monorepo architecture
