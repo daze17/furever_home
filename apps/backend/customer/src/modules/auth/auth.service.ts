@@ -9,6 +9,7 @@ import { JwtService } from "@nestjs/jwt";
 import bcrypt from "bcryptjs";
 import { Queue } from "bullmq";
 import {
+  CreateCustomerProfileRequestBody,
   RegisterGoogleRequestBody,
   RegisterWithEmailRequestBody,
   VerifyAccountRequestBody,
@@ -20,6 +21,7 @@ import {
 } from "@/common/constants/queue.constants";
 import { RegisterVerificationEmailToCustomer } from "@/common/interfaces/email.interface";
 import { generateJWT } from "@/common/utils";
+import { CustomerRepository } from "@/modules/customer/customer.repository";
 
 import { AuthRepository } from "./auth.repository";
 
@@ -31,6 +33,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly authRepository: AuthRepository,
+    private readonly customerRepository: CustomerRepository,
   ) {}
 
   async registerGoogle(body: RegisterGoogleRequestBody) {
@@ -64,9 +67,19 @@ export class AuthService {
     await this.sendVerificationEmail(customerAccountId, body.email);
   }
 
-  async createProfile(body: VerifyAccountRequestBody, accountId: string) {
-    // TODO:
-    // await this.authRepository.createProfile(body.profile, accountId);
+  async createCustomerProfile(
+    accountId: string,
+    body: CreateCustomerProfileRequestBody,
+  ) {
+    const profile =
+      await this.customerRepository.getCustomerProfileByAccountId(accountId);
+    if (profile) {
+      throw new BadRequestException("PROFILE_ALREADY_EXISTS");
+    }
+    await this.authRepository.createCustomerProfileAndAssignToAccount(
+      accountId,
+      body,
+    );
   }
 
   async verifyAccount({ token, newPassword }: VerifyAccountRequestBody) {
@@ -96,7 +109,10 @@ export class AuthService {
     const hash = await bcrypt.hash(newPassword, salt);
 
     // TODO: send email
-    await this.authRepository.verifyAccount(account.id, hash);
+    await this.authRepository.updateCustomerAccount(account.id, {
+      status: "active",
+      hash,
+    });
   }
 
   private async sendVerificationEmail(

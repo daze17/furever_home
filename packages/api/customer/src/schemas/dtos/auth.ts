@@ -48,18 +48,6 @@ export type GoogleRegisterResponseBody = z.infer<
   typeof GoogleRegisterResponseBody
 >;
 
-export const CreateProfileRequestBody = CustomerModel.pick({
-  first_name: true,
-  last_name: true,
-  nickname: true,
-  address: true,
-  phone: true,
-  profile_image_url: true,
-  gender: true,
-  zip_code: true,
-});
-export type CreateProfileRequestBody = z.infer<typeof CreateProfileRequestBody>;
-
 export const VerifyAccountRequestBody = z.object({
   token: z.string(),
   newPassword: z.string().regex(passwordRegex),
@@ -70,23 +58,29 @@ export type VerifyAccountRequestBody = z.infer<typeof VerifyAccountRequestBody>;
 // export const RegisterWithPhoneSchema = CustomerAccountModel.pick({ phoneNumber: true });
 // export type RegisterWithPhoneSchema = z.infer<typeof RegisterWithPhoneSchema>;
 
-// export const CreateProfileSchema = UserModel.pick({
-//   firstName: true,
-//   lastName: true,
-//   address: true,
-//   zipCode: true,
-//   birthdate: true,
-//   profileImage: true,
-//   gender: true,
-//   about: true,
-// }).extend({ birthdate: z.coerce.date(), profileImage: z.string().nullable() });
-// export type CreateProfileSchema = z.infer<typeof CreateProfileSchema>;
-
 export const SessionSchema = z.object({
   // user: UserModel.nullable(),
   sub: z.string(),
 });
 export type SessionSchema = z.infer<typeof SessionSchema>;
+
+export const AccountResponseBody = CustomerAccountModel.pick({
+  id: true,
+  email: true,
+  status: true,
+  customer_id: true,
+}).extend({
+  created_at: z.coerce.date(),
+  updated_at: z.coerce.date(),
+  // id: uuid("id").defaultRandom().primaryKey(),
+  // email: text("email").notNull().unique(),
+  // hash: text("hash").notNull(),
+  // status: status("status").notNull(),
+  // customer_id: uuid("customer_id").references(() => customers.id, {
+  //   onDelete: "cascade",
+  // }),
+});
+export type AccountResponseBody = z.infer<typeof AccountResponseBody>;
 
 // export const UserProfileResponse = UserModel;
 // export type UserProfileResponse = z.infer<typeof UserProfileResponse>;

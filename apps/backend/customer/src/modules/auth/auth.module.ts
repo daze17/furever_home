@@ -8,6 +8,7 @@ import { JwtAuthGuard } from "@/common/guards/jwt_auth.guard";
 // import { GoogleStrategy } from '@/common/strategies/google_oauth.strategy';
 import { JwtStrategy } from "@/common/strategies/jwt.strategy";
 import { LocalStrategy } from "@/common/strategies/local.strategy";
+import { CustomerModule } from "@/modules/customer/customer.module";
 import { EmailQueueModule } from "@/modules/email_queue/email_queue.module";
 
 import { AuthController } from "./auth.controller";
@@ -16,6 +17,7 @@ import { AuthService } from "./auth.service";
 
 @Module({
   imports: [
+    CustomerModule,
     forwardRef(() => EmailQueueModule),
     JwtModule.registerAsync({
       imports: [ConfigModule],

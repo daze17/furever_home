@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import {
-  CreateProfileRequestBody,
+  CreateCustomerProfileRequestBody,
+  CustomerAccountModel,
   RegisterGoogleRequestBody,
   RegisterWithEmailRequestBody,
 } from "customer_api";
@@ -12,14 +13,6 @@ import type { Database } from "@/modules/database/database.providers";
 @Injectable()
 export class AuthRepository {
   constructor(@Inject("DATABASE") private readonly db: Database) {}
-
-  async getProfileById(id: string) {
-    const profile = await this.db.query.customers.findFirst({
-      where: eq(customers.id, id),
-    });
-
-    return profile;
-  }
 
   async getAccountByEmail(email: string) {
     const account = await this.db.query.customer_accounts.findFirst({
@@ -56,7 +49,7 @@ export class AuthRepository {
       ).find(Boolean)!;
 
       await transaction.insert(customer_accounts).values({
-        customerId: customer.id,
+        customer_id: customer.id,
         email: body.email,
         hash: "hash",
         status: "active",
@@ -72,7 +65,7 @@ export class AuthRepository {
     const customerAccounts = await this.db
       .insert(customer_accounts)
       .values({
-        customerId: null,
+        customer_id: null,
         email: body.email,
         hash: "hash",
         status: "pending",
@@ -83,38 +76,57 @@ export class AuthRepository {
     return customerAccounts.id;
   }
 
-  // TODO: drizzle zod returns unknown degrade version
-  async createProfile(body: CreateProfileRequestBody, accountId: string) {
+  async createCustomerProfileAndAssignToAccount(
+    accountId: string,
+    data: CreateCustomerProfileRequestBody,
+  ) {
+    const {
+      first_name,
+      last_name,
+      nickname,
+      address,
+      phone,
+      profile_image_url,
+      gender,
+      zip_code,
+    } = data;
+
     await this.db.transaction(async (transaction) => {
       const customerIds = await transaction
         .insert(customers)
         .values({
-          first_name: body.first_name || "",
-          last_name: body.last_name || "",
-          nickname: body.nickname,
-          address: body.address,
-          phone: body.phone,
-          profile_image_url: body.profile_image_url,
-          gender: body.gender || "other",
-          zip_code: body.zip_code,
+          first_name,
+          last_name,
+          nickname,
+          address,
+          phone,
+          profile_image_url,
+          gender,
+          zip_code,
         })
         .returning({ id: customers.id });
       const customerId = customerIds.find(Boolean)!.id;
 
       await transaction
         .update(customer_accounts)
-        .set({ customerId, status: "active" })
+        .set({
+          status: "active",
+          customer_id: customerId,
+        })
         .where(eq(customer_accounts.id, accountId));
     });
   }
 
-  async verifyAccount(accountId: string, newHash: string) {
+  async updateCustomerAccount(
+    accountId: string,
+    data: Partial<
+      Pick<CustomerAccountModel, "email" | "hash" | "status" | "customer_id">
+    >,
+  ) {
+    const { email, hash, status, customer_id } = data;
     await this.db
       .update(customer_accounts)
-      .set({
-        status: "active",
-        hash: newHash,
-      })
+      .set({ email, hash, status, customer_id })
       .where(eq(customer_accounts.id, accountId));
   }
 }
