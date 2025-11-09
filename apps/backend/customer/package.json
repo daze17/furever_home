@@ -42,6 +42,7 @@
     "bcryptjs": "^3.0.2",
     "bullmq": "^5.49.2",
     "customer_api": "workspace:*",
+    "common_api": "workspace:*",
     "database": "workspace:*",
     "date-fns": "^4.1.0",
     "devalue": "^5.1.1",
