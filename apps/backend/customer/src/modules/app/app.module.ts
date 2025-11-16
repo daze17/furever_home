@@ -12,6 +12,7 @@ import { PetsModule } from '@/modules/pets/pets.module';
 import { DatabaseModule } from '../database/database.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { HealthModule } from './health.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { AppService } from './app.service';
     EmailQueueModule,
     PetsModule,
     DatabaseModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

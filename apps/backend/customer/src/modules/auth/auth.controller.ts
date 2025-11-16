@@ -11,7 +11,7 @@ import { generateJWT } from "@/common/utils";
 import { AuthRepository } from "./auth.repository";
 import { AuthService } from "./auth.service";
 
-@Controller()
+@Controller("auth")
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
