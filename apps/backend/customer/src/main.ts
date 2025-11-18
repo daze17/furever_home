@@ -28,7 +28,11 @@ async function bootstrap() {
   });
   adapter.enableCors({
     // TODO: env
-    origin: ["http://localhost:3001", "https://localhost:3000"],
+    origin: [
+      "http://localhost:3001",
+      "https://localhost:3000",
+      "http://localhost:3000",
+    ],
   });
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,

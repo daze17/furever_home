@@ -6,6 +6,7 @@ import { createSession, sessionName } from "@/utils/create_session";
 
 export const GET = () => {
   const session = cookies().get(sessionName)?.value;
+  if (!session) return NextResponse.json(null);
 
   return NextResponse.json(session);
 };
