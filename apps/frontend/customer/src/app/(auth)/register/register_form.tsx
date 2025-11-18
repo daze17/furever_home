@@ -63,7 +63,8 @@ export const RegisterForm: React.FC<Props> = ({ redirectTo }) => {
           });
 
           setIsPending(false);
-          router.push("/");
+          console.log("sucessful");
+          // router.push("/");
           break;
         case 400:
           toast({

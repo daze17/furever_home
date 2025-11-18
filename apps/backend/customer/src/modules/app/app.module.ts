@@ -7,10 +7,12 @@ import { LoggerModule } from 'nestjs-pino';
 import { configuration, validate } from '@/common/config/configuration';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { EmailQueueModule } from '@/modules/email_queue/email_queue.module';
+import { PetsModule } from '@/modules/pets/pets.module';
 
 import { DatabaseModule } from '../database/database.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { HealthModule } from './health.module';
 
 @Module({
   imports: [
@@ -53,7 +55,9 @@ import { AppService } from './app.service';
     }),
     AuthModule,
     EmailQueueModule,
+    PetsModule,
     DatabaseModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
