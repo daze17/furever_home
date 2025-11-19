@@ -5,6 +5,7 @@ import {
   CreateCustomerProfileRequestBody,
   LoginCredentialsRequestBody,
   LoginGoogleRequestBody,
+  RateLimitError,
   RegisterGoogleRequestBody,
   RegisterWithEmailRequestBody,
   TokenResponseBody,
@@ -51,8 +52,9 @@ export const authContract = c.router({
     responses: {
       201: z.object({}),
       400: CustomError,
+      429: RateLimitError,
     },
-    summary: "register google",
+    summary: "register credentials",
   },
   verifyAccount: {
     method: "POST",

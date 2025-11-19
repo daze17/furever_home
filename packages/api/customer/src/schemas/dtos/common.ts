@@ -5,3 +5,8 @@ import { z } from "zod";
 // export const ErrorResponseBody = CustomError;
 
 // export const EmptyResponseBody = z.object({});
+
+export const RateLimitError = z.object({
+  message: z.string(),
+  retry_after: z.number(),
+});

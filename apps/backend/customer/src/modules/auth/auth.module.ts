@@ -4,6 +4,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
 
 import { configuration } from "@/common/config/configuration";
+import { EmailRateLimitGuard } from "@/common/guards/email_rate_limit.guard";
 import { JwtAuthGuard } from "@/common/guards/jwt_auth.guard";
 // import { GoogleStrategy } from '@/common/strategies/google_oauth.strategy';
 import { JwtStrategy } from "@/common/strategies/jwt.strategy";
@@ -39,6 +40,7 @@ import { AuthService } from "./auth.service";
     AuthRepository,
     JwtStrategy,
     JwtAuthGuard,
+    EmailRateLimitGuard,
     // GoogleStrategy,
     LocalStrategy,
   ],
