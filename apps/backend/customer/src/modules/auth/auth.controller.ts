@@ -5,6 +5,8 @@ import { customerContract } from "customer_api";
 import { ClsService } from "nestjs-cls";
 
 import { CLS_KEYS } from "@/common/constants/cls.constants";
+import { EmailRateLimit } from "@/common/decorators/email_rate_limit.decorator";
+import { EmailRateLimitGuard } from "@/common/guards/email_rate_limit.guard";
 import { LocalAuthGuard } from "@/common/guards/local_auth.guard";
 import { generateJWT } from "@/common/utils";
 
@@ -90,6 +92,8 @@ export class AuthController {
     );
   }
 
+  @UseGuards(EmailRateLimitGuard)
+  @EmailRateLimit(60)
   @TsRestHandler(customerContract.auth.registerCredentials)
   async registerCredentials() {
     return tsRestHandler(

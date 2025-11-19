@@ -3,6 +3,7 @@ export const authRoutes: (string | RegExp)[] = [
   /^\/login\/.*$/,
   "/register",
   /^\/register.*$/,
+  "/email_sent",
 ];
 export const publicRoutes: (string | RegExp)[] = [
   "/",

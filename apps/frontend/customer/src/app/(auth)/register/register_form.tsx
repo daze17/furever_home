@@ -64,7 +64,8 @@ export const RegisterForm: React.FC<Props> = ({ redirectTo }) => {
 
           setIsPending(false);
           console.log("sucessful");
-          // router.push("/");
+          sessionStorage.setItem("registration_email", data.email);
+          router.push("/register/email_sent");
           break;
         case 400:
           toast({
@@ -76,6 +77,21 @@ export const RegisterForm: React.FC<Props> = ({ redirectTo }) => {
           toast({
             title: "Invalid token",
           });
+          setIsPending(false);
+          break;
+        case 429:
+          const retryAfter = response.body.retry_after;
+          sessionStorage.setItem("registration_email", data.email);
+          sessionStorage.setItem(
+            "last_resend_timestamp",
+            (Date.now() - (60 - retryAfter) * 1000).toString()
+          );
+          toast({
+            title: "Too many requests",
+            description: `Please wait ${retryAfter} seconds before trying again.`,
+            variant: "destructive",
+          });
+          router.push("/register/email_sent");
           setIsPending(false);
           break;
         default:
