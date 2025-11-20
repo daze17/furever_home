@@ -59,7 +59,7 @@ export const RegisterForm: React.FC<Props> = ({ redirectTo }) => {
         case 201:
           // TODO: loading
           toast({
-            title: "Success",
+            title: "Амжилттай",
           });
 
           setIsPending(false);
@@ -69,13 +69,13 @@ export const RegisterForm: React.FC<Props> = ({ redirectTo }) => {
           break;
         case 400:
           toast({
-            title: "Bad request",
+            title: "Буруу хүсэлт",
           });
           setIsPending(false);
           break;
         case 401:
           toast({
-            title: "Invalid token",
+            title: "Токен буруу байна",
           });
           setIsPending(false);
           break;
@@ -87,8 +87,8 @@ export const RegisterForm: React.FC<Props> = ({ redirectTo }) => {
             (Date.now() - (60 - retryAfter) * 1000).toString()
           );
           toast({
-            title: "Too many requests",
-            description: `Please wait ${retryAfter} seconds before trying again.`,
+            title: "Хэт олон хүсэлт",
+            description: `${retryAfter} секунд хүлээнэ үү.`,
             variant: "destructive",
           });
           router.push("/register/email_sent");
@@ -98,8 +98,8 @@ export const RegisterForm: React.FC<Props> = ({ redirectTo }) => {
       }
     } catch (error) {
       toast({
-        title: "Error",
-        description: "UNKNOWN_ERROR",
+        title: "Алдаа",
+        description: "Тодорхойгүй алдаа гарлаа",
       });
     } finally {
       setIsPending(false);
@@ -125,7 +125,7 @@ export const RegisterForm: React.FC<Props> = ({ redirectTo }) => {
               </div>
               <div className="relative flex justify-center text-xs uppercase">
                 <span className="bg-background px-2 text-muted-foreground">
-                  {`Or continue with`}
+                  {`Эсвэл үргэлжлүүлэх`}
                 </span>
               </div>
             </div>
@@ -144,7 +144,7 @@ export const RegisterForm: React.FC<Props> = ({ redirectTo }) => {
                           {...field}
                           value={field.value ?? ""}
                           disabled={form.formState.isSubmitting}
-                          placeholder={"email"}
+                          placeholder={"Имэйл"}
                         />
                       </>
                     </FormControl>
@@ -160,7 +160,7 @@ export const RegisterForm: React.FC<Props> = ({ redirectTo }) => {
               className="w-full"
               tabIndex={isPending ? -1 : undefined}
             >
-              {`Register`}
+              {`Бүртгүүлэх`}
             </Button>
           </CardContent>
         </Card>

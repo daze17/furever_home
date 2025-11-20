@@ -59,8 +59,8 @@ export const EmailSentForm = () => {
   const handleResendEmail = async () => {
     if (!email) {
       toast({
-        title: "Error",
-        description: "Email address not found. Please try registering again.",
+        title: "Алдаа",
+        description: "Имэйл хаяг олдсонгүй. Дахин бүртгүүлнэ үү.",
         variant: "destructive",
       });
       return;
@@ -77,8 +77,8 @@ export const EmailSentForm = () => {
       switch (response.status) {
         case 201:
           toast({
-            title: "Success",
-            description: "Verification email has been resent successfully.",
+            title: "Амжилттай",
+            description: "Баталгаажуулах имэйл амжилттай дахин илгээгдлээ.",
           });
           // Set the cooldown timer
           sessionStorage.setItem(STORAGE_KEY_LAST_RESEND, Date.now().toString());
@@ -86,8 +86,8 @@ export const EmailSentForm = () => {
           break;
         case 400:
           toast({
-            title: "Error",
-            description: "Failed to resend verification email.",
+            title: "Алдаа",
+            description: "Баталгаажуулах имэйл илгээхэд алдаа гарлаа.",
             variant: "destructive",
           });
           break;
@@ -100,22 +100,22 @@ export const EmailSentForm = () => {
           );
           setCountdown(retryAfter);
           toast({
-            title: "Too many requests",
-            description: `Please wait ${retryAfter} seconds before trying again.`,
+            title: "Хэт олон хүсэлт",
+            description: `${retryAfter} секунд хүлээнэ үү.`,
             variant: "destructive",
           });
           break;
         default:
           toast({
-            title: "Error",
-            description: "An unexpected error occurred.",
+            title: "Алдаа",
+            description: "Тодорхойгүй алдаа гарлаа.",
             variant: "destructive",
           });
       }
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to resend verification email.",
+        title: "Алдаа",
+        description: "Баталгаажуулах имэйл илгээхэд алдаа гарлаа.",
         variant: "destructive",
       });
     } finally {
@@ -133,18 +133,18 @@ export const EmailSentForm = () => {
             <MailIcon className="h-6 w-6 text-green-600" aria-hidden="true" />
           </div>
           <CardTitle className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Check your email
+            Имэйлээ шалгана уу
           </CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-center text-sm text-gray-600">
-            We've sent a verification link to{" "}
-            <span className="font-semibold">{email || "your email address"}</span>
-            . Please click the link to verify your account.
+            Бид таны{" "}
+            <span className="font-semibold">{email || "имэйл хаяг руу"}</span>
+            {" "}баталгаажуулах холбоос илгээлээ. Бүртгэлээ баталгаажуулахын тулд холбоос дээр дарна уу.
           </p>
           <div className="mt-6">
             <p className="text-center text-sm text-gray-600">
-              Didn't receive the email? Check your spam folder or try resending.
+              Имэйл ирээгүй юу? Спам хавтсаа шалгаад дахин илгээлгэнэ үү.
             </p>
           </div>
         </CardContent>
@@ -155,15 +155,15 @@ export const EmailSentForm = () => {
             disabled={isResendDisabled}
           >
             {isPending
-              ? "Sending..."
+              ? "Илгээж байна..."
               : countdown > 0
-                ? `Resend in ${countdown}s`
-                : "Resend verification email"}
+                ? `${countdown} секундын дараа дахин илгээх`
+                : "Баталгаажуулах имэйл дахин илгээх"}
           </Button>
           <Link href="/login" className="w-full">
             <Button variant="outline" className="w-full">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to login
+              Нэвтрэх хуудас руу буцах
             </Button>
           </Link>
         </CardFooter>

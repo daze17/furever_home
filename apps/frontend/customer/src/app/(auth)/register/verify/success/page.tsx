@@ -9,16 +9,15 @@ const VerifySuccessPage: React.Page = () => {
         <div className="text-center">
           <CheckCircle className="mx-auto h-16 w-16 animate-bounce text-green-500" />
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            Account Verified!
+            Бүртгэл баталгаажлаа!
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            Your account has been successfully verified. Please log in again to
-            continue.
+            Таны бүртгэл амжилттай баталгаажлаа. Үргэлжлүүлэхийн тулд дахин нэвтэрнэ үү.
           </p>
         </div>
         <div className="mt-8">
           <Link href="/login" passHref>
-            <Button className="w-full">Go to Login</Button>
+            <Button className="w-full">Нэвтрэх хуудас руу очих</Button>
           </Link>
         </div>
       </div>

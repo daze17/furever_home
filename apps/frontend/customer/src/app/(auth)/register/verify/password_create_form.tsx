@@ -89,7 +89,7 @@ export const PasswordCreateForm: React.FC<Props> = ({ token }) => {
         case 200:
           // TODO: loading
           toast({
-            title: "Success",
+            title: "Амжилттай",
           });
 
           setIsPending(false);
@@ -97,13 +97,13 @@ export const PasswordCreateForm: React.FC<Props> = ({ token }) => {
           break;
         case 400:
           toast({
-            title: "Bad request",
+            title: "Буруу хүсэлт",
           });
           setIsPending(false);
           break;
         case 401:
           toast({
-            title: "Invalid token",
+            title: "Токен буруу байна",
           });
           setIsPending(false);
           break;
@@ -111,8 +111,8 @@ export const PasswordCreateForm: React.FC<Props> = ({ token }) => {
       }
     } catch (error) {
       toast({
-        title: "Error",
-        description: "UNKNOWN_ERROR",
+        title: "Алдаа",
+        description: "Тодорхойгүй алдаа гарлаа",
       });
     } finally {
       setIsPending(false);
@@ -123,7 +123,7 @@ export const PasswordCreateForm: React.FC<Props> = ({ token }) => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         {/* form label */}
-        <h1 className="font-bold">Password</h1>
+        <h1 className="font-bold">Нууц үг</h1>
         <fieldset disabled={isPending} className="flex flex-col gap-y-5">
           <FormField
             control={form.control}
@@ -137,7 +137,7 @@ export const PasswordCreateForm: React.FC<Props> = ({ token }) => {
                       value={field.value ?? ""}
                       disabled={form.formState.isSubmitting}
                       type="password"
-                      placeholder={"password"}
+                      placeholder={"Нууц үг"}
                     />
                   </>
                 </FormControl>
@@ -157,7 +157,7 @@ export const PasswordCreateForm: React.FC<Props> = ({ token }) => {
                       value={field.value ?? ""}
                       disabled={form.formState.isSubmitting}
                       type="password"
-                      placeholder={"password again"}
+                      placeholder={"Нууц үг дахин оруулах"}
                     />
                   </>
                 </FormControl>
