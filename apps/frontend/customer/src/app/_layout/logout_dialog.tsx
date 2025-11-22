@@ -60,9 +60,7 @@ export const LogoutDialog: React.FC = () => {
                   router.push("/");
                   router.refresh();
                 });
-                toast({
-                  title: "You have been logged out.",
-                });
+                toast.success("Амжилттай гарлаа");
                 setIsOpen(false);
               } catch (error) {
                 console.log(error);

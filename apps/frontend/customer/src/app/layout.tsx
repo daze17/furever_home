@@ -1,7 +1,8 @@
-import "ui/styles/globals.css";
-
 import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
+
+import { Toaster } from "ui";
+import "ui/styles/globals.css";
 import { cn } from "utils";
 
 import { GlobalTransition } from "@/components/global_transition";
@@ -34,6 +35,7 @@ export default function RootLayout({
         <main className="mt-[80px]">{children}</main>
         <Footer />
         <GlobalTransition />
+        <Toaster />
       </body>
     </html>
   );

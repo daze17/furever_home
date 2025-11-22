@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { ArrowLeft, MailIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -40,7 +40,7 @@ export const EmailSentForm = () => {
     const lastResendTimestamp = sessionStorage.getItem(STORAGE_KEY_LAST_RESEND);
     if (lastResendTimestamp) {
       const timeSinceLastResend = Math.floor(
-        (Date.now() - parseInt(lastResendTimestamp)) / 1000
+        (Date.now() - parseInt(lastResendTimestamp)) / 1000,
       );
       const remainingCooldown = COOLDOWN_SECONDS - timeSinceLastResend;
       if (remainingCooldown > 0) {
@@ -58,10 +58,8 @@ export const EmailSentForm = () => {
 
   const handleResendEmail = async () => {
     if (!email) {
-      toast({
-        title: "Алдаа",
+      toast.error("Алдаа", {
         description: "Имэйл хаяг олдсонгүй. Дахин бүртгүүлнэ үү.",
-        variant: "destructive",
       });
       return;
     }
@@ -76,19 +74,20 @@ export const EmailSentForm = () => {
 
       switch (response.status) {
         case 201:
-          toast({
-            title: "Амжилттай",
+          toast.success("Амжилттай", {
             description: "Баталгаажуулах имэйл амжилттай дахин илгээгдлээ.",
           });
           // Set the cooldown timer
-          sessionStorage.setItem(STORAGE_KEY_LAST_RESEND, Date.now().toString());
+          sessionStorage.setItem(
+            STORAGE_KEY_LAST_RESEND,
+            Date.now().toString(),
+          );
           setCountdown(COOLDOWN_SECONDS);
           break;
         case 400:
-          toast({
-            title: "Алдаа",
+          toast.error("Алдаа", {
             description: "Баталгаажуулах имэйл илгээхэд алдаа гарлаа.",
-            variant: "destructive",
+            // variant: "destructive",
           });
           break;
         case 429:
@@ -96,27 +95,21 @@ export const EmailSentForm = () => {
           const retryAfter = response.body.retry_after;
           sessionStorage.setItem(
             STORAGE_KEY_LAST_RESEND,
-            (Date.now() - (COOLDOWN_SECONDS - retryAfter) * 1000).toString()
+            (Date.now() - (COOLDOWN_SECONDS - retryAfter) * 1000).toString(),
           );
           setCountdown(retryAfter);
-          toast({
-            title: "Хэт олон хүсэлт",
+          toast.error("Хэт олон хүсэлт", {
             description: `${retryAfter} секунд хүлээнэ үү.`,
-            variant: "destructive",
           });
           break;
         default:
-          toast({
-            title: "Алдаа",
+          toast.error("Алдаа", {
             description: "Тодорхойгүй алдаа гарлаа.",
-            variant: "destructive",
           });
       }
     } catch (error) {
-      toast({
-        title: "Алдаа",
+      toast.error("Алдаа", {
         description: "Баталгаажуулах имэйл илгээхэд алдаа гарлаа.",
-        variant: "destructive",
       });
     } finally {
       setIsPending(false);
@@ -139,8 +132,9 @@ export const EmailSentForm = () => {
         <CardContent>
           <p className="text-center text-sm text-gray-600">
             Бид таны{" "}
-            <span className="font-semibold">{email || "имэйл хаяг руу"}</span>
-            {" "}баталгаажуулах холбоос илгээлээ. Бүртгэлээ баталгаажуулахын тулд холбоос дээр дарна уу.
+            <span className="font-semibold">{email || "имэйл хаяг руу"}</span>{" "}
+            баталгаажуулах холбоос илгээлээ. Бүртгэлээ баталгаажуулахын тулд
+            холбоос дээр дарна уу.
           </p>
           <div className="mt-6">
             <p className="text-center text-sm text-gray-600">

@@ -57,26 +57,19 @@ export const RegisterForm: React.FC<Props> = ({ redirectTo }) => {
 
       switch (response.status) {
         case 201:
-          // TODO: loading
-          toast({
-            title: "Амжилттай",
+          toast.success("Амжилттай", {
+            description: "Баталгаажуулах имэйл илгээгдлээ",
           });
-
           setIsPending(false);
-          console.log("sucessful");
           sessionStorage.setItem("registration_email", data.email);
           router.push("/register/email_sent");
           break;
         case 400:
-          toast({
-            title: "Буруу хүсэлт",
-          });
+          toast.error("Буруу хүсэлт");
           setIsPending(false);
           break;
         case 401:
-          toast({
-            title: "Токен буруу байна",
-          });
+          toast.error("Токен буруу байна");
           setIsPending(false);
           break;
         case 429:
@@ -84,12 +77,10 @@ export const RegisterForm: React.FC<Props> = ({ redirectTo }) => {
           sessionStorage.setItem("registration_email", data.email);
           sessionStorage.setItem(
             "last_resend_timestamp",
-            (Date.now() - (60 - retryAfter) * 1000).toString()
+            (Date.now() - (60 - retryAfter) * 1000).toString(),
           );
-          toast({
-            title: "Хэт олон хүсэлт",
+          toast.error("Хэт олон хүсэлт", {
             description: `${retryAfter} секунд хүлээнэ үү.`,
-            variant: "destructive",
           });
           router.push("/register/email_sent");
           setIsPending(false);
@@ -97,8 +88,7 @@ export const RegisterForm: React.FC<Props> = ({ redirectTo }) => {
         default:
       }
     } catch (error) {
-      toast({
-        title: "Алдаа",
+      toast.error("Алдаа", {
         description: "Тодорхойгүй алдаа гарлаа",
       });
     } finally {

@@ -1,9 +1,15 @@
 "use client";
 
+import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginCredentialsRequestBody } from "customer_api";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { cn } from "utils";
+import { z } from "zod";
+
 import {
   Button,
   Card,
@@ -16,13 +22,11 @@ import {
   Input,
   toast,
 } from "ui";
-import { GoogleLogin } from "./google_login";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { useState } from "react";
-import { z } from "zod";
-import { LoginCredentialsRequestBody } from "customer_api";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { cn } from "utils";
+
 import { client } from "@/services/client";
+
+import { GoogleLogin } from "./google_login";
 
 type Props = {
   redirectTo?: string;
@@ -57,32 +61,23 @@ export const LoginForm: React.FC<Props> = ({ redirectTo }) => {
 
       switch (response.status) {
         case 201:
-          // TODO: loading
-          toast({
-            title: "Success",
-          });
-
+          toast.success("Амжилттай нэвтэрлээ");
           setIsPending(false);
           router.push("/");
           break;
         case 400:
-          toast({
-            title: "Bad request",
-          });
+          toast.error("Буруу хүсэлт");
           setIsPending(false);
           break;
         case 401:
-          toast({
-            title: "Invalid token",
-          });
+          toast.error("И-мэйл эсвэл нууц үг буруу байна");
           setIsPending(false);
           break;
         default:
       }
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "UNKNOWN_ERROR",
+      toast.error("Алдаа", {
+        description: "Тодорхойгүй алдаа гарлаа",
       });
     } finally {
       setIsPending(false);

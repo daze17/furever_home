@@ -87,31 +87,24 @@ export const PasswordCreateForm: React.FC<Props> = ({ token }) => {
 
       switch (response.status) {
         case 200:
-          // TODO: loading
-          toast({
-            title: "Амжилттай",
+          toast.success("Амжилттай", {
+            description: "Бүртгэл баталгаажлаа",
           });
-
           setIsPending(false);
           router.push("/");
           break;
         case 400:
-          toast({
-            title: "Буруу хүсэлт",
-          });
+          toast.error("Буруу хүсэлт");
           setIsPending(false);
           break;
         case 401:
-          toast({
-            title: "Токен буруу байна",
-          });
+          toast.error("Токен буруу байна");
           setIsPending(false);
           break;
         default:
       }
     } catch (error) {
-      toast({
-        title: "Алдаа",
+      toast.error("Алдаа", {
         description: "Тодорхойгүй алдаа гарлаа",
       });
     } finally {
