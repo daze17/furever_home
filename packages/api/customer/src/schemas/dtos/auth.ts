@@ -18,7 +18,8 @@ export const LoginGoogleRequestBody = z.object({
 export type LoginGoogleRequestBody = z.infer<typeof LoginGoogleRequestBody>;
 
 export const TokenResponseBody = z.object({
-  token: z.string(),
+  accessToken: z.string(),
+  refreshToken: z.string(),
 });
 export type TokenResponseBody = z.infer<typeof TokenResponseBody>;
 

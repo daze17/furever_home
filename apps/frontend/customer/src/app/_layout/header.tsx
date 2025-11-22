@@ -1,23 +1,17 @@
-// import { User } from "api/furever-home";
-import { jwtDecode } from "jwt-decode";
 import { CircleUserRound, Heart, PawPrint } from "lucide-react";
 import { cookies } from "next/headers";
-import Image from "next/image";
 import Link from "next/link";
 import { Button } from "ui/components/ui/button";
 
-import { sessionName } from "@/utils/create_session";
+import { accessTokenName } from "@/utils/create_tokens";
 
 import { MobileNav } from "./mobile_nav";
 import { Navigation } from "./navigation";
 import { ProfileSection } from "./profile_section";
 
 export const Header: React.FC = () => {
-  const appSession = cookies().get(sessionName);
-
-  // const decodedToken = appSession
-  //   ? jwtDecode<{ user: User }>(appSession?.value)
-  //   : null;
+  const accessToken = cookies().get(accessTokenName)?.value;
+  const isAuthenticated = !!accessToken;
   return (
     <header className="fixed top-0 z-50 w-full border-b border-orange-100 bg-white/95 shadow-sm backdrop-blur-md">
       <div className="container mx-auto flex h-[80px] items-center justify-between px-5">
@@ -43,14 +37,8 @@ export const Header: React.FC = () => {
             </Link>
           </Button>
 
-          <Button asChild>
-            <Link href="/login" className="flex items-center gap-2">
-              <CircleUserRound size={20} strokeWidth={2} />
-              <span className="font-medium">Нэвтрэх</span>
-            </Link>
-          </Button>
-          {/* {decodedToken ? (
-            <ProfileSection user={decodedToken.user} />
+          {isAuthenticated ? (
+            <ProfileSection />
           ) : (
             <Button asChild>
               <Link href="/login" className="flex items-center gap-2">
@@ -58,7 +46,7 @@ export const Header: React.FC = () => {
                 <span className="font-medium">Нэвтрэх</span>
               </Link>
             </Button>
-          )} */}
+          )}
         </div>
 
         {/* Mobile Menu */}

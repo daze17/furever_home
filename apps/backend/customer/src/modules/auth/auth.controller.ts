@@ -40,7 +40,7 @@ export class AuthController {
         if (googleAccount.status !== "active") {
           throw new BadRequestException();
         }
-        const token = await generateJWT({
+        const accessToken = await generateJWT({
           expirationTime: this.configService.get<string>(
             "jwt.expiresIn.accessToken",
           )!,
@@ -51,9 +51,20 @@ export class AuthController {
           secret: this.configService.get<string>("jwt.secret.accessToken")!,
         });
 
+        const refreshToken = await generateJWT({
+          expirationTime: this.configService.get<string>(
+            "jwt.expiresIn.refreshToken",
+          )!,
+          payload: {
+            sub: googleAccount.id,
+            user: null,
+          },
+          secret: this.configService.get<string>("jwt.secret.refreshToken")!,
+        });
+
         return {
           status: 201,
-          body: { token },
+          body: { accessToken, refreshToken },
         };
       },
     );
@@ -64,10 +75,11 @@ export class AuthController {
   async loginCredentials() {
     return tsRestHandler(customerContract.auth.loginCredentials, async () => {
       const accessToken = this.cls.get(CLS_KEYS.ACCESS_TOKEN);
+      const refreshToken = this.cls.get(CLS_KEYS.REFRESH_TOKEN);
 
       return {
         status: 201,
-        body: { token: accessToken },
+        body: { accessToken, refreshToken },
       };
     });
   }
@@ -79,17 +91,31 @@ export class AuthController {
       async ({ body }) => {
         const createdUser = await this.authService.registerGoogle(body);
 
-        const token = await generateJWT({
-          expirationTime: this.configService.get<string>("jwt.expiresIn")!,
+        const accessToken = await generateJWT({
+          expirationTime: this.configService.get<string>(
+            "jwt.expiresIn.accessToken",
+          )!,
           payload: {
             sub: createdUser.id,
             user: createdUser,
           },
           secret: this.configService.get<string>("jwt.secret.accessToken")!,
         });
+
+        const refreshToken = await generateJWT({
+          expirationTime: this.configService.get<string>(
+            "jwt.expiresIn.refreshToken",
+          )!,
+          payload: {
+            sub: createdUser.id,
+            user: null,
+          },
+          secret: this.configService.get<string>("jwt.secret.refreshToken")!,
+        });
+
         return {
           status: 201,
-          body: { token },
+          body: { accessToken, refreshToken },
         };
       },
     );
@@ -196,11 +222,23 @@ export class AuthController {
   async refreshToken() {
     return tsRestHandler(customerContract.auth.refreshToken, async () => {
       const account = this.cls.get(CLS_KEYS.CUSTOMER_ACCOUNT);
-      const token = await this.authService.refreshAccessToken(account.id);
+      const accessToken = await this.authService.refreshAccessToken(account.id);
+
+      // Generate new refresh token for token rotation
+      const refreshToken = await generateJWT({
+        expirationTime: this.configService.get<string>(
+          "jwt.expiresIn.refreshToken",
+        )!,
+        payload: {
+          sub: account.id,
+          user: null,
+        },
+        secret: this.configService.get<string>("jwt.secret.refreshToken")!,
+      });
 
       return {
         status: 201,
-        body: { token },
+        body: { accessToken, refreshToken },
       };
     });
   }

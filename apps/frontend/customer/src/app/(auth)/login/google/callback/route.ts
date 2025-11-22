@@ -3,7 +3,12 @@ import { cookies } from "next/headers";
 import { type NextRequest } from "next/server";
 
 import { client } from "@/services/client.server";
-import { defaultOptions, sessionName } from "@/utils/create_session";
+import {
+  accessTokenName,
+  createAccessTokenCookie,
+  createRefreshTokenCookie,
+  refreshTokenName,
+} from "@/utils/create_tokens";
 
 export const runtime = "edge";
 export const POST = async (request: NextRequest) => {
@@ -43,9 +48,24 @@ export const POST = async (request: NextRequest) => {
         },
       });
     }
-    const token = response.body.token;
+    const { accessToken, refreshToken } = response.body;
 
-    cookies().set(sessionName, token, defaultOptions);
+    // Set both tokens as cookies
+    const cookiesInstance = cookies();
+    cookiesInstance.set(accessTokenName, accessToken, {
+      httpOnly: true,
+      maxAge: 60 * 15, // 15 minutes
+      path: "/",
+      sameSite: "strict",
+      secure: process.env.NODE_ENV === "production",
+    });
+    cookiesInstance.set(refreshTokenName, refreshToken, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: "/api/session",
+      sameSite: "strict",
+      secure: process.env.NODE_ENV === "production",
+    });
 
     const url = new URL(request.url);
     const redirectTo = url.searchParams.get("redirectTo");

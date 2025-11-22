@@ -41,7 +41,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
         throw new ForbiddenException("WAITING_VERIFICATION");
       }
 
-      const token = await generateJWT({
+      const accessToken = await generateJWT({
         expirationTime: this.configService.get<string>(
           "jwt.expiresIn.accessToken",
         )!,
@@ -52,7 +52,19 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
         secret: this.configService.get<string>("jwt.secret.accessToken"),
       });
 
-      this.cls.set(CLS_KEYS.ACCESS_TOKEN, token);
+      const refreshToken = await generateJWT({
+        expirationTime: this.configService.get<string>(
+          "jwt.expiresIn.refreshToken",
+        )!,
+        payload: {
+          sub: account.id,
+          user: null,
+        },
+        secret: this.configService.get<string>("jwt.secret.refreshToken"),
+      });
+
+      this.cls.set(CLS_KEYS.ACCESS_TOKEN, accessToken);
+      this.cls.set(CLS_KEYS.REFRESH_TOKEN, refreshToken);
 
       return account;
     }

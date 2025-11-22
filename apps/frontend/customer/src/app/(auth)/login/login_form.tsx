@@ -61,6 +61,15 @@ export const LoginForm: React.FC<Props> = ({ redirectTo }) => {
 
       switch (response.status) {
         case 201:
+          // Store both tokens
+          await fetch("/api/session", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              accessToken: response.body.accessToken,
+              refreshToken: response.body.refreshToken,
+            }),
+          });
           toast.success("Амжилттай нэвтэрлээ");
           setIsPending(false);
           router.push("/");
