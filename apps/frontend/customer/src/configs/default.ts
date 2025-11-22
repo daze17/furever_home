@@ -4,12 +4,15 @@ export const authRoutes: (string | RegExp)[] = [
   "/register",
   /^\/register.*$/,
   "/email_sent",
+  "/forgot-password",
+  /^\/forgot-password\/.*$/,
 ];
 export const publicRoutes: (string | RegExp)[] = [
   "/",
   "/pets",
   "/users",
   /^\/users.*$/,
+  "/reset-password",
 ];
 const commonRoutes: (string | RegExp)[] = ["/profile"];
 export const allowedRoutes: (string | RegExp)[] = [

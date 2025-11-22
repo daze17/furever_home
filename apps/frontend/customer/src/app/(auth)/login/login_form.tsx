@@ -163,6 +163,14 @@ export const LoginForm: React.FC<Props> = ({ redirectTo }) => {
             >
               {`Login`}
             </Button>
+            <div className="flex w-full items-center justify-center">
+              <Link
+                href="/forgot-password"
+                className="text-sm text-blue-500 underline"
+              >
+                Forgot password?
+              </Link>
+            </div>
             <p>
               Don&#39;t have an account?{" "}
               <Link href="/register" className="text-blue-500 underline">
