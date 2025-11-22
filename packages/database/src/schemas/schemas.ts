@@ -51,7 +51,7 @@ export const customers = pgTable("customers", {
  * Separate from customers table to isolate auth logic
  */
 export const customer_accounts = pgTable("customer_accounts", {
-  id: uuid("id").defaultRandom().primaryKey(),
+  id: text("id").primaryKey(),
   email: text("email").notNull().unique(),
   hash: text("hash").notNull(),
   status: status("status").notNull(),
@@ -121,7 +121,7 @@ export const pet_extra_informations = pgTable("pet_extra_information", {
 export const pets = pgTable(
   "pets",
   {
-    id: uuid("id").defaultRandom().primaryKey(),
+    id: serial("id").primaryKey(),
     name: text("name").notNull(),
     birth_date: date("birth_date"),
     species: species("species").notNull(),
@@ -157,7 +157,7 @@ export const pets = pgTable(
  */
 export const pet_medical_records = pgTable("pet_medical_records", {
   id: uuid("id").defaultRandom().primaryKey(),
-  pet_id: uuid("pet_id")
+  pet_id: integer("pet_id")
     .references(() => pets.id, {
       onDelete: "cascade",
     })
@@ -179,7 +179,7 @@ export const pet_images = pgTable(
   "pet_images",
   {
     id: serial("id").primaryKey(),
-    pet_id: uuid("pet_id")
+    pet_id: integer("pet_id")
       .references(() => pets.id, {
         onDelete: "cascade",
       })
@@ -209,7 +209,7 @@ export const adoption_posts = pgTable(
   "adoption_posts",
   {
     id: serial("id").primaryKey(),
-    pet_id: uuid("pet_id")
+    pet_id: integer("pet_id")
       .references(() => pets.id, {
         onDelete: "cascade",
       })
@@ -362,7 +362,7 @@ export const favorites = pgTable(
         onDelete: "cascade",
       })
       .notNull(),
-    pet_id: uuid("pet_id")
+    pet_id: integer("pet_id")
       .references(() => pets.id, {
         onDelete: "cascade",
       })

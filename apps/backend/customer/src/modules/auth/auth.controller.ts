@@ -31,7 +31,7 @@ export class AuthController {
       customerContract.auth.loginGoogle,
       async ({ body }) => {
         // TODO: move logic to guard
-        const googleAccount = await this.authRepository.getAccountById(
+        const googleAccount = await this.authRepository.getAccountByEmail(
           `google_${body.sub}`,
         );
         if (!googleAccount || !googleAccount.customer) {

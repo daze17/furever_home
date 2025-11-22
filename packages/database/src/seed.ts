@@ -17,8 +17,9 @@ import {
   favorites,
 } from "./schemas";
 
-// Password: "password123" hashed with bcrypt
-const HASHED_PASSWORD = "$2b$10$YourHashedPasswordHere.REPLACE.WITH.REAL.HASH";
+// Password: "password123" hashed with bcryptjs
+const HASHED_PASSWORD =
+  "$2b$10$BuCMgDVXdh4Y86z9/Bfxa.m0B6LDOp9SJhoLY0VuM1dfXhN5e3ZG6";
 
 async function seed() {
   console.log("🌱 Starting database seed...");
@@ -107,30 +108,35 @@ async function seed() {
       .insert(customer_accounts)
       .values([
         {
+          id: "email_john.smith@example.com",
           email: "john.smith@example.com",
           hash: HASHED_PASSWORD,
           status: "active",
           customer_id: customersData[0].id,
         },
         {
+          id: "email_sarah.johnson@example.com",
           email: "sarah.johnson@example.com",
           hash: HASHED_PASSWORD,
           status: "active",
           customer_id: customersData[1].id,
         },
         {
+          id: "email_michael.chen@example.com",
           email: "michael.chen@example.com",
           hash: HASHED_PASSWORD,
           status: "active",
           customer_id: customersData[2].id,
         },
         {
+          id: "email_emily.rodriguez@example.com",
           email: "emily.rodriguez@example.com",
           hash: HASHED_PASSWORD,
           status: "active",
           customer_id: customersData[3].id,
         },
         {
+          id: "email_david.williams@example.com",
           email: "david.williams@example.com",
           hash: HASHED_PASSWORD,
           status: "active",
@@ -651,7 +657,7 @@ async function seed() {
     console.log("   - 5 favorites");
 
     console.log(
-      "\n⚠️  NOTE: Update HASHED_PASSWORD constant with a real bcrypt hash for testing authentication",
+      '\n✅ All seed accounts use password: "password123" for testing',
     );
   } catch (error) {
     console.error("❌ Error seeding database:", error);

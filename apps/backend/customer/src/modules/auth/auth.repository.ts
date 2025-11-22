@@ -1,3 +1,5 @@
+import { randomUUID } from "crypto";
+
 import { Inject, Injectable } from "@nestjs/common";
 import {
   CreateCustomerProfileRequestBody,
@@ -38,6 +40,7 @@ export class AuthRepository {
   }
 
   async createCustomerWithGoogle(body: RegisterGoogleRequestBody) {
+    console.log(body, "body");
     const response = await this.db.transaction(async (transaction) => {
       const customer = (
         await transaction
@@ -52,6 +55,7 @@ export class AuthRepository {
       ).find(Boolean)!;
 
       await transaction.insert(customer_accounts).values({
+        id: `google_${body.sub}`,
         customer_id: customer.id,
         email: body.email,
         hash: "hash",
@@ -68,6 +72,7 @@ export class AuthRepository {
     const customerAccounts = await this.db
       .insert(customer_accounts)
       .values({
+        id: `email_${body.email}`,
         customer_id: null,
         email: body.email,
         hash: "hash",

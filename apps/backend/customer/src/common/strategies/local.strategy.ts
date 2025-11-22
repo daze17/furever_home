@@ -25,8 +25,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(email: string, password: string) {
-    // const account = await this.authRepository.getAccountById(`email_${email}`);
-    const account = await this.authRepository.getAccountByEmail(email);
+    const account = await this.authRepository.getAccountById(`email_${email}`);
     if (!account) throw new NotFoundException("CUSTOMER_NOT_FOUND");
 
     const slicedHash = account.hash.split("***").find(Boolean);
