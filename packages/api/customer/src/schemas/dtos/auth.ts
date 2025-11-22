@@ -82,5 +82,35 @@ export const AccountResponseBody = CustomerAccountModel.pick({
 });
 export type AccountResponseBody = z.infer<typeof AccountResponseBody>;
 
+// Password Management
+export const ForgotPasswordRequestBody = z.object({
+  email: z.string().email(),
+});
+export type ForgotPasswordRequestBody = z.infer<
+  typeof ForgotPasswordRequestBody
+>;
+
+export const ResetPasswordRequestBody = z.object({
+  token: z.string(),
+  newPassword: z.string().regex(passwordRegex),
+});
+export type ResetPasswordRequestBody = z.infer<
+  typeof ResetPasswordRequestBody
+>;
+
+export const ChangePasswordRequestBody = z.object({
+  currentPassword: z.string(),
+  newPassword: z.string().regex(passwordRegex),
+});
+export type ChangePasswordRequestBody = z.infer<
+  typeof ChangePasswordRequestBody
+>;
+
+// Token Management
+export const RefreshTokenRequestBody = z.object({
+  refreshToken: z.string(),
+});
+export type RefreshTokenRequestBody = z.infer<typeof RefreshTokenRequestBody>;
+
 // export const UserProfileResponse = UserModel;
 // export type UserProfileResponse = z.infer<typeof UserProfileResponse>;

@@ -2,12 +2,16 @@ import { z } from "zod";
 
 import { c } from "@/contract";
 import {
+  ChangePasswordRequestBody,
   CreateCustomerProfileRequestBody,
+  ForgotPasswordRequestBody,
   LoginCredentialsRequestBody,
   LoginGoogleRequestBody,
   RateLimitError,
+  RefreshTokenRequestBody,
   RegisterGoogleRequestBody,
   RegisterWithEmailRequestBody,
+  ResetPasswordRequestBody,
   TokenResponseBody,
   VerifyAccountRequestBody,
 } from "@/schemas/dtos";
@@ -86,6 +90,49 @@ export const authContract = c.router({
   //   summary: "get profile",
   // },
 
-  // TODO: resend password
-  // TODO: change password
+  // Password Management
+  forgotPassword: {
+    method: "POST",
+    path: "/forgot-password",
+    body: ForgotPasswordRequestBody,
+    responses: {
+      201: z.object({}),
+      400: CustomError,
+    },
+    summary: "request password reset",
+  },
+  resetPassword: {
+    method: "POST",
+    path: "/reset-password",
+    body: ResetPasswordRequestBody,
+    responses: {
+      201: z.object({}),
+      400: CustomError,
+      401: CustomError,
+    },
+    summary: "reset password with token",
+  },
+  changePassword: {
+    method: "PATCH",
+    path: "/change-password",
+    body: ChangePasswordRequestBody,
+    responses: {
+      200: z.object({}),
+      400: CustomError,
+      401: CustomError,
+    },
+    summary: "change password (authenticated)",
+  },
+
+  // Token Management
+  refreshToken: {
+    method: "POST",
+    path: "/refresh",
+    body: RefreshTokenRequestBody,
+    responses: {
+      201: TokenResponseBody,
+      401: CustomError,
+    },
+    summary: "refresh access token",
+  },
 });

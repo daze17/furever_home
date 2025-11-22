@@ -10,8 +10,12 @@ const commonSchema = z.object({
   REDIS_PORT: z.coerce.number(),
   JWT_EXPIRES_IN_ACCESS_TOKEN: z.string(),
   JWT_EXPIRES_IN_EMAIL_VERIFICATION: z.string(),
+  JWT_EXPIRES_IN_PASSWORD_RESET: z.string(),
+  JWT_EXPIRES_IN_REFRESH_TOKEN: z.string(),
   JWT_SECRET_ACCESS_TOKEN: z.string(),
   JWT_SECRET_EMAIL_VERIFICATION: z.string(),
+  JWT_SECRET_PASSWORD_RESET: z.string(),
+  JWT_SECRET_REFRESH_TOKEN: z.string(),
   CUSTOMER_FRONTEND_URL: z.string(),
 });
 

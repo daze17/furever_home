@@ -9,6 +9,8 @@ import { JwtAuthGuard } from "@/common/guards/jwt_auth.guard";
 // import { GoogleStrategy } from '@/common/strategies/google_oauth.strategy';
 import { JwtStrategy } from "@/common/strategies/jwt.strategy";
 import { LocalStrategy } from "@/common/strategies/local.strategy";
+import { PasswordResetJwtStrategy } from "@/common/strategies/password_reset_jwt_auth.strategy";
+import { RefreshTokenStrategy } from "@/common/strategies/refresh_token.strategy";
 import { CustomerModule } from "@/modules/customer/customer.module";
 import { EmailQueueModule } from "@/modules/email_queue/email_queue.module";
 
@@ -43,6 +45,8 @@ import { AuthService } from "./auth.service";
     EmailRateLimitGuard,
     // GoogleStrategy,
     LocalStrategy,
+    PasswordResetJwtStrategy,
+    RefreshTokenStrategy,
   ],
 })
 export class AuthModule {}

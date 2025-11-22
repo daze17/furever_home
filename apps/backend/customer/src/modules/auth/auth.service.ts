@@ -3,15 +3,19 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  UnauthorizedException,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import bcrypt from "bcryptjs";
 import { Queue } from "bullmq";
 import {
+  ChangePasswordRequestBody,
   CreateCustomerProfileRequestBody,
+  ForgotPasswordRequestBody,
   RegisterGoogleRequestBody,
   RegisterWithEmailRequestBody,
+  ResetPasswordRequestBody,
   VerifyAccountRequestBody,
 } from "customer_api";
 
@@ -113,6 +117,104 @@ export class AuthService {
       status: "active",
       hash,
     });
+  }
+
+  async forgotPassword(body: ForgotPasswordRequestBody) {
+    const account = await this.authRepository.getAccountByEmail(body.email);
+
+    if (!account) {
+      return;
+    }
+
+    if (account.status !== "active") {
+      throw new BadRequestException("ACCOUNT_NOT_ACTIVE");
+    }
+
+    const token = await generateJWT({
+      expirationTime: this.configService.get<string>(
+        "jwt.expiresIn.passwordReset",
+      )!,
+      payload: {
+        sub: account.id,
+        user: null,
+      },
+      secret: this.configService.get<string>("jwt.secret.passwordReset"),
+    });
+
+    const resetUrl = `${this.configService.get<string>("email.customerFrontendUrl")}/reset-password?token=${token}`;
+
+    await this.emailQueue.add(
+      EMAIL_PROCESS_NAMES.RESET_PASSWORD_EMAIL_TO_CUSTOMER_PROCESS,
+      {
+        email: body.email,
+        reset_url: resetUrl,
+        locale: "en",
+      },
+    );
+  }
+
+  async resetPassword(accountId: string, body: ResetPasswordRequestBody) {
+    const account = await this.authRepository.getAccountById(accountId);
+
+    if (!account) {
+      throw new BadRequestException("INVALID_TOKEN");
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(body.newPassword, salt);
+
+    await this.authRepository.updateCustomerAccount(account.id, {
+      hash,
+    });
+  }
+
+  async changePassword(accountId: string, body: ChangePasswordRequestBody) {
+    const account = await this.authRepository.getAccountById(accountId);
+
+    if (!account || !account.hash) {
+      throw new UnauthorizedException("ACCOUNT_NOT_FOUND");
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      body.currentPassword,
+      account.hash,
+    );
+
+    if (!isPasswordValid) {
+      throw new BadRequestException("INVALID_CURRENT_PASSWORD");
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(body.newPassword, salt);
+
+    await this.authRepository.updateCustomerAccount(account.id, {
+      hash,
+    });
+  }
+
+  async refreshAccessToken(accountId: string) {
+    const account = await this.authRepository.getAccountById(accountId);
+
+    if (!account || !account.customer) {
+      throw new UnauthorizedException("SESSION_EXPIRED");
+    }
+
+    if (account.status !== "active") {
+      throw new UnauthorizedException("ACCOUNT_NOT_ACTIVE");
+    }
+
+    const accessToken = await generateJWT({
+      expirationTime: this.configService.get<string>(
+        "jwt.expiresIn.accessToken",
+      )!,
+      payload: {
+        sub: account.customer.id,
+        user: account.customer,
+      },
+      secret: this.configService.get<string>("jwt.secret.accessToken")!,
+    });
+
+    return accessToken;
   }
 
   private async sendVerificationEmail(

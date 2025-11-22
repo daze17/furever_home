@@ -7,7 +7,10 @@ import { ClsService } from "nestjs-cls";
 import { CLS_KEYS } from "@/common/constants/cls.constants";
 import { EmailRateLimit } from "@/common/decorators/email_rate_limit.decorator";
 import { EmailRateLimitGuard } from "@/common/guards/email_rate_limit.guard";
+import { JwtAuthGuard } from "@/common/guards/jwt_auth.guard";
 import { LocalAuthGuard } from "@/common/guards/local_auth.guard";
+import { PasswordResetJwtAuthGuard } from "@/common/guards/password_reset_jwt_auth.guard";
+import { RefreshTokenGuard } from "@/common/guards/refresh_token.guard";
 import { generateJWT } from "@/common/utils";
 
 import { AuthRepository } from "./auth.repository";
@@ -137,5 +140,68 @@ export class AuthController {
         };
       },
     );
+  }
+
+  @TsRestHandler(customerContract.auth.forgotPassword)
+  async forgotPassword() {
+    return tsRestHandler(
+      customerContract.auth.forgotPassword,
+      async ({ body }) => {
+        await this.authService.forgotPassword(body);
+
+        return {
+          status: 201,
+          body: {},
+        };
+      },
+    );
+  }
+
+  @UseGuards(PasswordResetJwtAuthGuard)
+  @TsRestHandler(customerContract.auth.resetPassword)
+  async resetPassword() {
+    return tsRestHandler(
+      customerContract.auth.resetPassword,
+      async ({ body }) => {
+        const account = this.cls.get(CLS_KEYS.CUSTOMER_ACCOUNT);
+        await this.authService.resetPassword(account.id, body);
+
+        return {
+          status: 201,
+          body: {},
+        };
+      },
+    );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @TsRestHandler(customerContract.auth.changePassword)
+  async changePassword() {
+    return tsRestHandler(
+      customerContract.auth.changePassword,
+      async ({ body }) => {
+        const account = this.cls.get(CLS_KEYS.CUSTOMER_ACCOUNT);
+        await this.authService.changePassword(account.id, body);
+
+        return {
+          status: 200,
+          body: {},
+        };
+      },
+    );
+  }
+
+  @UseGuards(RefreshTokenGuard)
+  @TsRestHandler(customerContract.auth.refreshToken)
+  async refreshToken() {
+    return tsRestHandler(customerContract.auth.refreshToken, async () => {
+      const account = this.cls.get(CLS_KEYS.CUSTOMER_ACCOUNT);
+      const token = await this.authService.refreshAccessToken(account.id);
+
+      return {
+        status: 201,
+        body: { token },
+      };
+    });
   }
 }
