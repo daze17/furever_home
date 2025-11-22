@@ -21,6 +21,9 @@ export class AuthRepository {
         // TODO:
         // ne(customer_accounts.status, "inactive"),
       ),
+      with: {
+        customer: true,
+      },
     });
     return account;
   }

@@ -6,6 +6,8 @@ export const authRoutes: (string | RegExp)[] = [
   "/email_sent",
   "/forgot-password",
   /^\/forgot-password\/.*$/,
+  "/verify",
+  /^\/verify\/.*$/,
 ];
 export const publicRoutes: (string | RegExp)[] = [
   "/",
