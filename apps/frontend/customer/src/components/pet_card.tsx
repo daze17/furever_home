@@ -1,6 +1,6 @@
 "use client";
 
-// import { PetsResponse } from "customer_api";
+import { PetResponseBody } from "customer_api";
 import { Heart } from "lucide-react";
 import Link from "next/link";
 import {
@@ -14,15 +14,28 @@ import {
 } from "ui";
 
 import ImageWithFallback from "@/components/image_with_fallback";
-// import { SpeciesTag } from "@/components/species_tag";
 
 export const PetCard: React.FC<{
-  // pet: PetsResponse;
-  pet: any;
+  pet: PetResponseBody;
 }> = ({ pet }) => {
-  const petAge = pet.birthDate
-    ? new Date().getFullYear() - new Date(pet.birthDate).getFullYear()
+  const petAge = pet.birth_date
+    ? new Date().getFullYear() - new Date(pet.birth_date).getFullYear()
     : 0;
+
+  const speciesEmoji = {
+    dog: "🐕",
+    cat: "🐈",
+    bird: "🐦",
+    fish: "🐠",
+    other: "🐾",
+  };
+
+  const statusLabel = {
+    adopting: "Available",
+    has_owner: "Adopted",
+    inactive: "Inactive",
+  };
+
   return (
     <Card className="">
       <CardHeader>
@@ -30,13 +43,12 @@ export const PetCard: React.FC<{
           {pet.name}
           <Heart
             className="ml-2 h-4 w-4 text-[#11D0BC]"
-            //  if added to favorites fill or empty
             fill="#11D0BC"
           />
         </CardTitle>
-        <CardDescription>{`${petAge} настай`}</CardDescription>
+        <CardDescription>{`${petAge} years old`}</CardDescription>
         <ImageWithFallback
-          src={pet.petImage}
+          src={pet.pet_image_url || ""}
           alt={pet.name}
           height={100}
           width={1000}
@@ -46,17 +58,27 @@ export const PetCard: React.FC<{
       </CardHeader>
       <CardContent>
         <div className="flex gap-2">
-          {/* <SpeciesTag species={pet.species} /> */}
-          <span className="rounded-full bg-gray-200 px-2 py-1 text-sm">
-            {/* TODO:pet.location  */}
-            📍{"Улаанбаатар"}
+          <span className="rounded-full bg-blue-100 px-2 py-1 text-sm">
+            {speciesEmoji[pet.species]} {pet.species}
+          </span>
+          {pet.size && (
+            <span className="rounded-full bg-gray-200 px-2 py-1 text-sm">
+              {pet.size}
+            </span>
+          )}
+          <span className={`rounded-full px-2 py-1 text-sm ${
+            pet.pet_status === "adopting" ? "bg-green-100 text-green-800" : "bg-gray-100"
+          }`}>
+            {statusLabel[pet.pet_status]}
           </span>
         </div>
-        <p className="text-sm text-gray-600">{pet.behavioralInformation}</p>
+        {pet.notes && (
+          <p className="mt-2 text-sm text-gray-600">{pet.notes}</p>
+        )}
       </CardContent>
       <CardFooter className="flex justify-between">
         <Button className="w-full rounded-full py-2" asChild>
-          <Link href={`/pets/${pet.id}`}>Үрчлэх</Link>
+          <Link href={`/pets/${pet.id}`}>View Details</Link>
         </Button>
       </CardFooter>
     </Card>

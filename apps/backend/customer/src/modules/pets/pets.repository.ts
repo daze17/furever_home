@@ -1,23 +1,29 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { CreatePetRequestBody } from "customer_api";
-import { pets } from "database";
-import { and, eq, sql } from "drizzle-orm";
+import {
+  CreatePetExtraInformationRequestBody,
+  CreatePetRequestBody,
+} from "customer_api";
+import { pet_extra_informations, pets } from "database";
 
 import type { Database } from "@/modules/database/database.providers";
 
-interface ListPetsFilters {
-  customer_id?: string;
-  species?: string;
-  pet_status?: string;
-  limit?: number;
-  offset?: number;
-}
+// interface ListPetsFilters {
+//   customer_id?: string;
+//   species?: string;
+//   pet_status?: string;
+//   limit?: number;
+//   offset?: number;
+// }
 
 @Injectable()
 export class PetsRepository {
   constructor(@Inject("DATABASE") private readonly db: Database) {}
 
-  async createPet(customerId: string, data: CreatePetRequestBody) {
+  async createPet(
+    customerId: string,
+    petExtraInformationId: string,
+    data: CreatePetRequestBody,
+  ) {
     const {
       name,
       birth_date,
@@ -26,7 +32,7 @@ export class PetsRepository {
       pet_image_url,
       size,
       pet_status,
-      pet_extra_information_id,
+      pet_extra_information,
     } = data;
 
     await this.db.insert(pets).values({
@@ -38,7 +44,86 @@ export class PetsRepository {
       size,
       pet_status,
       customer_id: customerId,
-      pet_extra_information_id,
+      pet_extra_information_id: petExtraInformationId,
+    });
+  }
+
+  async createPetExtraInformation(data: CreatePetExtraInformationRequestBody) {
+    const {
+      energy_level,
+      friendliness_with_children,
+      friendliness_with_pets,
+      is_house_trained,
+      training_level,
+      special_needs,
+      dietary_restrictions,
+    } = data;
+
+    const createdPetExtraInformation = await this.db
+      .insert(pet_extra_informations)
+      .values({
+        energy_level,
+        friendliness_with_children,
+        friendliness_with_pets,
+        is_house_trained,
+        training_level,
+        special_needs,
+        dietary_restrictions,
+      })
+      .returning();
+    return createdPetExtraInformation.find(Boolean)!.id;
+  }
+
+  async createPetAndPetExtraInformations(
+    customerId: string,
+    data: CreatePetRequestBody,
+  ) {
+    await this.db.transaction(async (transaction) => {
+      const {
+        name,
+        birth_date,
+        species,
+        notes,
+        pet_image_url,
+        size,
+        pet_status,
+        pet_extra_information,
+      } = data;
+
+      const {
+        energy_level,
+        friendliness_with_children,
+        friendliness_with_pets,
+        is_house_trained,
+        training_level,
+        special_needs,
+        dietary_restrictions,
+      } = pet_extra_information;
+
+      const createdPetExtraInformation = await transaction
+        .insert(pet_extra_informations)
+        .values({
+          energy_level,
+          friendliness_with_children,
+          friendliness_with_pets,
+          is_house_trained,
+          training_level,
+          special_needs,
+          dietary_restrictions,
+        })
+        .returning();
+
+      await transaction.insert(pets).values({
+        name,
+        birth_date,
+        species,
+        notes,
+        pet_image_url,
+        size,
+        pet_status,
+        customer_id: customerId,
+        pet_extra_information_id: createdPetExtraInformation.find(Boolean)!.id,
+      });
     });
   }
 

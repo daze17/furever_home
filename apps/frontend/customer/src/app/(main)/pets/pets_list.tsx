@@ -1,0 +1,197 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { PetResponseBody } from "customer_api";
+import Link from "next/link";
+import { Button, Card, CardContent, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "ui";
+import { PlusCircle } from "lucide-react";
+
+import { client } from "@/services/client";
+import { PetCard } from "@/components/pet_card";
+
+const ITEMS_PER_PAGE = 12;
+
+export function PetsList() {
+  const [pets, setPets] = useState<PetResponseBody[]>([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const [filters, setFilters] = useState({
+    species: "",
+    pet_status: "",
+    search: "",
+  });
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    fetchPets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters, currentPage]);
+
+  const fetchPets = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await client.pets.listPets({
+        query: {
+          species: filters.species || undefined,
+          pet_status: filters.pet_status || undefined,
+          limit: ITEMS_PER_PAGE,
+          offset: (currentPage - 1) * ITEMS_PER_PAGE,
+        },
+      });
+
+      if (response.status === 200) {
+        setPets(response.body.pets);
+        setTotal(response.body.total);
+      } else {
+        setError("Failed to fetch pets");
+      }
+    } catch (err) {
+      setError("An error occurred while fetching pets");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFilterChange = (key: string, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    setCurrentPage(1);
+  };
+
+  const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
+
+  const filteredPets = pets.filter((pet) =>
+    filters.search
+      ? pet.name.toLowerCase().includes(filters.search.toLowerCase())
+      : true
+  );
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="mb-8 flex items-center justify-between">
+        <h1 className="text-3xl font-bold">Pets</h1>
+        <Button asChild>
+          <Link href="/pets/new">
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Add New Pet
+          </Link>
+        </Button>
+      </div>
+
+      {/* Filters */}
+      <Card className="mb-6">
+        <CardContent className="pt-6">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div>
+              <label className="mb-2 block text-sm font-medium">Search by name</label>
+              <Input
+                placeholder="Search pets..."
+                value={filters.search}
+                onChange={(e) => handleFilterChange("search", e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm font-medium">Species</label>
+              <Select
+                value={filters.species}
+                onValueChange={(value) => handleFilterChange("species", value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="All species" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">All species</SelectItem>
+                  <SelectItem value="dog">Dog</SelectItem>
+                  <SelectItem value="cat">Cat</SelectItem>
+                  <SelectItem value="bird">Bird</SelectItem>
+                  <SelectItem value="fish">Fish</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm font-medium">Status</label>
+              <Select
+                value={filters.pet_status}
+                onValueChange={(value) => handleFilterChange("pet_status", value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="All statuses" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">All statuses</SelectItem>
+                  <SelectItem value="adopting">Available for Adoption</SelectItem>
+                  <SelectItem value="has_owner">Has Owner</SelectItem>
+                  <SelectItem value="inactive">Inactive</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Loading State */}
+      {loading && (
+        <div className="py-12 text-center">
+          <p className="text-gray-500">Loading pets...</p>
+        </div>
+      )}
+
+      {/* Error State */}
+      {error && (
+        <div className="rounded-lg bg-red-50 p-4 text-red-600">
+          {error}
+        </div>
+      )}
+
+      {/* Empty State */}
+      {!loading && !error && filteredPets.length === 0 && (
+        <div className="py-12 text-center">
+          <p className="text-gray-500">No pets found</p>
+        </div>
+      )}
+
+      {/* Pets Grid */}
+      {!loading && !error && filteredPets.length > 0 && (
+        <>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {filteredPets.map((pet) => (
+              <PetCard key={pet.id} pet={pet} />
+            ))}
+          </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="mt-8 flex items-center justify-center gap-2">
+              <Button
+                variant="outline"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              >
+                Previous
+              </Button>
+
+              <span className="text-sm text-gray-600">
+                Page {currentPage} of {totalPages}
+              </span>
+
+              <Button
+                variant="outline"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              >
+                Next
+              </Button>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
