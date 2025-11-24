@@ -83,7 +83,15 @@ export function PetForm({ pet, mode }: PetFormProps) {
             pet_image_url: data.pet_image_url || null,
             size: data.size || null,
             pet_status: data.pet_status,
-            // pet_extra_information_id: data.pet_extra_information_id || null,
+            pet_extra_information: {
+              energy_level: null,
+              friendliness_with_children: null,
+              friendliness_with_pets: null,
+              is_house_trained: false,
+              training_level: null,
+              special_needs: null,
+              dietary_restrictions: null,
+            },
           },
         });
 
@@ -91,7 +99,7 @@ export function PetForm({ pet, mode }: PetFormProps) {
           toast.success("Success", {
             description: "Pet created successfully",
           });
-          router.push(`/pets/${response.body.id}`);
+          router.push("/pets");
         } else {
           toast.error("Error", {
             description: "Failed to create pet",

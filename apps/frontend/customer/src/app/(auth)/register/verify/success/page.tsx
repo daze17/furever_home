@@ -12,12 +12,12 @@ const VerifySuccessPage: React.Page = () => {
             Бүртгэл баталгаажлаа!
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            Таны бүртгэл амжилттай баталгаажлаа. Үргэлжлүүлэхийн тулд дахин нэвтэрнэ үү.
+            Таны бүртгэл амжилттай баталгаажлаа. Үргэлжлүүлэхийн тулд профайлаа үүсгэнэ үү.
           </p>
         </div>
         <div className="mt-8">
-          <Link href="/login" passHref>
-            <Button className="w-full">Нэвтрэх хуудас руу очих</Button>
+          <Link href="/register/create-profile" passHref>
+            <Button className="w-full">Профайл үүсгэх</Button>
           </Link>
         </div>
       </div>
