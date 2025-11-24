@@ -2,9 +2,12 @@
 
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+
 import { zodResolver } from "@hookform/resolvers/zod";
+import { PetResponseBody } from "customer_api";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
+
 import {
   Button,
   Form,
@@ -25,14 +28,17 @@ import {
 } from "ui";
 
 import { client } from "@/services/client";
-import { PetResponseBody } from "customer_api";
 
 const petFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
   birth_date: z.string().optional(),
   species: z.enum(["dog", "cat", "bird", "fish", "other"]),
   notes: z.string().optional(),
-  pet_image_url: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  pet_image_url: z
+    .string()
+    .url("Must be a valid URL")
+    .optional()
+    .or(z.literal("")),
   size: z.enum(["small", "medium", "large"]).optional(),
   pet_status: z.enum(["adopting", "has_owner", "inactive"]),
   pet_extra_information_id: z.string().uuid().optional().or(z.literal("")),
@@ -77,7 +83,7 @@ export function PetForm({ pet, mode }: PetFormProps) {
             pet_image_url: data.pet_image_url || null,
             size: data.size || null,
             pet_status: data.pet_status,
-            pet_extra_information_id: data.pet_extra_information_id || null,
+            // pet_extra_information_id: data.pet_extra_information_id || null,
           },
         });
 
@@ -225,7 +231,9 @@ export function PetForm({ pet, mode }: PetFormProps) {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="adopting">Available for Adoption</SelectItem>
+                    <SelectItem value="adopting">
+                      Available for Adoption
+                    </SelectItem>
                     <SelectItem value="has_owner">Has Owner</SelectItem>
                     <SelectItem value="inactive">Inactive</SelectItem>
                   </SelectContent>
@@ -282,10 +290,7 @@ export function PetForm({ pet, mode }: PetFormProps) {
             <FormItem>
               <FormLabel>Extra Information ID</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="UUID of pet extra information"
-                  {...field}
-                />
+                <Input placeholder="UUID of pet extra information" {...field} />
               </FormControl>
               <FormDescription>
                 Optional: Link to additional pet information record
@@ -297,7 +302,11 @@ export function PetForm({ pet, mode }: PetFormProps) {
 
         <div className="flex gap-4">
           <Button type="submit" disabled={isPending}>
-            {isPending ? "Saving..." : mode === "create" ? "Create Pet" : "Update Pet"}
+            {isPending
+              ? "Saving..."
+              : mode === "create"
+                ? "Create Pet"
+                : "Update Pet"}
           </Button>
           <Button
             type="button"

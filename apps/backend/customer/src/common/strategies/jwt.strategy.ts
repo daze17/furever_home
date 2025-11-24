@@ -38,14 +38,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     );
     if (!accountWithCustomer)
       throw new UnauthorizedException("SESSION_EXPIRED");
-    if (
-      accountWithCustomer.status === CustomerStatusEnum.enum.inactive.toString()
-    ) {
+    if (accountWithCustomer.status === CustomerStatusEnum.inactive) {
       throw new ForbiddenException("INACTIVE_ACCOUNT");
     }
-    if (
-      accountWithCustomer.status === CustomerStatusEnum.enum.pending.toString()
-    ) {
+    if (accountWithCustomer.status === CustomerStatusEnum.pending) {
       throw new ForbiddenException("WAITING_VERIFICATION");
     }
     if (!accountWithCustomer.customer) {

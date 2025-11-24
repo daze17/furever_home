@@ -23,6 +23,7 @@ export class PetsService {
 
   async createPet(data: CreatePetRequestBody) {
     const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);
+
     console.log(accountProfile, "accountProfileaccountProfile");
 
     // const petExtraInformationId =
@@ -35,12 +36,12 @@ export class PetsService {
     //   petExtraInformationId,
     //   data,
     // );
-    const testId = "13c26c66-7e84-411b-8be1-0823e1787674";
-    await this.petsRepository.createPetAndPetExtraInformations(
-      // accountProfile.id,
-      testId,
-      data,
-    );
+    // const testId = "13c26c66-7e84-411b-8be1-0823e1787674";
+    // await this.petsRepository.createPetAndPetExtraInformations(
+    //   // accountProfile.id,
+    //   testId,
+    //   data,
+    // );
   }
 
   // async listPets(filters: ListPetsFilters) {

@@ -6,6 +6,7 @@ import { ClsService } from "nestjs-cls";
 
 import { CLS_KEYS } from "@/common/constants/cls.constants";
 import { EmailRateLimit } from "@/common/decorators/email_rate_limit.decorator";
+import { Public } from "@/common/decorators/public";
 import { EmailRateLimitGuard } from "@/common/guards/email_rate_limit.guard";
 import { JwtAuthGuard } from "@/common/guards/jwt_auth.guard";
 import { LocalAuthGuard } from "@/common/guards/local_auth.guard";
@@ -70,6 +71,7 @@ export class AuthController {
     );
   }
 
+  @Public()
   @UseGuards(LocalAuthGuard)
   @TsRestHandler(customerContract.auth.loginCredentials)
   async loginCredentials() {
