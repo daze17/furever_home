@@ -10,6 +10,7 @@ import { Public } from "@/common/decorators/public";
 import { EmailRateLimitGuard } from "@/common/guards/email_rate_limit.guard";
 import { JwtAuthGuard } from "@/common/guards/jwt_auth.guard";
 import { LocalAuthGuard } from "@/common/guards/local_auth.guard";
+import { PartialJwtAuthGuard } from "@/common/guards/partial_jwt_auth.guard";
 import { PasswordResetJwtAuthGuard } from "@/common/guards/password_reset_jwt_auth.guard";
 import { RefreshTokenGuard } from "@/common/guards/refresh_token.guard";
 import { generateJWT } from "@/common/utils";
@@ -139,13 +140,27 @@ export class AuthController {
     );
   }
 
+  @Public()
+  @UseGuards(PartialJwtAuthGuard)
   @TsRestHandler(customerContract.auth.createCustomerProfile)
   async createProfile() {
     return tsRestHandler(
       customerContract.auth.createCustomerProfile,
       async ({ body }) => {
-        // TODO: take account id from cls
-        await this.authService.createCustomerProfile("account_id", body);
+        const account = this.cls.get(CLS_KEYS.CUSTOMER_ACCOUNT);
+        if (!account) {
+          throw new BadRequestException("ACCOUNT_NOT_FOUND");
+        }
+
+        // Check if profile already exists
+        const existingAccount = await this.authRepository.getAccountById(
+          account.id,
+        );
+        if (existingAccount?.customer) {
+          throw new BadRequestException("PROFILE_ALREADY_EXISTS");
+        }
+
+        await this.authService.createCustomerProfile(account.id, body);
 
         return {
           status: 201,

@@ -11,7 +11,7 @@ export class PetsController {
   @TsRestHandler(customerContract.pets.createPet)
   async createPet() {
     return tsRestHandler(customerContract.pets.createPet, async ({ body }) => {
-      const pet = await this.petsService.createPet(body);
+      await this.petsService.createPet(body);
 
       return {
         body: {},

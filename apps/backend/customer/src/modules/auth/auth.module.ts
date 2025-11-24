@@ -10,6 +10,7 @@ import { JwtAuthGuard } from "@/common/guards/jwt_auth.guard";
 // import { GoogleStrategy } from '@/common/strategies/google_oauth.strategy';
 import { JwtStrategy } from "@/common/strategies/jwt.strategy";
 import { LocalStrategy } from "@/common/strategies/local.strategy";
+import { PartialJwtStrategy } from "@/common/strategies/partial_jwt.strategy";
 import { PasswordResetJwtStrategy } from "@/common/strategies/password_reset_jwt_auth.strategy";
 import { RefreshTokenStrategy } from "@/common/strategies/refresh_token.strategy";
 import { CustomerModule } from "@/modules/customer/customer.module";
@@ -42,6 +43,7 @@ import { AuthService } from "./auth.service";
     AuthService,
     AuthRepository,
     JwtStrategy,
+    PartialJwtStrategy,
     JwtAuthGuard,
     EmailRateLimitGuard,
     // GoogleStrategy,
