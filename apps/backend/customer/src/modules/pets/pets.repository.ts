@@ -2,18 +2,14 @@ import { Inject, Injectable } from "@nestjs/common";
 import {
   CreatePetExtraInformationRequestBody,
   CreatePetRequestBody,
+  PetsQuery,
 } from "customer_api";
 import { pet_extra_informations, pets } from "database";
+import { and, asc, SQL } from "drizzle-orm";
+import { count } from "drizzle-orm";
+import { desc } from "drizzle-orm";
 
 import type { Database } from "@/modules/database/database.providers";
-
-// interface ListPetsFilters {
-//   customer_id?: string;
-//   species?: string;
-//   pet_status?: string;
-//   limit?: number;
-//   offset?: number;
-// }
 
 @Injectable()
 export class PetsRepository {
@@ -127,69 +123,60 @@ export class PetsRepository {
     });
   }
 
-  // async listPets(filters: ListPetsFilters) {
-  //   const conditions = [];
+  async getPetsList(query: PetsQuery = {}) {
+    const currentPage = query.current_page ?? 1;
+    const perPage = query.per_page ?? 10;
 
-  //   if (filters.customer_id) {
-  //     conditions.push(eq(pets.customer_id, filters.customer_id));
-  //   }
+    const where = and(...this.mapPetsQuery(query));
 
-  //   if (filters.species) {
-  //     conditions.push(eq(pets.species, filters.species as any));
-  //   }
+    const _pets = await this.db.query.pets.findMany({
+      with: {
+        pet_extra_information: true,
+      },
+      where,
+      orderBy: (query.sorting_order === "ascending" ? asc : desc)(
+        this.mapPetsSortingField(query.sorting_field),
+      ),
+      // When provided as 0, it returns all rows without pagination
+      offset: currentPage === 0 ? undefined : (currentPage - 1) * perPage,
+      limit: perPage === 0 ? undefined : perPage,
+    });
 
-  //   if (filters.pet_status) {
-  //     conditions.push(eq(pets.pet_status, filters.pet_status as any));
-  //   }
+    const _count = await this.db
+      .select({ total: count() })
+      .from(pets)
+      .where(where);
 
-  //   const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+    const total = _count.find(Boolean)?.total ?? 0;
 
-  //   const [petsResult, totalResult] = await Promise.all([
-  //     this.db.query.pets.findMany({
-  //       where: whereClause,
-  //       limit: filters.limit || 50,
-  //       offset: filters.offset || 0,
-  //       orderBy: (pets, { desc }) => [desc(pets.created_at)],
-  //     }),
-  //     this.db
-  //       .select({ count: sql<number>`count(*)` })
-  //       .from(pets)
-  //       .where(whereClause),
-  //   ]);
+    return {
+      data: _pets,
+      meta: {
+        total,
+        per_page: perPage,
+        current_page: currentPage,
+      },
+    };
+  }
 
-  //   return {
-  //     pets: petsResult,
-  //     total: Number(totalResult[0]?.count || 0),
-  //   };
-  // }
+  private mapPetsQuery(query: PetsQuery = {}) {
+    const conditions: SQL<unknown | undefined>[] = [];
 
-  // async getPetById(id: string) {
-  //   const pet = await this.db.query.pets.findFirst({
-  //     where: eq(pets.id, id),
-  //   });
+    const {
+      //
+    } = query;
 
-  //   return pet || null;
-  // }
+    return conditions;
+  }
 
-  // async updatePet(id: string, data: UpdatePetRequestBody) {
-  //   const [updatedPet] = await this.db
-  //     .update(pets)
-  //     .set({
-  //       ...data,
-  //       updated_at: new Date(),
-  //     })
-  //     .where(eq(pets.id, id))
-  //     .returning();
-
-  //   return updatedPet || null;
-  // }
-
-  // async deletePet(id: string) {
-  //   const [deletedPet] = await this.db
-  //     .delete(pets)
-  //     .where(eq(pets.id, id))
-  //     .returning();
-
-  //   return deletedPet || null;
-  // }
+  private mapPetsSortingField(field: NonNullable<PetsQuery>["sorting_field"]) {
+    switch (field) {
+      // case "pets_id":
+      //   return pets.id;
+      case "created_at":
+        return pets.created_at;
+      default:
+        return pets.created_at;
+    }
+  }
 }

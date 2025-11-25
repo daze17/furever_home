@@ -1,5 +1,6 @@
 import {
   ForbiddenException,
+  ImATeapotException,
   Injectable,
   UnauthorizedException,
 } from "@nestjs/common";
@@ -45,7 +46,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new ForbiddenException("WAITING_VERIFICATION");
     }
     if (!accountWithCustomer.customer) {
-      throw new ForbiddenException("PROFILE_DOES_NOT_EXIST");
+      throw new ImATeapotException("PROFILE_DOES_NOT_EXIST");
     }
     const { customer, ...account } = accountWithCustomer;
     // const { customer_setting, ...restCustomer } = customer;

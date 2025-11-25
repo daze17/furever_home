@@ -1,4 +1,5 @@
 import { PetExtraInformationModel, PetModel } from "@/models";
+import { paginationQuery } from "@/models/pagination";
 import { z } from "zod";
 
 export const CreatePetExtraInformationRequestBody =
@@ -31,11 +32,8 @@ export type CreatePetRequestBody = z.infer<typeof CreatePetRequestBody>;
 export const PetResponseBody = PetModel;
 export type PetResponseBody = z.infer<typeof PetResponseBody>;
 
-export const ListPetsResponseBody = z.object({
-  pets: z.array(PetResponseBody),
-  total: z.number(),
-});
-export type ListPetsResponseBody = z.infer<typeof ListPetsResponseBody>;
+export const PetsListResponseBody = PetResponseBody.array();
+export type PetsListResponseBody = z.infer<typeof PetsListResponseBody>;
 
 export const UpdatePetRequestBody = PetModel.pick({
   name: true,
@@ -48,3 +46,12 @@ export const UpdatePetRequestBody = PetModel.pick({
   pet_extra_information_id: true,
 }).partial();
 export type UpdatePetRequestBody = z.infer<typeof UpdatePetRequestBody>;
+
+export const PetsQuery = z
+  .object({
+    // name: CaseSearchConditionModel.shape.name,
+  })
+  .merge(paginationQuery(z.enum(["name", "created_at"])))
+  .partial()
+  .optional();
+export type PetsQuery = z.infer<typeof PetsQuery>;

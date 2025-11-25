@@ -1,13 +1,25 @@
 "use client";
 
+import { PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
+
 import { PetResponseBody } from "customer_api";
 import Link from "next/link";
-import { Button, Card, CardContent, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "ui";
-import { PlusCircle } from "lucide-react";
 
-import { client } from "@/services/client";
+import {
+  Button,
+  Card,
+  CardContent,
+  Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "ui";
+
 import { PetCard } from "@/components/pet_card";
+import { client } from "@/services/client";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -34,18 +46,18 @@ export function PetsList() {
     setError(null);
 
     try {
-      const response = await client.pets.listPets({
+      const response = await client.pets.getPetsList({
         query: {
-          species: filters.species || undefined,
-          pet_status: filters.pet_status || undefined,
-          limit: ITEMS_PER_PAGE,
-          offset: (currentPage - 1) * ITEMS_PER_PAGE,
+          // species: filters.species || undefined,
+          // pet_status: filters.pet_status || undefined,
+          // limit: ITEMS_PER_PAGE,
+          // offset: (currentPage - 1) * ITEMS_PER_PAGE,
         },
       });
 
       if (response.status === 200) {
-        setPets(response.body.pets);
-        setTotal(response.body.total);
+        setPets(response.body.data);
+        setTotal(response.body.meta.total);
       } else {
         setError("Failed to fetch pets");
       }
@@ -67,7 +79,7 @@ export function PetsList() {
   const filteredPets = pets.filter((pet) =>
     filters.search
       ? pet.name.toLowerCase().includes(filters.search.toLowerCase())
-      : true
+      : true,
   );
 
   return (
@@ -87,7 +99,9 @@ export function PetsList() {
         <CardContent className="pt-6">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <div>
-              <label className="mb-2 block text-sm font-medium">Search by name</label>
+              <label className="mb-2 block text-sm font-medium">
+                Search by name
+              </label>
               <Input
                 placeholder="Search pets..."
                 value={filters.search}
@@ -97,7 +111,7 @@ export function PetsList() {
 
             <div>
               <label className="mb-2 block text-sm font-medium">Species</label>
-              <Select
+              {/*<Select
                 value={filters.species}
                 onValueChange={(value) => handleFilterChange("species", value)}
               >
@@ -112,25 +126,29 @@ export function PetsList() {
                   <SelectItem value="fish">Fish</SelectItem>
                   <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
-              </Select>
+              </Select>*/}
             </div>
 
             <div>
               <label className="mb-2 block text-sm font-medium">Status</label>
-              <Select
+              {/*<Select
                 value={filters.pet_status}
-                onValueChange={(value) => handleFilterChange("pet_status", value)}
+                onValueChange={(value) =>
+                  handleFilterChange("pet_status", value)
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder="All statuses" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="">All statuses</SelectItem>
-                  <SelectItem value="adopting">Available for Adoption</SelectItem>
+                  <SelectItem value="adopting">
+                    Available for Adoption
+                  </SelectItem>
                   <SelectItem value="has_owner">Has Owner</SelectItem>
                   <SelectItem value="inactive">Inactive</SelectItem>
                 </SelectContent>
-              </Select>
+              </Select>*/}
             </div>
           </div>
         </CardContent>
@@ -145,9 +163,7 @@ export function PetsList() {
 
       {/* Error State */}
       {error && (
-        <div className="rounded-lg bg-red-50 p-4 text-red-600">
-          {error}
-        </div>
+        <div className="rounded-lg bg-red-50 p-4 text-red-600">{error}</div>
       )}
 
       {/* Empty State */}
@@ -184,7 +200,9 @@ export function PetsList() {
               <Button
                 variant="outline"
                 disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                onClick={() =>
+                  setCurrentPage((p) => Math.min(totalPages, p + 1))
+                }
               >
                 Next
               </Button>

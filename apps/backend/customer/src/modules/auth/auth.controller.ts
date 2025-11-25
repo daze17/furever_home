@@ -124,6 +124,7 @@ export class AuthController {
     );
   }
 
+  @Public()
   @UseGuards(EmailRateLimitGuard)
   @EmailRateLimit(60)
   @TsRestHandler(customerContract.auth.registerCredentials)
@@ -170,6 +171,7 @@ export class AuthController {
     );
   }
 
+  @Public()
   @TsRestHandler(customerContract.auth.verifyAccount)
   async verifyAccount() {
     return tsRestHandler(

@@ -3,8 +3,8 @@ import { customerContract } from "customer_api";
 import { cookies } from "next/headers";
 
 import { backend } from "@/configs/default";
-import { sessionName } from "@/utils/create_session";
 import { Session } from "@/schemas/session";
+import { sessionName } from "@/utils/create_session";
 
 export const client = initClient(
   {
@@ -17,7 +17,10 @@ export const client = initClient(
     api: async (args) => {
       const interceptedArgs = await requestInterceptor(args);
       let response = await tsRestFetchApi(interceptedArgs);
-      const newResponse = await responseInterceptor({ ...interceptedArgs, response });
+      const newResponse = await responseInterceptor({
+        ...interceptedArgs,
+        response,
+      });
 
       // If interceptor returned a new response (from retry), use it
       return newResponse || response;
@@ -49,8 +52,11 @@ let isRefreshing = false;
 let refreshPromise: Promise<boolean> | null = null;
 
 const responseInterceptor = async (args: CustomResponseHandlerArgs) => {
-  const handlers: ((args: CustomResponseHandlerArgs) => Promise<Response | void>)[] = [
+  const handlers: ((
+    args: CustomResponseHandlerArgs,
+  ) => Promise<Response | void>)[] = [
     _handle401,
+    _handle418ProfileIncomplete,
     _forceLogout,
   ];
   for (const handler of handlers) {
@@ -63,10 +69,22 @@ const responseInterceptor = async (args: CustomResponseHandlerArgs) => {
 };
 
 // Handle 401 errors with token refresh
-const _handle401 = async ({ path, response, ...requestArgs }: CustomResponseHandlerArgs): Promise<Response | void> => {
+const _handle401 = async ({
+  path,
+  response,
+  ...requestArgs
+}: CustomResponseHandlerArgs): Promise<Response | void> => {
   // Skip 401 handling for authentication endpoints (they're expected to return 401)
-  const authEndpoints = ["/login/credentials", "/login/google", "/register", "/reset-password", "/refresh"];
-  const isAuthEndpoint = authEndpoints.some(endpoint => path.includes(endpoint));
+  const authEndpoints = [
+    "/login/credentials",
+    "/login/google",
+    "/register",
+    "/reset-password",
+    "/refresh",
+  ];
+  const isAuthEndpoint = authEndpoints.some((endpoint) =>
+    path.includes(endpoint),
+  );
 
   if (response.status !== 401 || isAuthEndpoint) {
     return;
@@ -124,6 +142,18 @@ const attemptTokenRefresh = async (): Promise<boolean> => {
     console.error("Token refresh failed:", error);
     return false;
   }
+};
+
+// Handle 418 (profile incomplete) - redirect to profile creation
+const _handle418ProfileIncomplete = async ({
+  response,
+}: CustomResponseHandlerArgs): Promise<Response | void> => {
+  if (response.status !== 418) {
+    return;
+  }
+
+  // Redirect to profile creation page
+  router.push("/register/create-profile");
 };
 
 // const _login = async ({ path, response }: CustomResponseHandlerArgs) => {

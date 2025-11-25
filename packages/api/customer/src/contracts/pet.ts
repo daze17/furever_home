@@ -4,10 +4,12 @@ import { c } from "@/contract";
 import { CustomError } from "@/models/custom_error";
 import {
   CreatePetRequestBody,
-  ListPetsResponseBody,
   PetResponseBody,
+  PetsListResponseBody,
+  PetsQuery,
   UpdatePetRequestBody,
 } from "@/schemas/dtos";
+import { PaginationMeta } from "@/models/pagination";
 
 export const petContract = c.router({
   // Create a new pet
@@ -23,18 +25,15 @@ export const petContract = c.router({
   },
 
   // Get all pets (with optional customer filter)
-  listPets: {
+  getPetsList: {
     method: "GET",
     path: "/pets",
-    query: z.object({
-      customer_id: z.string().uuid().optional(),
-      species: z.string().optional(),
-      pet_status: z.string().optional(),
-      limit: z.coerce.number().optional(),
-      offset: z.coerce.number().optional(),
-    }),
+    query: PetsQuery,
     responses: {
-      200: ListPetsResponseBody,
+      200: z.object({
+        data: PetsListResponseBody,
+        meta: PaginationMeta,
+      }),
       400: CustomError,
     },
     summary: "List all pets with optional filters",
