@@ -19,6 +19,10 @@ const nestConfig = [
     ],
     languageOptions: {
       parser: tsParser,
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+      },
     },
     plugins: {
       "@typescript-eslint": tseslint,

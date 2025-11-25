@@ -4,6 +4,7 @@ import { c } from "@/contract";
 import {
   ChangePasswordRequestBody,
   CreateCustomerProfileRequestBody,
+  CustomerProfileResponseBody,
   ForgotPasswordRequestBody,
   LoginCredentialsRequestBody,
   LoginGoogleRequestBody,
@@ -70,15 +71,6 @@ export const authContract = c.router({
     },
     summary: "verify email and complete registration with profile",
   },
-  // getCustomerProfile: {
-  //   method: "GET",
-  //   path: "/profile",
-  //   responses: {
-  //     200: UserProfileResponse,
-  //     400: CustomError,
-  //   },
-  //   summary: "get profile",
-  // },
 
   // Password Management
   forgotPassword: {

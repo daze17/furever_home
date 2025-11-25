@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { CustomerAccountModel, CustomerModel } from "@/models";
+import { CustomerAccountModel } from "@/models";
 
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[!-~]{8,}$/;
 
@@ -103,9 +103,7 @@ export const ResetPasswordRequestBody = z.object({
   token: z.string(),
   newPassword: z.string().regex(passwordRegex),
 });
-export type ResetPasswordRequestBody = z.infer<
-  typeof ResetPasswordRequestBody
->;
+export type ResetPasswordRequestBody = z.infer<typeof ResetPasswordRequestBody>;
 
 export const ChangePasswordRequestBody = z.object({
   currentPassword: z.string(),
