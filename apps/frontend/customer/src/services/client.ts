@@ -54,11 +54,7 @@ let refreshPromise: Promise<boolean> | null = null;
 const responseInterceptor = async (args: CustomResponseHandlerArgs) => {
   const handlers: ((
     args: CustomResponseHandlerArgs,
-  ) => Promise<Response | void>)[] = [
-    _handle401,
-    _handle418ProfileIncomplete,
-    _forceLogout,
-  ];
+  ) => Promise<Response | void>)[] = [_handle401, _forceLogout];
   for (const handler of handlers) {
     const response = await handler(args);
     if (response) {
@@ -144,17 +140,6 @@ const attemptTokenRefresh = async (): Promise<boolean> => {
   }
 };
 
-// Handle 418 (profile incomplete) - redirect to profile creation
-const _handle418ProfileIncomplete = async ({
-  response,
-}: CustomResponseHandlerArgs): Promise<Response | void> => {
-  if (response.status !== 418) {
-    return;
-  }
-
-  // Redirect to profile creation page
-  router.push("/register/create-profile");
-};
 
 // const _login = async ({ path, response }: CustomResponseHandlerArgs) => {
 //   if (!path.endsWith("/login/google") || response.status !== 200) {

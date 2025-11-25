@@ -52,7 +52,15 @@ export type GoogleRegisterResponseBody = z.infer<
 export const VerifyAccountRequestBody = z.object({
   token: z.string(),
   newPassword: z.string().regex(passwordRegex),
-  // profile: CreateProfileRequestBody,
+  // Profile fields
+  first_name: z.string().min(1, "First name is required"),
+  last_name: z.string().min(1, "Last name is required"),
+  nickname: z.string().optional(),
+  gender: z.enum(["male", "female", "other"]),
+  phone: z.string().optional(),
+  zip_code: z.string().optional(),
+  address: z.string().optional(),
+  profile_image_url: z.string().optional(),
 });
 export type VerifyAccountRequestBody = z.infer<typeof VerifyAccountRequestBody>;
 

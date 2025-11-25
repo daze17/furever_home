@@ -142,46 +142,16 @@ export class AuthController {
   }
 
   @Public()
-  @UseGuards(PartialJwtAuthGuard)
-  @TsRestHandler(customerContract.auth.createCustomerProfile)
-  async createProfile() {
-    return tsRestHandler(
-      customerContract.auth.createCustomerProfile,
-      async ({ body }) => {
-        const account = this.cls.get(CLS_KEYS.CUSTOMER_ACCOUNT);
-        if (!account) {
-          throw new BadRequestException("ACCOUNT_NOT_FOUND");
-        }
-
-        // Check if profile already exists
-        const existingAccount = await this.authRepository.getAccountById(
-          account.id,
-        );
-        if (existingAccount?.customer) {
-          throw new BadRequestException("PROFILE_ALREADY_EXISTS");
-        }
-
-        await this.authService.createCustomerProfile(account.id, body);
-
-        return {
-          status: 201,
-          body: {},
-        };
-      },
-    );
-  }
-
-  @Public()
   @TsRestHandler(customerContract.auth.verifyAccount)
   async verifyAccount() {
     return tsRestHandler(
       customerContract.auth.verifyAccount,
       async ({ body }) => {
-        await this.authService.verifyAccount(body);
+        const tokens = await this.authService.verifyAccount(body);
 
         return {
           status: 200,
-          body: {},
+          body: tokens,
         };
       },
     );

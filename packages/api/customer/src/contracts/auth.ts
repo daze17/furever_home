@@ -65,20 +65,10 @@ export const authContract = c.router({
     path: "/register/verify",
     body: VerifyAccountRequestBody,
     responses: {
-      200: z.object({}),
+      200: TokenResponseBody,
       400: CustomError,
     },
-    summary: "verify email by verify url",
-  },
-  createCustomerProfile: {
-    method: "POST",
-    path: "/register/create_customer_profile",
-    body: CreateCustomerProfileRequestBody,
-    responses: {
-      201: z.object({}),
-      400: CustomError,
-    },
-    summary: "create customer profile",
+    summary: "verify email and complete registration with profile",
   },
   // getCustomerProfile: {
   //   method: "GET",

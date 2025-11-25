@@ -137,4 +137,46 @@ export class AuthRepository {
       .set({ email, hash, status, customer_id })
       .where(eq(customer_accounts.id, accountId));
   }
+
+  async completeRegistration(
+    accountId: string,
+    hash: string,
+    profileData: CreateCustomerProfileRequestBody,
+  ) {
+    return await this.db.transaction(async (transaction) => {
+      const customerIds = await transaction
+        .insert(customers)
+        .values({
+          first_name: profileData.first_name,
+          last_name: profileData.last_name,
+          nickname: profileData.nickname,
+          address: profileData.address,
+          phone: profileData.phone,
+          profile_image_url: profileData.profile_image_url,
+          gender: profileData.gender,
+          zip_code: profileData.zip_code,
+        })
+        .returning({ id: customers.id });
+
+      const customerId = customerIds.find(Boolean)!.id;
+
+      await transaction
+        .update(customer_accounts)
+        .set({
+          hash,
+          customer_id: customerId,
+          status: "active",
+        })
+        .where(eq(customer_accounts.id, accountId));
+
+      const account = await transaction.query.customer_accounts.findFirst({
+        where: eq(customer_accounts.id, accountId),
+        with: {
+          customer: true,
+        },
+      });
+
+      return account!;
+    });
+  }
 }

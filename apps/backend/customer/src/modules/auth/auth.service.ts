@@ -71,22 +71,12 @@ export class AuthService {
     await this.sendVerificationEmail(customerAccountId, body.email);
   }
 
-  async createCustomerProfile(
-    accountId: string,
-    body: CreateCustomerProfileRequestBody,
-  ) {
-    const profile =
-      await this.customerRepository.getCustomerProfileByAccountId(accountId);
-    if (profile) {
-      throw new BadRequestException("PROFILE_ALREADY_EXISTS");
-    }
-    await this.authRepository.createCustomerProfileAndAssignToAccount(
-      accountId,
-      body,
-    );
-  }
 
-  async verifyAccount({ token, newPassword }: VerifyAccountRequestBody) {
+  async verifyAccount(body: VerifyAccountRequestBody) {
+    // Extract token, password, and profile data
+    const { token, newPassword, ...profileData } = body;
+
+    // 1. Verify JWT token
     const payload = await this.jwtService
       .verifyAsync<{ sub: string }>(token, {
         secret: this.configService.get<string>("jwt.secret.emailVerification"),
@@ -103,20 +93,53 @@ export class AuthService {
       throw new BadRequestException("INVALID_TOKEN");
     }
 
+    // 2. Get account
     const account = await this.authRepository.getAccountById(payload.sub);
 
     if (!account) {
       throw new BadRequestException("INVALID_TOKEN");
     }
 
+    // Check if account already has profile
+    if (account.customer_id) {
+      throw new BadRequestException("ACCOUNT_ALREADY_VERIFIED");
+    }
+
+    // 3. Hash password
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(newPassword, salt);
 
-    // TODO: send email
-    await this.authRepository.updateCustomerAccount(account.id, {
-      status: "active",
+    // 4. Complete registration atomically (profile + password + activate)
+    const completedAccount = await this.authRepository.completeRegistration(
+      account.id,
       hash,
+      profileData as CreateCustomerProfileRequestBody,
+    );
+
+    // 5. Generate JWT tokens for auto-login
+    const accessToken = await generateJWT({
+      expirationTime: this.configService.get<string>(
+        "jwt.expiresIn.accessToken",
+      )!,
+      payload: {
+        sub: completedAccount.customer!.id,
+        user: completedAccount.customer,
+      },
+      secret: this.configService.get<string>("jwt.secret.accessToken")!,
     });
+
+    const refreshToken = await generateJWT({
+      expirationTime: this.configService.get<string>(
+        "jwt.expiresIn.refreshToken",
+      )!,
+      payload: {
+        sub: completedAccount.id,
+        user: null,
+      },
+      secret: this.configService.get<string>("jwt.secret.refreshToken")!,
+    });
+
+    return { accessToken, refreshToken };
   }
 
   async forgotPassword(body: ForgotPasswordRequestBody) {
