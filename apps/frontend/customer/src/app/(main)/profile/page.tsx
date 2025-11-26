@@ -1,11 +1,17 @@
-import { ProfileView } from "./profile_view";
+import { client } from "@/services/client.server";
 
-export const revalidate = 0;
+import ProfileView from "./profile_view";
 
-export default function ProfilePage() {
+const ProfilePage: React.Page = async () => {
+  const response = await client.customer.getCustomerProfile();
+  if (response.status !== 200) {
+    return <div>error</div>;
+  }
   return (
     <div className="container mx-auto px-4 py-8">
-      <ProfileView />
+      <ProfileView profileData={response.body} />
     </div>
   );
-}
+};
+
+export default ProfilePage;

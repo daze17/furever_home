@@ -16,7 +16,7 @@ export const defaultOptions: CookieSerializeOptions = {
   sameSite: "lax",
   secure: true,
 };
-export const sessionName = "session";
+export const sessionName = "accessToken";
 
 export const createSession = (
   token: string,

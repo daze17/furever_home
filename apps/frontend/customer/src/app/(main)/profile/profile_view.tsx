@@ -1,9 +1,8 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import Link from "next/link";
 import { ArrowLeft, Edit } from "lucide-react";
+
 import type { CustomerProfileResponseBody } from "customer_api";
+import Link from "next/link";
+
 import {
   Avatar,
   AvatarFallback,
@@ -15,79 +14,17 @@ import {
   CardTitle,
 } from "ui";
 
-import { client } from "@/services/client";
-
-export function ProfileView() {
-  const [profile, setProfile] = useState<CustomerProfileResponseBody | null>(
-    null,
-  );
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetchProfile();
-  }, []);
-
-  const fetchProfile = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await client.customer.getCustomerProfile();
-
-      if (response.status === 200) {
-        setProfile(response.body);
-      } else if (response.status === 400) {
-        setError("Unable to load profile. Please try again.");
-      } else if (response.status === 404) {
-        setError("Profile not found");
-      } else {
-        setError("An error occurred while loading your profile");
-      }
-    } catch (err) {
-      setError("An error occurred while loading your profile");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="py-12 text-center">
-        <p className="text-gray-500">Loading profile...</p>
-      </div>
-    );
-  }
-
-  if (error || !profile) {
-    return (
-      <div>
-        <div className="rounded-lg bg-red-50 p-4 text-red-600">
-          {error || "Profile not found"}
-        </div>
-        <Button asChild className="mt-4">
-          <Link href="/">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Home
-          </Link>
-        </Button>
-      </div>
-    );
-  }
-
+const ProfileView: React.FC<{
+  profileData: CustomerProfileResponseBody;
+}> = (data) => {
+  const profile = data.profileData;
   // Generate avatar initials
   const getInitials = () => {
     const firstInitial = profile.first_name?.[0] || "";
     const lastInitial = profile.last_name?.[0] || "";
     return (firstInitial + lastInitial).toUpperCase() || "?";
   };
-
   // Format display name
-  const displayName = [profile.first_name, profile.last_name]
-    .filter(Boolean)
-    .join(" ") || "User";
-
   return (
     <div>
       {/* Header with Back and Edit buttons */}
@@ -111,9 +48,13 @@ export function ProfileView() {
         <CardContent className="flex flex-col items-center pt-6">
           <Avatar className="h-24 w-24 border-2">
             <AvatarImage src={profile.profile_image_url || ""} />
-            <AvatarFallback className="text-2xl">{getInitials()}</AvatarFallback>
+            <AvatarFallback className="text-2xl">
+              {getInitials()}
+            </AvatarFallback>
           </Avatar>
-          <h1 className="mt-4 text-2xl font-bold">{displayName}</h1>
+          <h1 className="mt-4 text-2xl font-bold">
+            {[profile.first_name, profile.last_name].join(" ")}
+          </h1>
           <p className="text-sm text-gray-500">
             {profile.nickname ? `"${profile.nickname}"` : "Not provided"}
           </p>
@@ -184,7 +125,7 @@ export function ProfileView() {
         <CardContent className="space-y-2">
           <div className="flex justify-between">
             <span className="text-sm text-gray-500">Account ID:</span>
-            <span className="text-sm font-medium font-mono">
+            <span className="font-mono text-sm font-medium">
               {profile.id.slice(0, 8)}...
             </span>
           </div>
@@ -204,4 +145,6 @@ export function ProfileView() {
       </Card>
     </div>
   );
-}
+};
+
+export default ProfileView;
