@@ -1,13 +1,12 @@
-import "server-only";
-
 import { cookies } from "next/headers";
+import "server-only";
 
 import { session } from "@/configs/default";
 
 import { verifyAccessToken } from "./verify_access_token";
 
 export const getSession = async () => {
-  const token = cookies().get("session")?.value;
+  const token = cookies().get("accessToken")?.value;
   if (!token) {
     return null;
   }

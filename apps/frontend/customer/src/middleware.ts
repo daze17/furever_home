@@ -1,4 +1,3 @@
-// import { UserModel, UserRoleEnum } from "customer_api";
 import type { NextMiddleware, NextRequest } from "next/server";
 
 import { allowedRoutes, authRoutes, publicRoutes } from "@/configs/default";
@@ -78,26 +77,13 @@ const protectedRoutesGuard = (
     return Response.redirect(new URL("/login", request.nextUrl), 307);
   }
 
-  // const isAllowedRoute = allowedRoutes.some((route) => {
-  //   if (typeof route === "string") {
-  //     return route === pathname;
-  //   }
-  //   return route.test(pathname);
-  // });
-  // if (!isAllowedRoute) {
-  //   const requestHeaders = new Headers(request.headers);
-  //   requestHeaders.set(
-  //     "x-data",
-  //     JSON.stringify({
-  //       message: "Unauthorized",
-  //       redirect: "/",
-  //     }),
-  //   );
-  //
-  //   return NextResponse.rewrite(new URL("/", origin), {
-  //     request: {
-  //       headers: requestHeaders,
-  //     },
-  //   });
-  // }
+  const isAllowedRoute = allowedRoutes.some((route) => {
+    if (typeof route === "string") {
+      return route === pathname;
+    }
+    return route.test(pathname);
+  });
+  if (!isAllowedRoute) {
+    return Response.redirect(new URL("/login", request.nextUrl), 307);
+  }
 };
