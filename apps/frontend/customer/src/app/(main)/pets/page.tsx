@@ -10,7 +10,7 @@ import PetsList from "./pets_list";
 import { petsListSPCache, searchParamsCache } from "./search_params";
 
 const ProfilePage: React.Page = async (props) => {
-  const searchParams = props.searchParams;
+  const searchParams = (await props.searchParams);
   searchParamsCache.parse(searchParams);
   petsListSPCache.parse(searchParams);
 

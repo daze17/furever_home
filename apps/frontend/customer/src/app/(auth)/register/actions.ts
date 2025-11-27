@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 
 export async function setRegistrationEmailCookie(email: string) {
-  cookies().set("registration_email", email, {
+  (await cookies()).set("registration_email", email, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
@@ -13,7 +13,7 @@ export async function setRegistrationEmailCookie(email: string) {
 }
 
 export async function setLastResendTimestamp(timestamp: number) {
-  cookies().set("last_resend_timestamp", timestamp.toString(), {
+  (await cookies()).set("last_resend_timestamp", timestamp.toString(), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",

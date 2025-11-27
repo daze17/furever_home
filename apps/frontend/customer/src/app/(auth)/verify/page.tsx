@@ -4,7 +4,8 @@ interface Props {
   searchParams: { token?: string };
 }
 
-const VerifyPage: React.Page<Props> = async ({ searchParams }) => {
+const VerifyPage: React.Page<Props> = async props => {
+  const searchParams = await props.searchParams;
   const token = searchParams.token;
 
   if (!token) {

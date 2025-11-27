@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { EmailSentDisplay } from "./email_sent_display";
 
 const EmailSentPage: React.Page = async () => {
-  const email = cookies().get("reset-email")?.value;
+  const email = (await cookies()).get("reset-email")?.value;
 
   if (!email) {
     redirect("/forgot-password");

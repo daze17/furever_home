@@ -13,7 +13,7 @@ import {
 // PUT - Refresh access token using refresh token
 export const PUT = async () => {
   try {
-    const refreshToken = cookies().get(refreshTokenName)?.value;
+    const refreshToken = (await cookies()).get(refreshTokenName)?.value;
 
     if (!refreshToken) {
       return NextResponse.json(

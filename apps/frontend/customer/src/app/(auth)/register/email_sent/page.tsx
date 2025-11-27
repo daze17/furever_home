@@ -6,14 +6,14 @@ import { EmailSentForm } from "./email_sent_form";
 const COOLDOWN_SECONDS = 60;
 
 const RegisterEmailSentPage: React.Page = async () => {
-  const email = cookies().get("registration_email")?.value;
+  const email = (await cookies()).get("registration_email")?.value;
 
   if (!email) {
     redirect("/register");
   }
 
   // Calculate initial countdown server-side
-  const lastResendTimestamp = cookies().get("last_resend_timestamp")?.value;
+  const lastResendTimestamp = (await cookies()).get("last_resend_timestamp")?.value;
   let initialCountdown = 0;
 
   if (lastResendTimestamp) {
