@@ -2,6 +2,8 @@ import { Controller } from "@nestjs/common";
 import { TsRestHandler, tsRestHandler } from "@ts-rest/nest";
 import { customerContract, PetsListResponseBody } from "customer_api";
 
+import { Public } from "@/common/decorators/public";
+
 import { PetsService } from "./pets.service";
 
 @Controller()
@@ -20,6 +22,7 @@ export class PetsController {
     });
   }
 
+  @Public()
   @TsRestHandler(customerContract.pets.getPetsList)
   async getPetsList() {
     return tsRestHandler(

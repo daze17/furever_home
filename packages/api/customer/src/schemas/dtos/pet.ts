@@ -1,5 +1,6 @@
 import { PetExtraInformationModel, PetModel } from "@/models";
 import { paginationQuery } from "@/models/pagination";
+import { PetSizeEnum, PetSpeciesEnum } from "common_api";
 import { z } from "zod";
 
 export const CreatePetExtraInformationRequestBody =
@@ -49,7 +50,9 @@ export type UpdatePetRequestBody = z.infer<typeof UpdatePetRequestBody>;
 
 export const PetsQuery = z
   .object({
-    // name: CaseSearchConditionModel.shape.name,
+    name: PetModel.shape.name,
+    sizes: PetSizeEnum.array(),
+    species: PetSpeciesEnum.array(),
   })
   .merge(paginationQuery(z.enum(["name", "created_at"])))
   .partial()

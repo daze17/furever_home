@@ -1,9 +1,8 @@
 "use client";
 
 import { PlusCircle } from "lucide-react";
-import { useEffect, useState } from "react";
 
-import { PetResponseBody } from "customer_api";
+import { PetsListResponseBody } from "customer_api";
 import Link from "next/link";
 
 import {
@@ -19,69 +18,10 @@ import {
 } from "ui";
 
 import { PetCard } from "@/components/pet_card";
-import { client } from "@/services/client";
 
-const ITEMS_PER_PAGE = 12;
-
-export function PetsList() {
-  const [pets, setPets] = useState<PetResponseBody[]>([]);
-  const [total, setTotal] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const [filters, setFilters] = useState({
-    species: "",
-    pet_status: "",
-    search: "",
-  });
-  const [currentPage, setCurrentPage] = useState(1);
-
-  useEffect(() => {
-    fetchPets();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters, currentPage]);
-
-  const fetchPets = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await client.pets.getPetsList({
-        query: {
-          // species: filters.species || undefined,
-          // pet_status: filters.pet_status || undefined,
-          // limit: ITEMS_PER_PAGE,
-          // offset: (currentPage - 1) * ITEMS_PER_PAGE,
-        },
-      });
-
-      if (response.status === 200) {
-        setPets(response.body.data);
-        setTotal(response.body.meta.total);
-      } else {
-        setError("Failed to fetch pets");
-      }
-    } catch (err) {
-      setError("An error occurred while fetching pets");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleFilterChange = (key: string, value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-    setCurrentPage(1);
-  };
-
-  const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
-
-  const filteredPets = pets.filter((pet) =>
-    filters.search
-      ? pet.name.toLowerCase().includes(filters.search.toLowerCase())
-      : true,
-  );
-
+const PetsList: React.FC<{
+  pets: PetsListResponseBody;
+}> = (data) => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8 flex items-center justify-between">
@@ -98,7 +38,7 @@ export function PetsList() {
       <Card className="mb-6">
         <CardContent className="pt-6">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            <div>
+            {/*<div>
               <label className="mb-2 block text-sm font-medium">
                 Search by name
               </label>
@@ -108,7 +48,7 @@ export function PetsList() {
                 onChange={(e) => handleFilterChange("search", e.target.value)}
               />
             </div>
-
+*/}
             <div>
               <label className="mb-2 block text-sm font-medium">Species</label>
               {/*<Select
@@ -154,62 +94,41 @@ export function PetsList() {
         </CardContent>
       </Card>
 
-      {/* Loading State */}
-      {loading && (
-        <div className="py-12 text-center">
-          <p className="text-gray-500">Loading pets...</p>
-        </div>
-      )}
-
-      {/* Error State */}
-      {error && (
-        <div className="rounded-lg bg-red-50 p-4 text-red-600">{error}</div>
-      )}
-
-      {/* Empty State */}
-      {!loading && !error && filteredPets.length === 0 && (
-        <div className="py-12 text-center">
-          <p className="text-gray-500">No pets found</p>
-        </div>
-      )}
-
       {/* Pets Grid */}
-      {!loading && !error && filteredPets.length > 0 && (
-        <>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {filteredPets.map((pet) => (
-              <PetCard key={pet.id} pet={pet} />
-            ))}
+      <>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {data.pets.map((pet) => (
+            <PetCard key={pet.id} pet={pet} />
+          ))}
+        </div>
+
+        {/* Pagination */}
+        {/*{totalPages > 1 && (
+          <div className="mt-8 flex items-center justify-center gap-2">
+            <Button
+              variant="outline"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            >
+              Previous
+            </Button>
+
+            <span className="text-sm text-gray-600">
+              Page {currentPage} of {totalPages}
+            </span>
+
+            <Button
+              variant="outline"
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            >
+              Next
+            </Button>
           </div>
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="mt-8 flex items-center justify-center gap-2">
-              <Button
-                variant="outline"
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              >
-                Previous
-              </Button>
-
-              <span className="text-sm text-gray-600">
-                Page {currentPage} of {totalPages}
-              </span>
-
-              <Button
-                variant="outline"
-                disabled={currentPage === totalPages}
-                onClick={() =>
-                  setCurrentPage((p) => Math.min(totalPages, p + 1))
-                }
-              >
-                Next
-              </Button>
-            </div>
-          )}
-        </>
-      )}
+        )}*/}
+      </>
     </div>
   );
-}
+};
+
+export default PetsList;

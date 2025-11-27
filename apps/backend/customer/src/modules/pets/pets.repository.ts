@@ -5,9 +5,16 @@ import {
   PetsQuery,
 } from "customer_api";
 import { pet_extra_informations, pets } from "database";
-import { and, asc, SQL } from "drizzle-orm";
-import { count } from "drizzle-orm";
-import { desc } from "drizzle-orm";
+import {
+  and,
+  asc,
+  count,
+  desc,
+  eq,
+  inArray,
+  isNotNull,
+  SQL,
+} from "drizzle-orm";
 
 import type { Database } from "@/modules/database/database.providers";
 
@@ -162,9 +169,17 @@ export class PetsRepository {
   private mapPetsQuery(query: PetsQuery = {}) {
     const conditions: SQL<unknown | undefined>[] = [];
 
-    const {
-      //
-    } = query;
+    const { name, sizes, species } = query;
+
+    if (name) {
+      conditions.push(eq(pets.name, name));
+    }
+    // if (sizes && sizes.length > 0) {
+    //   conditions.push(and(isNotNull(pets.size), inArray(pets.size, sizes)));
+    // }
+    if (species && species.length > 0) {
+      conditions.push(inArray(pets.species, species));
+    }
 
     return conditions;
   }

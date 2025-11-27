@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { Toaster } from "ui";
 import "ui/styles/globals.css";
@@ -32,7 +33,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={cn(nunito.className)}>
         <Header />
-        <main className="mt-[80px]">{children}</main>
+        <NuqsAdapter>
+          <main className="mt-[80px]">{children}</main>
+        </NuqsAdapter>
         <Footer />
         <GlobalTransition />
         <Toaster />
