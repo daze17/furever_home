@@ -1,9 +1,18 @@
 "use client";
 
-import { CldUploadWidget, CloudinaryUploadWidgetInfo } from "next-cloudinary";
+import dynamic from "next/dynamic";
+import { CloudinaryUploadWidgetInfo } from "next-cloudinary";
 import { useState } from "react";
 
-import { CldImage } from "@/components/cld_image";
+const CldUploadWidget = dynamic(
+  () => import("next-cloudinary").then((mod) => mod.CldUploadWidget),
+  { ssr: false }
+);
+
+const CldImage = dynamic(
+  () => import("@/components/cld_image").then((mod) => mod.CldImage),
+  { ssr: false }
+);
 
 const ImageUploadPage = () => {
   const [resource, setResource] = useState<CloudinaryUploadWidgetInfo>();

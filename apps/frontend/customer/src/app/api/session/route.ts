@@ -10,8 +10,8 @@ import {
 } from "@/utils/create_tokens";
 
 // GET - Returns access token only
-export const GET = () => {
-  const accessToken = cookies().get(accessTokenName)?.value;
+export const GET = async () => {
+  const accessToken = (await cookies()).get(accessTokenName)?.value;
   if (!accessToken) return NextResponse.json(null);
 
   return NextResponse.json(accessToken);
@@ -32,10 +32,10 @@ export const POST = async (request: Request) => {
 };
 
 // DELETE - Clears both tokens
-export const DELETE = () => {
+export const DELETE = async () => {
   // https://nextjs.org/docs/app/building-your-application/caching#invalidation-1
-  cookies().delete(accessTokenName);
-  cookies().delete(refreshTokenName);
+  (await cookies()).delete(accessTokenName);
+  (await cookies()).delete(refreshTokenName);
 
   return new NextResponse(null, { status: 200 });
 };

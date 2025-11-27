@@ -51,7 +51,7 @@ export const POST = async (request: NextRequest) => {
     const { accessToken, refreshToken } = response.body;
 
     // Set both tokens as cookies
-    const cookiesInstance = cookies();
+    const cookiesInstance = await cookies();
     cookiesInstance.set(accessTokenName, accessToken, {
       httpOnly: true,
       maxAge: 60 * 15, // 15 minutes

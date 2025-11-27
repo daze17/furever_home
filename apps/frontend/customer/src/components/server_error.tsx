@@ -13,7 +13,7 @@ export const ServerError: React.FC<Props> = ({ message }) => {
   return <div className="text-red-500">{message}</div>;
 };
 
-export const serverErrorMap = <
+export const serverErrorMap = async <
   T extends {
     status: number;
     body: unknown;
@@ -24,7 +24,8 @@ export const serverErrorMap = <
 ) => {
   // TODO: filter by pathname?
   //
-  const pathname = headers().get("x-middleware-request-x-pathname");
+  const headerStore = await headers();
+  const pathname = headerStore.get("x-middleware-request-x-pathname");
   if (response.status === 401) {
     // TODO: force logout
     // return <ForceLogout />;

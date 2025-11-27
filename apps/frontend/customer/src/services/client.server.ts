@@ -23,7 +23,7 @@ export const client = initClient(
 
 type CustomRequestHandlerArgs = ApiFetcherArgs;
 const requestInterceptor = async (_args: CustomRequestHandlerArgs) => {
-  const session = cookies().get(sessionName)?.value;
+  const session = (await cookies()).get(sessionName)?.value;
 
   const args = _args;
   if (session) {

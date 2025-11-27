@@ -19,6 +19,7 @@ import {
 } from "ui";
 
 import { client } from "@/services/client";
+import { setResetEmailCookie } from "./actions";
 
 type Schema = typeof ForgotPasswordRequestBody._type;
 
@@ -45,7 +46,7 @@ export const ForgotPasswordForm: React.FC = () => {
           toast.success("Password reset email sent", {
             description: "Check your email for reset instructions",
           });
-          sessionStorage.setItem("reset-email", data.email);
+          await setResetEmailCookie(data.email);
           router.push("/forgot-password/email-sent");
           break;
         case 400:

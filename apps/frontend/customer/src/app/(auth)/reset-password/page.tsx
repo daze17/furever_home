@@ -1,35 +1,17 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Card, CardContent } from "ui";
+import { redirect } from "next/navigation";
 
 import { ResetPasswordForm } from "./reset_password_form";
 
-const ResetPasswordPage: React.Page = () => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [token, setToken] = useState<string | null>(null);
+interface Props {
+  searchParams: Promise<{ token?: string | string[] }>;
+}
 
-  useEffect(() => {
-    const tokenParam = searchParams.get("token");
-    if (!tokenParam) {
-      router.push("/forgot-password");
-      return;
-    }
-    setToken(tokenParam);
-  }, [router, searchParams]);
+const ResetPasswordPage: React.Page<Props> = async props => {
+  const searchParams = await props.searchParams;
+  const token = Array.isArray(searchParams.token) ? searchParams.token[0] : searchParams.token;
 
   if (!token) {
-    return (
-      <main className="flex h-[calc(100dvh-190px)] w-full items-center justify-center">
-        <Card className="shadow-xl">
-          <CardContent className="p-10">
-            <p className="text-muted-foreground">Loading...</p>
-          </CardContent>
-        </Card>
-      </main>
-    );
+    redirect("/forgot-password");
   }
 
   return (

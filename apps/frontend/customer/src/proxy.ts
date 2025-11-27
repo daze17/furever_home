@@ -21,7 +21,7 @@ type Session = {
   id: string;
   // role: UserRoleEnum;
 };
-export const middleware: NextMiddleware = async (request) => {
+export const proxy: NextMiddleware = async (request) => {
   const payload = await getSession();
   const session: Session | null = payload
     ? {

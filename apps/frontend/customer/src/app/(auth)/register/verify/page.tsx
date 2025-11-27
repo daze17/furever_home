@@ -5,7 +5,8 @@ import { PasswordCreateForm } from "./password_create_form";
 interface Props {
   searchParams: { token: string };
 }
-const RegisterVerifyPage: React.FC<Props> = async ({ searchParams }) => {
+const RegisterVerifyPage: React.FC<Props> = async props => {
+  const searchParams = await props.searchParams;
   if (!searchParams.token) return <ServerError message={`Токен буруу байна`} />;
 
   return (

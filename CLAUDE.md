@@ -41,6 +41,11 @@ pnpm check-types
 
 # Format all code
 pnpm format
+
+# Frontend-specific linting (apps/frontend/customer)
+cd apps/frontend/customer
+pnpm eslint              # Check for ESLint errors
+pnpm eslint:fix          # Auto-fix ESLint errors
 ```
 
 ### Backend-Specific Commands (apps/backend/customer)
@@ -68,6 +73,12 @@ pnpm db:generate
 
 # Push schema changes to database
 pnpm db:migrate
+
+# Seed database with initial data
+pnpm db:seed
+
+# Open Drizzle Studio (database GUI)
+pnpm db:studio
 ```
 
 ### Docker
@@ -137,10 +148,16 @@ docker-compose up -d
 - **Image Handling**: Cloudinary via next-cloudinary
 
 **Route Structure** (`src/app/`):
-- `(auth)/*`: Authentication routes (login, register) - redirects to home if authenticated
+- `(auth)/*`: Authentication routes (login, register, forgot-password, verify) - redirects to home if authenticated
 - `(main)/*`: Protected main application routes (home, donation, faq, image upload)
 - `api/*`: API route handlers
 - `_layout`: Shared layout components
+
+**Server Actions Pattern**:
+- Server Actions are used for cookie management and other server-side operations
+- Located in `actions.ts` files within route folders (e.g., `(auth)/register/actions.ts`)
+- Common use cases: setting HTTP-only cookies, server-side data mutations
+- Example: `setRegistrationEmailCookie()`, `setResetEmailCookie()`
 
 **Middleware** (`src/middleware.ts`):
 - `authRoutesGuard`: Redirects authenticated users away from auth pages
@@ -202,7 +219,11 @@ This package is the single source of truth for API types, ensuring frontend and 
 ## Key Technical Patterns
 
 ### Type-Safe API Communication
-Frontend and backend communicate through `@ts-rest` contracts defined in `packages/api/customer`. Changes to API contracts automatically update both client and server types.
+Frontend and backend communicate through `@ts-rest` contracts defined in `packages/api/customer`. The frontend uses two approaches:
+1. **Direct API calls**: Using ts-rest client for backend API requests (e.g., login, registration)
+2. **Server Actions**: Next.js Server Actions for server-side operations (e.g., cookie management)
+
+Changes to API contracts automatically update both client and server types.
 
 ### Authentication Flow
 1. User logs in via `/api/auth/login` endpoint (backend)
@@ -214,8 +235,9 @@ Frontend and backend communicate through `@ts-rest` contracts defined in `packag
 ### Database Workflow
 1. Define/update schemas in `packages/database/src/schemas/`
 2. Run `pnpm db:generate` to create migration files
-3. Run `pnpm db:migrate` to apply migrations
-4. Update Zod schemas in `packages/api/customer/src/schemas/` using drizzle-zod
+3. Run `pnpm db:migrate` to apply migrations to database
+4. (Optional) Run `pnpm db:seed` to populate with test data
+5. Update Zod schemas in `packages/api/customer/src/schemas/` using drizzle-zod
 
 ### Shared Component Development
 1. Create components in `packages/ui/components/`

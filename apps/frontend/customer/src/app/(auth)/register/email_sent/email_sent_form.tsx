@@ -4,7 +4,6 @@ import { ArrowLeft, MailIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 import {
   Button,
@@ -17,37 +16,18 @@ import {
 } from "ui";
 
 import { client } from "@/services/client";
+import { setLastResendTimestamp } from "../actions";
 
 const COOLDOWN_SECONDS = 60;
-const STORAGE_KEY_EMAIL = "registration_email";
-const STORAGE_KEY_LAST_RESEND = "last_resend_timestamp";
 
-export const EmailSentForm = () => {
+interface Props {
+  email: string;
+  initialCountdown: number;
+}
+
+export const EmailSentForm: React.FC<Props> = ({ email, initialCountdown }) => {
   const [isPending, setIsPending] = useState(false);
-  const [email, setEmail] = useState<string | null>(null);
-  const [countdown, setCountdown] = useState(0);
-  const router = useRouter();
-
-  useEffect(() => {
-    const storedEmail = sessionStorage.getItem(STORAGE_KEY_EMAIL);
-    if (!storedEmail) {
-      router.push("/register");
-      return;
-    }
-    setEmail(storedEmail);
-
-    // Check if there's a recent resend attempt
-    const lastResendTimestamp = sessionStorage.getItem(STORAGE_KEY_LAST_RESEND);
-    if (lastResendTimestamp) {
-      const timeSinceLastResend = Math.floor(
-        (Date.now() - parseInt(lastResendTimestamp)) / 1000,
-      );
-      const remainingCooldown = COOLDOWN_SECONDS - timeSinceLastResend;
-      if (remainingCooldown > 0) {
-        setCountdown(remainingCooldown);
-      }
-    }
-  }, [router]);
+  const [countdown, setCountdown] = useState(initialCountdown);
 
   useEffect(() => {
     if (countdown > 0) {
@@ -78,10 +58,7 @@ export const EmailSentForm = () => {
             description: "Баталгаажуулах имэйл амжилттай дахин илгээгдлээ.",
           });
           // Set the cooldown timer
-          sessionStorage.setItem(
-            STORAGE_KEY_LAST_RESEND,
-            Date.now().toString(),
-          );
+          await setLastResendTimestamp(Date.now());
           setCountdown(COOLDOWN_SECONDS);
           break;
         case 400:
@@ -93,9 +70,8 @@ export const EmailSentForm = () => {
         case 429:
           // Backend enforced rate limit
           const retryAfter = response.body.retry_after;
-          sessionStorage.setItem(
-            STORAGE_KEY_LAST_RESEND,
-            (Date.now() - (COOLDOWN_SECONDS - retryAfter) * 1000).toString(),
+          await setLastResendTimestamp(
+            Date.now() - (COOLDOWN_SECONDS - retryAfter) * 1000,
           );
           setCountdown(retryAfter);
           toast.error("Хэт олон хүсэлт", {

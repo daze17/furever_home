@@ -9,8 +9,9 @@ import { MobileNav } from "./mobile_nav";
 import { Navigation } from "./navigation";
 import { ProfileSection } from "./profile_section";
 
-export const Header: React.FC = () => {
-  const accessToken = cookies().get(accessTokenName)?.value;
+export const Header = async () => {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get(accessTokenName)?.value;
   const isAuthenticated = !!accessToken;
   return (
     <header className="fixed top-0 z-50 w-full border-b border-orange-100 bg-white/95 shadow-sm backdrop-blur-md">
