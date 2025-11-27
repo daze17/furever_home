@@ -23,6 +23,7 @@ import {
 import { cn } from "utils";
 
 import { client } from "@/services/client";
+import { setRegistrationEmailCookie, setLastResendTimestamp } from "./actions";
 
 import { GoogleRegister } from "./google_register";
 
@@ -61,7 +62,7 @@ export const RegisterForm: React.FC<Props> = ({ redirectTo }) => {
             description: "Баталгаажуулах имэйл илгээгдлээ",
           });
           setIsPending(false);
-          sessionStorage.setItem("registration_email", data.email);
+          await setRegistrationEmailCookie(data.email);
           router.push("/register/email_sent");
           break;
         case 400:
@@ -74,11 +75,8 @@ export const RegisterForm: React.FC<Props> = ({ redirectTo }) => {
           break;
         case 429:
           const retryAfter = response.body.retry_after;
-          sessionStorage.setItem("registration_email", data.email);
-          sessionStorage.setItem(
-            "last_resend_timestamp",
-            (Date.now() - (60 - retryAfter) * 1000).toString(),
-          );
+          await setRegistrationEmailCookie(data.email);
+          await setLastResendTimestamp(Date.now() - (60 - retryAfter) * 1000);
           toast.error("Хэт олон хүсэлт", {
             description: `${retryAfter} секунд хүлээнэ үү.`,
           });
