@@ -71,7 +71,6 @@ export class AuthService {
     await this.sendVerificationEmail(customerAccountId, body.email);
   }
 
-
   async verifyAccount(body: VerifyAccountRequestBody) {
     // Extract token, password, and profile data
     const { token, newPassword, ...profileData } = body;
@@ -122,7 +121,7 @@ export class AuthService {
         "jwt.expiresIn.accessToken",
       )!,
       payload: {
-        sub: completedAccount.customer!.id,
+        sub: completedAccount.id,
         user: completedAccount.customer,
       },
       secret: this.configService.get<string>("jwt.secret.accessToken")!,

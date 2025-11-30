@@ -147,9 +147,10 @@ export function PetForm({ pet, mode }: PetFormProps) {
         <FormField
           control={form.control}
           name="name"
+          required
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name *</FormLabel>
+              <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input placeholder="Enter pet name" {...field} />
               </FormControl>
@@ -162,9 +163,10 @@ export function PetForm({ pet, mode }: PetFormProps) {
           <FormField
             control={form.control}
             name="species"
+            required
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Species *</FormLabel>
+                <FormLabel>Species</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
@@ -229,9 +231,10 @@ export function PetForm({ pet, mode }: PetFormProps) {
           <FormField
             control={form.control}
             name="pet_status"
+            required
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Status *</FormLabel>
+                <FormLabel>Status</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>

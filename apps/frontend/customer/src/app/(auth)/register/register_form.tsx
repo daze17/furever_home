@@ -23,8 +23,8 @@ import {
 import { cn } from "utils";
 
 import { client } from "@/services/client";
-import { setRegistrationEmailCookie, setLastResendTimestamp } from "./actions";
 
+import { setLastResendTimestamp, setRegistrationEmailCookie } from "./actions";
 import { GoogleRegister } from "./google_register";
 
 type Props = {
@@ -73,14 +73,19 @@ export const RegisterForm: React.FC<Props> = ({ redirectTo }) => {
           toast.error("Токен буруу байна");
           setIsPending(false);
           break;
+        case 409:
+          toast.error("Бүртгэлтэй аккаунт байна");
+          setIsPending(false);
+          break;
         case 429:
-          const retryAfter = response.body.retry_after;
           await setRegistrationEmailCookie(data.email);
-          await setLastResendTimestamp(Date.now() - (60 - retryAfter) * 1000);
+          await setLastResendTimestamp(
+            Date.now() - (60 - response.body.retry_after) * 1000,
+          );
           toast.error("Хэт олон хүсэлт", {
-            description: `${retryAfter} секунд хүлээнэ үү.`,
+            description: `${response.body.retry_after} секунд хүлээнэ үү.`,
           });
-          router.push("/register/email_sent");
+          // router.push("/register/email_sent");
           setIsPending(false);
           break;
         default:

@@ -1,13 +1,13 @@
 "use client";
 
 import { Loader2Icon } from "lucide-react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { z } from "zod";
 
 import {
   Button,
@@ -68,7 +68,7 @@ const schema = z
 
 type Schema = z.infer<typeof schema>;
 
-export const PasswordCreateForm: React.FC<Props> = ({ token }) => {
+const ProfileCreateForm: React.FC<Props> = ({ token }) => {
   const [isPending, setIsPending] = useState(false);
   const router = useRouter();
 
@@ -173,11 +173,16 @@ export const PasswordCreateForm: React.FC<Props> = ({ token }) => {
                 <FormField
                   control={form.control}
                   name="password"
+                  required
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Нууц үг *</FormLabel>
+                      <FormLabel>Нууц үг</FormLabel>
                       <FormControl>
-                        <Input {...field} type="password" placeholder="Нууц үг" />
+                        <Input
+                          {...field}
+                          type="password"
+                          placeholder="Нууц үг"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -187,9 +192,10 @@ export const PasswordCreateForm: React.FC<Props> = ({ token }) => {
                 <FormField
                   control={form.control}
                   name="password_again"
+                  required
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Нууц үг дахин оруулах *</FormLabel>
+                      <FormLabel>Нууц үг дахин оруулах</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
@@ -213,9 +219,10 @@ export const PasswordCreateForm: React.FC<Props> = ({ token }) => {
                   <FormField
                     control={form.control}
                     name="first_name"
+                    required
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Нэр *</FormLabel>
+                        <FormLabel>Нэр</FormLabel>
                         <FormControl>
                           <Input {...field} placeholder="Нэр" />
                         </FormControl>
@@ -227,9 +234,10 @@ export const PasswordCreateForm: React.FC<Props> = ({ token }) => {
                   <FormField
                     control={form.control}
                     name="last_name"
+                    required
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Овог *</FormLabel>
+                        <FormLabel>Овог</FormLabel>
                         <FormControl>
                           <Input {...field} placeholder="Овог" />
                         </FormControl>
@@ -259,9 +267,10 @@ export const PasswordCreateForm: React.FC<Props> = ({ token }) => {
                   <FormField
                     control={form.control}
                     name="gender"
+                    required
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Хүйс *</FormLabel>
+                        <FormLabel>Хүйс</FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
@@ -360,7 +369,9 @@ export const PasswordCreateForm: React.FC<Props> = ({ token }) => {
                 className={cn("w-full text-lg", "md:text-base")}
                 disabled={isPending}
               >
-                {isPending && <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />}
+                {isPending && (
+                  <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+                )}
                 {isPending ? "Түр хүлээнэ үү..." : "Бүртгэл дуусгах"}
               </Button>
             </fieldset>
@@ -370,3 +381,5 @@ export const PasswordCreateForm: React.FC<Props> = ({ token }) => {
     </Form>
   );
 };
+
+export default ProfileCreateForm;

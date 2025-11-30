@@ -57,6 +57,7 @@ export const authContract = c.router({
     responses: {
       201: z.object({}),
       400: CustomError,
+      409: CustomError,
       429: RateLimitError,
     },
     summary: "register credentials",
