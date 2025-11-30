@@ -27,12 +27,14 @@ export class AuthController {
     private readonly cls: ClsService,
   ) {}
 
+  @Public()
   @TsRestHandler(customerContract.auth.loginGoogle)
   async loginGoogle() {
     return tsRestHandler(
       customerContract.auth.loginGoogle,
       async ({ body }) => {
         // TODO: move logic to guard
+
         const googleAccount = await this.authRepository.getAccountByEmail(
           `google_${body.sub}`,
         );
@@ -47,7 +49,7 @@ export class AuthController {
             "jwt.expiresIn.accessToken",
           )!,
           payload: {
-            sub: googleAccount.customer.id,
+            sub: googleAccount.id,
             user: googleAccount.customer,
           },
           secret: this.configService.get<string>("jwt.secret.accessToken")!,
@@ -87,6 +89,7 @@ export class AuthController {
     });
   }
 
+  @Public()
   @TsRestHandler(customerContract.auth.registerGoogle)
   async registerGoogle() {
     return tsRestHandler(
@@ -99,7 +102,7 @@ export class AuthController {
             "jwt.expiresIn.accessToken",
           )!,
           payload: {
-            sub: createdUser.id,
+            sub: `google_${body.sub}`,
             user: createdUser,
           },
           secret: this.configService.get<string>("jwt.secret.accessToken")!,
@@ -110,7 +113,7 @@ export class AuthController {
             "jwt.expiresIn.refreshToken",
           )!,
           payload: {
-            sub: createdUser.id,
+            sub: `google_${body.sub}`,
             user: null,
           },
           secret: this.configService.get<string>("jwt.secret.refreshToken")!,
