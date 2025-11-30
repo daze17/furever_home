@@ -49,10 +49,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new ImATeapotException("PROFILE_DOES_NOT_EXIST");
     }
     const { customer, ...account } = accountWithCustomer;
-    // const { customer_setting, ...restCustomer } = customer;
     this.cls.set(CLS_KEYS.CUSTOMER_ACCOUNT, account);
     this.cls.set(CLS_KEYS.CUSTOMER_PROFILE, customer);
-    // this.cls.set(CLS_KEYS.CUSTOMER_SETTINGS, customer.customer_setting);
+
+    // Populate customer settings in CLS for easy access across the app
+    if (customer.customer_settings) {
+      this.cls.set(CLS_KEYS.CUSTOMER_SETTINGS, customer.customer_settings);
+    }
+
     return account;
   }
 }
