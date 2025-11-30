@@ -5,7 +5,7 @@ import {
   RegisterGoogleRequestBody,
   RegisterWithEmailRequestBody,
 } from "customer_api";
-import { customer_accounts, customers } from "database";
+import { customer_accounts, customer_settings, customers } from "database";
 import { and, eq } from "drizzle-orm";
 
 import type { Database } from "@/modules/database/database.providers";
@@ -32,7 +32,11 @@ export class AuthRepository {
     return await this.db.query.customer_accounts.findFirst({
       where: eq(customer_accounts.id, id),
       with: {
-        customer: true,
+        customer: {
+          with: {
+            customer_settings: true,
+          },
+        },
       },
     });
   }
@@ -51,6 +55,11 @@ export class AuthRepository {
           })
           .returning()
       ).find(Boolean)!;
+
+      // Create customer settings with defaults
+      await transaction.insert(customer_settings).values({
+        customer_id: customer.id,
+      });
 
       await transaction.insert(customer_accounts).values({
         id: `google_${body.sub}`,
@@ -158,6 +167,11 @@ export class AuthRepository {
 
       const customerId = customerIds.find(Boolean)!.id;
 
+      // Create customer settings with defaults
+      await transaction.insert(customer_settings).values({
+        customer_id: customerId,
+      });
+
       await transaction
         .update(customer_accounts)
         .set({
@@ -170,7 +184,11 @@ export class AuthRepository {
       const account = await transaction.query.customer_accounts.findFirst({
         where: eq(customer_accounts.id, accountId),
         with: {
-          customer: true,
+          customer: {
+            with: {
+              customer_settings: true,
+            },
+          },
         },
       });
 

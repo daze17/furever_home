@@ -17,6 +17,7 @@ export * from "./components/ui/label";
 export * from "./components/ui/resizable";
 export * from "./components/ui/select";
 export * from "./components/ui/sonner";
+export * from "./components/ui/switch";
 export * from "./components/ui/table";
 export * from "./components/ui/tabs";
 export * from "./components/ui/textarea";
