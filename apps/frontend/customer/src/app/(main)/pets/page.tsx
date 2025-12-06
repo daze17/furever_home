@@ -50,12 +50,11 @@ const ProfilePage: React.Page = async (props) => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <PetsList pets={response.body.data} />
-      <div className="self-center">
-        <PetListPagination meta={response.body.meta} />
-      </div>
-    </div>
+    <PetsList
+      pets={response.body.data}
+      meta={response.body.meta}
+      pagination={<PetListPagination meta={response.body.meta} />}
+    />
   );
 };
 

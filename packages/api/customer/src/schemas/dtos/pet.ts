@@ -53,6 +53,20 @@ export const PetsQuery = z
     name: PetModel.shape.name,
     sizes: PetSizeEnum.array(),
     species: PetSpeciesEnum.array(),
+    pet_statuses: PetModel.shape.pet_status.array(),
+
+    // Behavioral filters (from pet_extra_information)
+    energy_levels: PetExtraInformationModel.shape.energy_level.array(),
+    friendliness_with_children_levels:
+      PetExtraInformationModel.shape.friendliness_with_children.array(),
+    friendliness_with_pets_levels:
+      PetExtraInformationModel.shape.friendliness_with_pets.array(),
+    is_house_trained: z.boolean(),
+    training_levels: PetExtraInformationModel.shape.training_level.array(),
+
+    // Age range filter
+    birth_date_from: z.string().date(),
+    birth_date_to: z.string().date(),
   })
   .merge(paginationQuery(z.enum(["name", "created_at"])))
   .partial()
