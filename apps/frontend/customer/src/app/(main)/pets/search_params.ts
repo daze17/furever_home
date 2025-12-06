@@ -27,6 +27,7 @@ export const petsListSPParsers = {
 };
 
 export const paginationParsers = {
+  page: parseAsInteger.withDefault(1).withOptions({ shallow: false }),
   order: parseAsJson(orderSchema.parse).withOptions({ shallow: false }),
   current_page: parseAsInteger.withDefault(1).withOptions({ shallow: false }),
   per_page: parseAsInteger.withDefault(20),
