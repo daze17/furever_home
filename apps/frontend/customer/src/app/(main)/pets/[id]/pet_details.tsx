@@ -234,7 +234,7 @@ export function PetDetails({ id, currentUserId }: PetDetailsProps) {
           <Card>
             <CardContent className="p-6">
               <ImageWithFallback
-                src={pet.pet_image_url || "/furever-home-dog.jpg"}
+                src={pet.pet_image_url}
                 alt={pet.name}
                 height={400}
                 width={400}

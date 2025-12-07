@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { CreatePetRequestBody, PetsQuery } from "customer_api";
 import { ClsService } from "nestjs-cls";
 
@@ -39,8 +43,18 @@ export class PetsService {
   }
 
   async updatePet(id: number, data: any) {
+    // Get current user
+    const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);
+
     // Check if pet exists
-    await this.getPet(id);
+    const pet = await this.getPet(id);
+
+    // Verify ownership
+    if (pet.customer_id !== accountProfile.id) {
+      throw new ForbiddenException(
+        "You do not have permission to update this pet",
+      );
+    }
 
     // Update pet
     const updatedPet = await this.petsRepository.updatePet(id, data);
@@ -53,8 +67,18 @@ export class PetsService {
   }
 
   async deletePet(id: number) {
+    // Get current user
+    const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);
+
     // Check if pet exists
-    await this.getPet(id);
+    const pet = await this.getPet(id);
+
+    // Verify ownership
+    if (pet.customer_id !== accountProfile.id) {
+      throw new ForbiddenException(
+        "You do not have permission to delete this pet",
+      );
+    }
 
     // Delete pet
     await this.petsRepository.deletePet(id);

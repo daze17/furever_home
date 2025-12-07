@@ -42,12 +42,13 @@ export const PetCard: React.FC<{
     <Card className="">
       <CardHeader className="p-0">
         <ImageWithFallback
-          src={pet.pet_image_url || "/furever-home-dog.jpg"}
+          // src={pet.pet_image_url}
+          src={"/furever-home-dog.jpg"}
           alt={pet.name}
           height={220}
           width={440}
           fallbackSrc="/furever-home-dog.jpg"
-          className="h-[220px] w-full rounded-t-lg object-cover"
+          className="h-[220px] w-full rounded-t-lg object-contain"
         />
       </CardHeader>
       <CardHeader>

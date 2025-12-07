@@ -8,6 +8,7 @@ import Link from "next/link";
 import { Button } from "ui";
 
 import { PetCard } from "@/components/pet_card";
+
 import { PetListFilters } from "./components/pet_list_filters";
 
 type PaginationMeta = {
@@ -49,7 +50,7 @@ const PetsList: React.FC<{
           <div className="border-b bg-background px-6 py-4">
             <div className="flex items-center justify-between">
               {/* Results Count */}
-              <p className="text-muted-foreground text-sm">
+              <p className="text-sm text-muted-foreground">
                 Showing {pets.length} of {meta.total} pets
               </p>
               {/* Pagination */}
@@ -70,7 +71,7 @@ const PetsList: React.FC<{
                 <div className="flex min-h-[400px] items-center justify-center rounded-lg border-2 border-dashed">
                   <div className="text-center">
                     <h3 className="text-lg font-semibold">No pets found</h3>
-                    <p className="text-muted-foreground mt-2">
+                    <p className="mt-2 text-muted-foreground">
                       Try adjusting your filters or add a new pet
                     </p>
                   </div>
@@ -80,16 +81,14 @@ const PetsList: React.FC<{
           </div>
 
           {/* Bottom Pagination */}
-          <div className="border-t bg-background px-6 py-4">
+          {/*<div className="border-t bg-background px-6 py-4">
             <div className="flex items-center justify-between">
-              {/* Results Count */}
               <p className="text-muted-foreground text-sm">
                 Showing {pets.length} of {meta.total} pets
               </p>
-              {/* Pagination */}
               <div>{pagination}</div>
             </div>
-          </div>
+          </div>*/}
         </div>
       </div>
     </div>
