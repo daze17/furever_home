@@ -40,20 +40,23 @@ export const PetCard: React.FC<{
 
   return (
     <Card className="">
+      <CardHeader className="p-0">
+        <ImageWithFallback
+          // src={pet.pet_image_url}
+          src={"/furever-home-dog.jpg"}
+          alt={pet.name}
+          height={220}
+          width={440}
+          fallbackSrc="/furever-home-dog.jpg"
+          className="h-[220px] w-full rounded-t-lg object-contain"
+        />
+      </CardHeader>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           {pet.name}
           <Heart className="ml-2 h-4 w-4 text-[#11D0BC]" fill="#11D0BC" />
         </CardTitle>
         <CardDescription>{`${petAge} years old`}</CardDescription>
-        {/*<ImageWithFallback
-          src={pet.pet_image_url || ""}
-          alt={pet.name}
-          height={100}
-          width={1000}
-          fallbackSrc="/logo.svg"
-          className="h-[220px] w-[440px] rounded-t-lg border object-cover"
-        />*/}
       </CardHeader>
       <CardContent>
         <div className="flex gap-2">

@@ -11,8 +11,11 @@ import {
   count,
   desc,
   eq,
+  gte,
+  ilike,
   inArray,
   isNotNull,
+  lte,
   SQL,
 } from "drizzle-orm";
 
@@ -134,7 +137,9 @@ export class PetsRepository {
     const currentPage = query.current_page ?? 1;
     const perPage = query.per_page ?? 10;
 
-    const where = and(...this.mapPetsQuery(query));
+    // Build WHERE conditions for both pets and pet_extra_informations
+    const conditions = this.mapPetsQuery(query);
+    const where = conditions.length > 0 ? and(...conditions) : undefined;
 
     const _pets = await this.db.query.pets.findMany({
       with: {
@@ -149,6 +154,7 @@ export class PetsRepository {
       limit: perPage === 0 ? undefined : perPage,
     });
 
+    // Count total with same WHERE conditions
     const _count = await this.db
       .select({ total: count() })
       .from(pets)
@@ -169,16 +175,106 @@ export class PetsRepository {
   private mapPetsQuery(query: PetsQuery = {}) {
     const conditions: SQL<unknown | undefined>[] = [];
 
-    const { name, sizes, species } = query;
+    const {
+      name,
+      sizes,
+      species,
+      pet_statuses,
+      birth_date_from,
+      birth_date_to,
+      energy_levels,
+      friendliness_with_children_levels,
+      friendliness_with_pets_levels,
+      is_house_trained,
+      training_levels,
+    } = query;
 
+    // Partial name search (case-insensitive)
     if (name) {
-      conditions.push(eq(pets.name, name));
+      conditions.push(ilike(pets.name, `%${name}%`));
     }
-    // if (sizes && sizes.length > 0) {
-    //   conditions.push(and(isNotNull(pets.size), inArray(pets.size, sizes)));
-    // }
+
+    // Species array
     if (species && species.length > 0) {
       conditions.push(inArray(pets.species, species));
+    }
+
+    // Size array
+    if (sizes && sizes.length > 0) {
+      const sizeCondition = and(
+        isNotNull(pets.size),
+        inArray(pets.size, sizes as any),
+      );
+      if (sizeCondition) conditions.push(sizeCondition);
+    }
+
+    // Pet status array
+    if (pet_statuses && pet_statuses.length > 0) {
+      conditions.push(inArray(pets.pet_status, pet_statuses));
+    }
+
+    // Birth date range (for age filtering)
+    if (birth_date_from) {
+      conditions.push(gte(pets.birth_date, birth_date_from));
+    }
+    if (birth_date_to) {
+      conditions.push(lte(pets.birth_date, birth_date_to));
+    }
+
+    // Energy level filter
+    if (energy_levels && energy_levels.length > 0) {
+      const energyCondition = and(
+        isNotNull(pet_extra_informations.energy_level),
+        inArray(pet_extra_informations.energy_level, energy_levels as any),
+      );
+      if (energyCondition) conditions.push(energyCondition);
+    }
+
+    // Friendliness with children filter
+    if (
+      friendliness_with_children_levels &&
+      friendliness_with_children_levels.length > 0
+    ) {
+      const friendlinessChildrenCondition = and(
+        isNotNull(pet_extra_informations.friendliness_with_children),
+        inArray(
+          pet_extra_informations.friendliness_with_children,
+          friendliness_with_children_levels as any,
+        ),
+      );
+      if (friendlinessChildrenCondition)
+        conditions.push(friendlinessChildrenCondition);
+    }
+
+    // Friendliness with pets filter
+    if (
+      friendliness_with_pets_levels &&
+      friendliness_with_pets_levels.length > 0
+    ) {
+      const friendlinessPetsCondition = and(
+        isNotNull(pet_extra_informations.friendliness_with_pets),
+        inArray(
+          pet_extra_informations.friendliness_with_pets,
+          friendliness_with_pets_levels as any,
+        ),
+      );
+      if (friendlinessPetsCondition) conditions.push(friendlinessPetsCondition);
+    }
+
+    // House trained filter
+    if (is_house_trained !== undefined) {
+      conditions.push(
+        eq(pet_extra_informations.is_house_trained, is_house_trained),
+      );
+    }
+
+    // Training level filter
+    if (training_levels && training_levels.length > 0) {
+      const trainingCondition = and(
+        isNotNull(pet_extra_informations.training_level),
+        inArray(pet_extra_informations.training_level, training_levels as any),
+      );
+      if (trainingCondition) conditions.push(trainingCondition);
     }
 
     return conditions;
@@ -193,5 +289,49 @@ export class PetsRepository {
       default:
         return pets.created_at;
     }
+  }
+
+  private buildOrderBy(query: PetsQuery = {}) {
+    const sortingField = query.sorting_field ?? "created_at";
+    const sortingOrder = query.sorting_order ?? "descending";
+
+    const column = sortingField === "name" ? pets.name : pets.created_at;
+
+    return sortingOrder === "ascending" ? asc(column) : desc(column);
+  }
+
+  async getPet(id: number) {
+    const pet = await this.db.query.pets.findFirst({
+      where: eq(pets.id, id),
+      with: {
+        pet_extra_information: true,
+      },
+    });
+
+    return pet;
+  }
+
+  async updatePet(id: number, data: Partial<any>) {
+    await this.db
+      .update(pets)
+      .set({
+        ...data,
+        updated_at: new Date(),
+      })
+      .where(eq(pets.id, id));
+
+    // Fetch the updated pet with pet_extra_information
+    const updatedPet = await this.db.query.pets.findFirst({
+      where: eq(pets.id, id),
+      with: {
+        pet_extra_information: true,
+      },
+    });
+
+    return updatedPet;
+  }
+
+  async deletePet(id: number) {
+    await this.db.delete(pets).where(eq(pets.id, id));
   }
 }

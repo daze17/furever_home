@@ -7,10 +7,11 @@ import { filterValidFieldsFromObjectBySchema } from "@/utils/filter_valid_fields
 import { removeNullFromObject } from "@/utils/remove_null_and_undefined";
 
 import PetsList from "./pets_list";
+import { PetListPagination } from "./pets_list_pagination";
 import { petsListSPCache, searchParamsCache } from "./search_params";
 
 const ProfilePage: React.Page = async (props) => {
-  const searchParams = (await props.searchParams);
+  const searchParams = await props.searchParams;
   searchParamsCache.parse(searchParams);
   petsListSPCache.parse(searchParams);
 
@@ -49,9 +50,11 @@ const ProfilePage: React.Page = async (props) => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <PetsList pets={response.body.data} />;
-    </div>
+    <PetsList
+      pets={response.body.data}
+      meta={response.body.meta}
+      pagination={<PetListPagination meta={response.body.meta} />}
+    />
   );
 };
 

@@ -42,4 +42,47 @@ export class PetsController {
       },
     );
   }
+
+  @Public()
+  @TsRestHandler(customerContract.pets.getPet)
+  async getPet() {
+    return tsRestHandler(customerContract.pets.getPet, async ({ params }) => {
+      const pet = await this.petsService.getPet(params.id);
+
+      return {
+        status: 200,
+        body: pet,
+      };
+    });
+  }
+
+  @TsRestHandler(customerContract.pets.updatePet)
+  async updatePet() {
+    return tsRestHandler(
+      customerContract.pets.updatePet,
+      async ({ params, body }) => {
+        const updatedPet = await this.petsService.updatePet(params.id, body);
+
+        return {
+          status: 200,
+          body: updatedPet,
+        };
+      },
+    );
+  }
+
+  @TsRestHandler(customerContract.pets.deletePet)
+  async deletePet() {
+    return tsRestHandler(
+      customerContract.pets.deletePet,
+      async ({ params }) => {
+        await this.petsService.deletePet(params.id);
+
+        return {
+          status: 204,
+          body: {},
+        };
+      },
+    );
+  }
 }
