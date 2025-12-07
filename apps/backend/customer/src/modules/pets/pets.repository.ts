@@ -299,4 +299,39 @@ export class PetsRepository {
 
     return sortingOrder === "ascending" ? asc(column) : desc(column);
   }
+
+  async getPet(id: number) {
+    const pet = await this.db.query.pets.findFirst({
+      where: eq(pets.id, id),
+      with: {
+        pet_extra_information: true,
+      },
+    });
+
+    return pet;
+  }
+
+  async updatePet(id: number, data: Partial<any>) {
+    await this.db
+      .update(pets)
+      .set({
+        ...data,
+        updated_at: new Date(),
+      })
+      .where(eq(pets.id, id));
+
+    // Fetch the updated pet with pet_extra_information
+    const updatedPet = await this.db.query.pets.findFirst({
+      where: eq(pets.id, id),
+      with: {
+        pet_extra_information: true,
+      },
+    });
+
+    return updatedPet;
+  }
+
+  async deletePet(id: number) {
+    await this.db.delete(pets).where(eq(pets.id, id));
+  }
 }

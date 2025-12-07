@@ -30,7 +30,9 @@ export const CreatePetRequestBody = PetModel.pick({
 });
 export type CreatePetRequestBody = z.infer<typeof CreatePetRequestBody>;
 
-export const PetResponseBody = PetModel;
+export const PetResponseBody = PetModel.extend({
+  pet_extra_information: PetExtraInformationModel.nullable(),
+});
 export type PetResponseBody = z.infer<typeof PetResponseBody>;
 
 export const PetsListResponseBody = PetResponseBody.array();

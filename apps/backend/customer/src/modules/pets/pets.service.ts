@@ -27,4 +27,36 @@ export class PetsService {
 
     return response;
   }
+
+  async getPet(id: number) {
+    const pet = await this.petsRepository.getPet(id);
+
+    if (!pet) {
+      throw new NotFoundException(`Pet with ID ${id} not found`);
+    }
+
+    return pet;
+  }
+
+  async updatePet(id: number, data: any) {
+    // Check if pet exists
+    await this.getPet(id);
+
+    // Update pet
+    const updatedPet = await this.petsRepository.updatePet(id, data);
+
+    if (!updatedPet) {
+      throw new NotFoundException(`Pet with ID ${id} not found`);
+    }
+
+    return updatedPet;
+  }
+
+  async deletePet(id: number) {
+    // Check if pet exists
+    await this.getPet(id);
+
+    // Delete pet
+    await this.petsRepository.deletePet(id);
+  }
 }

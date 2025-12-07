@@ -16,6 +16,7 @@ export const authRoutes: (string | RegExp)[] = [
 export const publicRoutes: (string | RegExp)[] = [
   "/",
   "/pets",
+  /^\/pets.*$/,
   "/users",
   /^\/users.*$/,
   "/reset-password",
