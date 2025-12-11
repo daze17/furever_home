@@ -24,8 +24,8 @@ export const petContract = c.router({
     summary: "Create a new pet",
   },
 
-  // Get all pets (with optional customer filter)
-  getPetsList: {
+  // Get all adoptable pets (with optional filters)
+  getAdoptablePetsList: {
     method: "GET",
     path: "/pets",
     query: PetsQuery,
@@ -36,11 +36,11 @@ export const petContract = c.router({
       }),
       400: CustomError,
     },
-    summary: "List all pets with optional filters",
+    summary: "List all adoptable pets with optional filters",
   },
 
-  // Get a single pet by ID
-  getPet: {
+  // Get a single adoptable pet by ID
+  getAdoptablePet: {
     method: "GET",
     path: "/pets/:id",
     pathParams: z.object({
@@ -50,7 +50,7 @@ export const petContract = c.router({
       200: PetResponseBody,
       404: CustomError,
     },
-    summary: "Get a pet by ID",
+    summary: "Get an adoptable pet by ID",
   },
 
   // Update a pet

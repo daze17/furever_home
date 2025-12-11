@@ -59,7 +59,6 @@ export const PetListFilters: React.FC = () => {
       name: searchParams.name || "",
       species: searchParams.species || [],
       size: searchParams.size || [],
-      pet_status: searchParams.pet_status || [],
       energy_level: searchParams.energy_level || [],
       friendliness_with_children: searchParams.friendliness_with_children || [],
       friendliness_with_pets: searchParams.friendliness_with_pets || [],
@@ -205,33 +204,6 @@ export const PetListFilters: React.FC = () => {
                         value={field.value || []}
                         onChange={field.onChange}
                         placeholder="All sizes"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Pet Status Multi-Select */}
-              <FormField
-                control={form.control}
-                name="pet_status"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Status</FormLabel>
-                    <FormControl>
-                      <MultiSelect
-                        options={[
-                          {
-                            label: "Available for Adoption",
-                            value: "adopting",
-                          },
-                          { label: "Has Owner", value: "has_owner" },
-                          { label: "Inactive", value: "inactive" },
-                        ]}
-                        value={field.value || []}
-                        onChange={field.onChange}
-                        placeholder="All statuses"
                       />
                     </FormControl>
                     <FormMessage />

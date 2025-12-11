@@ -18,3 +18,6 @@ export type PetSizeEnum = z.infer<typeof PetSizeEnum>;
 
 export const PetSpeciesEnum = createSelectSchema(pets).shape.species;
 export type PetSpeciesEnum = z.infer<typeof PetSpeciesEnum>;
+
+export const PetStatusEnum = createSelectSchema(pets).shape.pet_status;
+export type PetStatusEnum = z.infer<typeof PetStatusEnum>;

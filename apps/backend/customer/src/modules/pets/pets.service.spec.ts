@@ -1,6 +1,7 @@
 import { NotFoundException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { CreatePetRequestBody, UpdatePetRequestBody } from "customer_api";
+import { ClsService } from "nestjs-cls";
 
 import { PetsRepository } from "./pets.repository";
 import { PetsService } from "./pets.service";
@@ -11,16 +12,27 @@ describe("PetsService", () => {
 
   // Mock factory for PetsRepository
   const mockPetsRepository = {
-    createPet: jest.fn(),
-    listPets: jest.fn(),
-    getPetById: jest.fn(),
+    createPetAndPetExtraInformations: jest.fn(),
+    getAdoptablePetsList: jest.fn(),
+    getAdoptablePet: jest.fn(),
     updatePet: jest.fn(),
     deletePet: jest.fn(),
+  };
+
+  // Mock factory for ClsService
+  const mockClsService = {
+    get: jest.fn(),
   };
 
   beforeEach(async () => {
     // Reset all mocks before each test
     jest.clearAllMocks();
+
+    // Setup default CLS mock to return a customer profile
+    mockClsService.get.mockReturnValue({
+      id: "customer-123",
+      email: "test@example.com",
+    });
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -28,6 +40,10 @@ describe("PetsService", () => {
         {
           provide: PetsRepository,
           useValue: mockPetsRepository,
+        },
+        {
+          provide: ClsService,
+          useValue: mockClsService,
         },
       ],
     }).compile();
@@ -68,14 +84,14 @@ describe("PetsService", () => {
         updated_at: new Date(),
       };
 
-      mockPetsRepository.createPet.mockResolvedValue(expectedPet as any);
+      mockPetsRepository.createPetAndPetExtraInformations.mockResolvedValue(expectedPet as any);
 
       // Act
       const result = await service.createPet(createPetData);
 
       // Assert
-      expect(repository.createPet).toHaveBeenCalledWith(createPetData);
-      expect(repository.createPet).toHaveBeenCalledTimes(1);
+      expect(repository.createPetAndPetExtraInformations).toHaveBeenCalledWith(createPetData);
+      expect(repository.createPetAndPetExtraInformations).toHaveBeenCalledTimes(1);
       expect(result).toEqual(expectedPet);
     });
 
@@ -103,13 +119,13 @@ describe("PetsService", () => {
         updated_at: new Date(),
       };
 
-      mockPetsRepository.createPet.mockResolvedValue(expectedPet as any);
+      mockPetsRepository.createPetAndPetExtraInformations.mockResolvedValue(expectedPet as any);
 
       // Act
       const result = await service.createPet(minimalPetData);
 
       // Assert
-      expect(repository.createPet).toHaveBeenCalledWith(minimalPetData);
+      expect(repository.createPetAndPetExtraInformations).toHaveBeenCalledWith(minimalPetData);
       expect(result).toEqual(expectedPet);
     });
 
@@ -123,17 +139,17 @@ describe("PetsService", () => {
       };
 
       const error = new Error("Database error");
-      mockPetsRepository.createPet.mockRejectedValue(error);
+      mockPetsRepository.createPetAndPetExtraInformations.mockRejectedValue(error);
 
       // Act & Assert
       await expect(service.createPet(createPetData)).rejects.toThrow(
         "Database error",
       );
-      expect(repository.createPet).toHaveBeenCalledWith(createPetData);
+      expect(repository.createPetAndPetExtraInformations).toHaveBeenCalledWith(createPetData);
     });
   });
 
-  describe("listPets", () => {
+  describe("getAdoptablePetsList", () => {
     it("should list all pets without filters", async () => {
       // Arrange
       const expectedResult = {
@@ -170,14 +186,14 @@ describe("PetsService", () => {
         total: 2,
       };
 
-      mockPetsRepository.listPets.mockResolvedValue(expectedResult as any);
+      mockPetsRepository.getAdoptablePetsList.mockResolvedValue(expectedResult as any);
 
       // Act
-      const result = await service.listPets({});
+      const result = await service.getAdoptablePetsList({});
 
       // Assert
-      expect(repository.listPets).toHaveBeenCalledWith({});
-      expect(repository.listPets).toHaveBeenCalledTimes(1);
+      expect(repository.getAdoptablePetsList).toHaveBeenCalledWith({});
+      expect(repository.getAdoptablePetsList).toHaveBeenCalledTimes(1);
       expect(result).toEqual(expectedResult);
       expect(result.pets).toHaveLength(2);
       expect(result.total).toBe(2);
@@ -206,13 +222,13 @@ describe("PetsService", () => {
         total: 1,
       };
 
-      mockPetsRepository.listPets.mockResolvedValue(expectedResult as any);
+      mockPetsRepository.getAdoptablePetsList.mockResolvedValue(expectedResult as any);
 
       // Act
-      const result = await service.listPets(filters);
+      const result = await service.getAdoptablePetsList(filters);
 
       // Assert
-      expect(repository.listPets).toHaveBeenCalledWith(filters);
+      expect(repository.getAdoptablePetsList).toHaveBeenCalledWith(filters);
       expect(result).toEqual(expectedResult);
       expect(result.pets).toHaveLength(1);
       expect(result.pets[0].customer_id).toBe("customer-123");
@@ -241,13 +257,13 @@ describe("PetsService", () => {
         total: 1,
       };
 
-      mockPetsRepository.listPets.mockResolvedValue(expectedResult as any);
+      mockPetsRepository.getAdoptablePetsList.mockResolvedValue(expectedResult as any);
 
       // Act
-      const result = await service.listPets(filters);
+      const result = await service.getAdoptablePetsList(filters);
 
       // Assert
-      expect(repository.listPets).toHaveBeenCalledWith(filters);
+      expect(repository.getAdoptablePetsList).toHaveBeenCalledWith(filters);
       expect(result.pets[0].species).toBe("dog");
     });
 
@@ -259,13 +275,13 @@ describe("PetsService", () => {
         total: 100,
       };
 
-      mockPetsRepository.listPets.mockResolvedValue(expectedResult);
+      mockPetsRepository.getAdoptablePetsList.mockResolvedValue(expectedResult);
 
       // Act
-      const result = await service.listPets(filters);
+      const result = await service.getAdoptablePetsList(filters);
 
       // Assert
-      expect(repository.listPets).toHaveBeenCalledWith(filters);
+      expect(repository.getAdoptablePetsList).toHaveBeenCalledWith(filters);
       expect(result.total).toBe(100);
     });
 
@@ -276,13 +292,13 @@ describe("PetsService", () => {
         total: 0,
       };
 
-      mockPetsRepository.listPets.mockResolvedValue(expectedResult);
+      mockPetsRepository.getAdoptablePetsList.mockResolvedValue(expectedResult);
 
       // Act
-      const result = await service.listPets({});
+      const result = await service.getAdoptablePetsList({});
 
       // Assert
-      expect(repository.listPets).toHaveBeenCalledWith({});
+      expect(repository.getAdoptablePetsList).toHaveBeenCalledWith({});
       expect(result.pets).toHaveLength(0);
       expect(result.total).toBe(0);
     });
@@ -316,18 +332,18 @@ describe("PetsService", () => {
         total: 1,
       };
 
-      mockPetsRepository.listPets.mockResolvedValue(expectedResult as any);
+      mockPetsRepository.getAdoptablePetsList.mockResolvedValue(expectedResult as any);
 
       // Act
-      const result = await service.listPets(filters);
+      const result = await service.getAdoptablePetsList(filters);
 
       // Assert
-      expect(repository.listPets).toHaveBeenCalledWith(filters);
+      expect(repository.getAdoptablePetsList).toHaveBeenCalledWith(filters);
       expect(result).toEqual(expectedResult);
     });
   });
 
-  describe("getPetById", () => {
+  describe("getAdoptablePet", () => {
     it("should return a pet when found", async () => {
       // Arrange
       const petId = "pet-123";
@@ -346,40 +362,40 @@ describe("PetsService", () => {
         updated_at: new Date(),
       };
 
-      mockPetsRepository.getPetById.mockResolvedValue(expectedPet as any);
+      mockPetsRepository.getAdoptablePet.mockResolvedValue(expectedPet as any);
 
       // Act
-      const result = await service.getPetById(petId);
+      const result = await service.getAdoptablePet(petId);
 
       // Assert
-      expect(repository.getPetById).toHaveBeenCalledWith(petId);
-      expect(repository.getPetById).toHaveBeenCalledTimes(1);
+      expect(repository.getAdoptablePet).toHaveBeenCalledWith(petId);
+      expect(repository.getAdoptablePet).toHaveBeenCalledTimes(1);
       expect(result).toEqual(expectedPet);
     });
 
     it("should throw NotFoundException when pet not found", async () => {
       // Arrange
       const petId = "non-existent-pet";
-      mockPetsRepository.getPetById.mockResolvedValue(null);
+      mockPetsRepository.getAdoptablePet.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(service.getPetById(petId)).rejects.toThrow(
+      await expect(service.getAdoptablePet(petId)).rejects.toThrow(
         new NotFoundException(`Pet with ID ${petId} not found`),
       );
-      expect(repository.getPetById).toHaveBeenCalledWith(petId);
+      expect(repository.getAdoptablePet).toHaveBeenCalledWith(petId);
     });
 
     it("should propagate repository errors", async () => {
       // Arrange
       const petId = "pet-123";
       const error = new Error("Database connection error");
-      mockPetsRepository.getPetById.mockRejectedValue(error);
+      mockPetsRepository.getAdoptablePet.mockRejectedValue(error);
 
       // Act & Assert
-      await expect(service.getPetById(petId)).rejects.toThrow(
+      await expect(service.getAdoptablePet(petId)).rejects.toThrow(
         "Database connection error",
       );
-      expect(repository.getPetById).toHaveBeenCalledWith(petId);
+      expect(repository.getAdoptablePet).toHaveBeenCalledWith(petId);
     });
   });
 
@@ -414,14 +430,14 @@ describe("PetsService", () => {
         updated_at: new Date(),
       };
 
-      mockPetsRepository.getPetById.mockResolvedValue(existingPet as any);
+      mockPetsRepository.getAdoptablePet.mockResolvedValue(existingPet as any);
       mockPetsRepository.updatePet.mockResolvedValue(updatedPet as any);
 
       // Act
       const result = await service.updatePet(petId, updateData);
 
       // Assert
-      expect(repository.getPetById).toHaveBeenCalledWith(petId);
+      expect(repository.getAdoptablePet).toHaveBeenCalledWith(petId);
       expect(repository.updatePet).toHaveBeenCalledWith(petId, updateData);
       expect(result).toEqual(updatedPet);
       expect(result.name).toBe("Buddy Updated");
@@ -435,13 +451,13 @@ describe("PetsService", () => {
         name: "New Name",
       };
 
-      mockPetsRepository.getPetById.mockResolvedValue(null);
+      mockPetsRepository.getAdoptablePet.mockResolvedValue(null);
 
       // Act & Assert
       await expect(service.updatePet(petId, updateData)).rejects.toThrow(
         new NotFoundException(`Pet with ID ${petId} not found`),
       );
-      expect(repository.getPetById).toHaveBeenCalledWith(petId);
+      expect(repository.getAdoptablePet).toHaveBeenCalledWith(petId);
       expect(repository.updatePet).not.toHaveBeenCalled();
     });
 
@@ -467,14 +483,14 @@ describe("PetsService", () => {
         updated_at: new Date(),
       };
 
-      mockPetsRepository.getPetById.mockResolvedValue(existingPet as any);
+      mockPetsRepository.getAdoptablePet.mockResolvedValue(existingPet as any);
       mockPetsRepository.updatePet.mockResolvedValue(null);
 
       // Act & Assert
       await expect(service.updatePet(petId, updateData)).rejects.toThrow(
         new NotFoundException(`Pet with ID ${petId} not found`),
       );
-      expect(repository.getPetById).toHaveBeenCalledWith(petId);
+      expect(repository.getAdoptablePet).toHaveBeenCalledWith(petId);
       expect(repository.updatePet).toHaveBeenCalledWith(petId, updateData);
     });
 
@@ -506,7 +522,7 @@ describe("PetsService", () => {
         updated_at: new Date(),
       };
 
-      mockPetsRepository.getPetById.mockResolvedValue(existingPet as any);
+      mockPetsRepository.getAdoptablePet.mockResolvedValue(existingPet as any);
       mockPetsRepository.updatePet.mockResolvedValue(updatedPet as any);
 
       // Act
@@ -545,7 +561,7 @@ describe("PetsService", () => {
         updated_at: new Date(),
       };
 
-      mockPetsRepository.getPetById.mockResolvedValue(existingPet as any);
+      mockPetsRepository.getAdoptablePet.mockResolvedValue(existingPet as any);
       mockPetsRepository.updatePet.mockResolvedValue(updatedPet as any);
 
       // Act
@@ -577,14 +593,14 @@ describe("PetsService", () => {
         updated_at: new Date(),
       };
 
-      mockPetsRepository.getPetById.mockResolvedValue(existingPet as any);
+      mockPetsRepository.getAdoptablePet.mockResolvedValue(existingPet as any);
       mockPetsRepository.deletePet.mockResolvedValue(existingPet as any);
 
       // Act
       const result = await service.deletePet(petId);
 
       // Assert
-      expect(repository.getPetById).toHaveBeenCalledWith(petId);
+      expect(repository.getAdoptablePet).toHaveBeenCalledWith(petId);
       expect(repository.deletePet).toHaveBeenCalledWith(petId);
       expect(repository.deletePet).toHaveBeenCalledTimes(1);
       expect(result).toEqual(existingPet);
@@ -593,13 +609,13 @@ describe("PetsService", () => {
     it("should throw NotFoundException when pet to delete does not exist", async () => {
       // Arrange
       const petId = "non-existent-pet";
-      mockPetsRepository.getPetById.mockResolvedValue(null);
+      mockPetsRepository.getAdoptablePet.mockResolvedValue(null);
 
       // Act & Assert
       await expect(service.deletePet(petId)).rejects.toThrow(
         new NotFoundException(`Pet with ID ${petId} not found`),
       );
-      expect(repository.getPetById).toHaveBeenCalledWith(petId);
+      expect(repository.getAdoptablePet).toHaveBeenCalledWith(petId);
       expect(repository.deletePet).not.toHaveBeenCalled();
     });
 
@@ -621,14 +637,14 @@ describe("PetsService", () => {
         updated_at: new Date(),
       };
 
-      mockPetsRepository.getPetById.mockResolvedValue(existingPet as any);
+      mockPetsRepository.getAdoptablePet.mockResolvedValue(existingPet as any);
       mockPetsRepository.deletePet.mockResolvedValue(null);
 
       // Act & Assert
       await expect(service.deletePet(petId)).rejects.toThrow(
         new NotFoundException(`Pet with ID ${petId} not found`),
       );
-      expect(repository.getPetById).toHaveBeenCalledWith(petId);
+      expect(repository.getAdoptablePet).toHaveBeenCalledWith(petId);
       expect(repository.deletePet).toHaveBeenCalledWith(petId);
     });
 
@@ -651,7 +667,7 @@ describe("PetsService", () => {
       };
 
       const error = new Error("Foreign key constraint violation");
-      mockPetsRepository.getPetById.mockResolvedValue(existingPet as any);
+      mockPetsRepository.getAdoptablePet.mockResolvedValue(existingPet as any);
       mockPetsRepository.deletePet.mockRejectedValue(error);
 
       // Act & Assert
@@ -682,7 +698,7 @@ describe("PetsService", () => {
       };
 
       // First call returns pet, second call returns null (deleted)
-      mockPetsRepository.getPetById
+      mockPetsRepository.getAdoptablePet
         .mockResolvedValueOnce(existingPet as any)
         .mockResolvedValueOnce(null);
       mockPetsRepository.updatePet.mockResolvedValue(null);
@@ -714,7 +730,7 @@ describe("PetsService", () => {
         updated_at: new Date(),
       };
 
-      mockPetsRepository.getPetById.mockResolvedValue(existingPet as any);
+      mockPetsRepository.getAdoptablePet.mockResolvedValue(existingPet as any);
       mockPetsRepository.updatePet.mockResolvedValue(existingPet as any);
 
       // Act

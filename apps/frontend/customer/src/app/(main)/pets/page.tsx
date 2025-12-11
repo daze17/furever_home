@@ -30,7 +30,7 @@ const ProfilePage: React.Page = async (props) => {
     _searchParams,
   );
 
-  const response = await client.pets.getPetsList({
+  const response = await client.pets.getAdoptablePetsList({
     query: validQuery,
   });
 

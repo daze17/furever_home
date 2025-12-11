@@ -26,14 +26,14 @@ export class PetsService {
     );
   }
 
-  async getPetsList(query: PetsQuery = {}) {
-    const response = await this.petsRepository.getPetsList(query);
+  async getAdoptablePetsList(query: PetsQuery = {}) {
+    const response = await this.petsRepository.getAdoptablePetsList(query);
 
     return response;
   }
 
-  async getPet(id: number) {
-    const pet = await this.petsRepository.getPet(id);
+  async getAdoptablePet(id: number) {
+    const pet = await this.petsRepository.getAdoptablePet(id);
 
     if (!pet) {
       throw new NotFoundException(`Pet with ID ${id} not found`);
@@ -47,7 +47,7 @@ export class PetsService {
     const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);
 
     // Check if pet exists
-    const pet = await this.getPet(id);
+    const pet = await this.getAdoptablePet(id);
 
     // Verify ownership
     if (pet.customer_id !== accountProfile.id) {
@@ -71,7 +71,7 @@ export class PetsService {
     const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);
 
     // Check if pet exists
-    const pet = await this.getPet(id);
+    const pet = await this.getAdoptablePet(id);
 
     // Verify ownership
     if (pet.customer_id !== accountProfile.id) {

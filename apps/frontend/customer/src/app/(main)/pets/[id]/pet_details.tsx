@@ -45,7 +45,7 @@ export function PetDetails({ id, currentUserId }: PetDetailsProps) {
     setError(null);
 
     try {
-      const response = await client.pets.getPet({
+      const response = await client.pets.getAdoptablePet({
         params: { id: Number(id) },
       });
 

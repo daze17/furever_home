@@ -23,12 +23,12 @@ export class PetsController {
   }
 
   @Public()
-  @TsRestHandler(customerContract.pets.getPetsList)
-  async getPetsList() {
+  @TsRestHandler(customerContract.pets.getAdoptablePetsList)
+  async getAdoptablePetsList() {
     return tsRestHandler(
-      customerContract.pets.getPetsList,
+      customerContract.pets.getAdoptablePetsList,
       async ({ query }) => {
-        const result = await this.petsService.getPetsList(query);
+        const result = await this.petsService.getAdoptablePetsList(query);
 
         const parsedData = PetsListResponseBody.parse(result.data);
 
@@ -44,10 +44,10 @@ export class PetsController {
   }
 
   @Public()
-  @TsRestHandler(customerContract.pets.getPet)
-  async getPet() {
-    return tsRestHandler(customerContract.pets.getPet, async ({ params }) => {
-      const pet = await this.petsService.getPet(params.id);
+  @TsRestHandler(customerContract.pets.getAdoptablePet)
+  async getAdoptablePet() {
+    return tsRestHandler(customerContract.pets.getAdoptablePet, async ({ params }) => {
+      const pet = await this.petsService.getAdoptablePet(params.id);
 
       return {
         status: 200,

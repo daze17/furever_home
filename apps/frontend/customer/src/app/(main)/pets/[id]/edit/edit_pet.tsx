@@ -28,7 +28,7 @@ export function EditPet({ id }: EditPetProps) {
     setError(null);
 
     try {
-      const response = await client.pets.getPet({
+      const response = await client.pets.getAdoptablePet({
         params: { id: Number(id) },
       });
 

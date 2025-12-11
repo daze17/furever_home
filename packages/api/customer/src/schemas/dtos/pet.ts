@@ -55,7 +55,6 @@ export const PetsQuery = z
     name: PetModel.shape.name,
     sizes: PetSizeEnum.array(),
     species: PetSpeciesEnum.array(),
-    pet_statuses: PetModel.shape.pet_status.array(),
 
     // Behavioral filters (from pet_extra_information)
     energy_levels: PetExtraInformationModel.shape.energy_level.array(),

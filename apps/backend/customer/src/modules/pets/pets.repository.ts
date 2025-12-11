@@ -15,11 +15,13 @@ import {
   ilike,
   inArray,
   isNotNull,
+  isNull,
   lte,
   SQL,
 } from "drizzle-orm";
 
 import type { Database } from "@/modules/database/database.providers";
+import { PetStatusEnum } from "common_api";
 
 @Injectable()
 export class PetsRepository {
@@ -133,13 +135,13 @@ export class PetsRepository {
     });
   }
 
-  async getPetsList(query: PetsQuery = {}) {
+  async getAdoptablePetsList(query: PetsQuery = {}) {
     const currentPage = query.current_page ?? 1;
     const perPage = query.per_page ?? 10;
 
     // Build WHERE conditions for both pets and pet_extra_informations
     const conditions = this.mapPetsQuery(query);
-    const where = conditions.length > 0 ? and(...conditions) : undefined;
+    const where = and(eq(pets.pet_status, PetStatusEnum.Enum.adopting), conditions.length > 0 ? and(...conditions) : undefined);
 
     const _pets = await this.db.query.pets.findMany({
       with: {
@@ -179,7 +181,6 @@ export class PetsRepository {
       name,
       sizes,
       species,
-      pet_statuses,
       birth_date_from,
       birth_date_to,
       energy_levels,
@@ -206,11 +207,6 @@ export class PetsRepository {
         inArray(pets.size, sizes as any),
       );
       if (sizeCondition) conditions.push(sizeCondition);
-    }
-
-    // Pet status array
-    if (pet_statuses && pet_statuses.length > 0) {
-      conditions.push(inArray(pets.pet_status, pet_statuses));
     }
 
     // Birth date range (for age filtering)
@@ -300,9 +296,9 @@ export class PetsRepository {
     return sortingOrder === "ascending" ? asc(column) : desc(column);
   }
 
-  async getPet(id: number) {
+  async getAdoptablePet(id: number) {
     const pet = await this.db.query.pets.findFirst({
-      where: eq(pets.id, id),
+      where: and(eq(pets.id, id), eq(pets.pet_status, PetStatusEnum.Enum.adopting)),
       with: {
         pet_extra_information: true,
       },
