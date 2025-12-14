@@ -1,6 +1,8 @@
 import { CircleUserRound, Heart, PawPrint } from "lucide-react";
+
 import { cookies } from "next/headers";
 import Link from "next/link";
+
 import { Button } from "ui/components/ui/button";
 
 import { accessTokenName } from "@/utils/create_tokens";
@@ -13,11 +15,16 @@ export const Header = async () => {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get(accessTokenName)?.value;
   const isAuthenticated = !!accessToken;
+  console.log(isAuthenticated, "isAuthenticatedisAuthenticated");
+
   return (
     <header className="fixed top-0 z-50 w-full border-b border-orange-100 bg-white/95 shadow-sm backdrop-blur-md">
       <div className="container mx-auto flex h-[80px] items-center justify-between px-5">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 transition-transform hover:scale-105">
+        <Link
+          href="/"
+          className="flex items-center gap-2 transition-transform hover:scale-105"
+        >
           <div className="rounded-full bg-gradient-to-br from-orange-500 to-pink-500 p-2">
             <PawPrint className="h-6 w-6 text-white" />
           </div>

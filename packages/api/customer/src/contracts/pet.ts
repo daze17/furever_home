@@ -24,6 +24,21 @@ export const petContract = c.router({
     summary: "Create a new pet",
   },
 
+  // Get all own pets (with optional filters)
+  getOwnPetsList: {
+    method: "GET",
+    path: "/own_pets",
+    query: PetsQuery,
+    responses: {
+      200: z.object({
+        data: PetsListResponseBody,
+        meta: PaginationMeta,
+      }),
+      400: CustomError,
+    },
+    summary: "List all adoptable pets with optional filters",
+  },
+
   // Get all adoptable pets (with optional filters)
   getAdoptablePetsList: {
     method: "GET",

@@ -128,14 +128,12 @@ export const LoginForm: React.FC<Props> = ({ redirectTo }) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <>
-                        <Input
-                          {...field}
-                          value={field.value ?? ""}
-                          disabled={form.formState.isSubmitting}
-                          placeholder={"email"}
-                        />
-                      </>
+                      <Input
+                        {...field}
+                        value={field.value ?? ""}
+                        disabled={form.formState.isSubmitting}
+                        placeholder={"email"}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -148,15 +146,13 @@ export const LoginForm: React.FC<Props> = ({ redirectTo }) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <>
-                        <Input
-                          {...field}
-                          value={field.value ?? ""}
-                          disabled={form.formState.isSubmitting}
-                          type="password"
-                          placeholder={"password"}
-                        />
-                      </>
+                      <Input
+                        {...field}
+                        value={field.value ?? ""}
+                        disabled={form.formState.isSubmitting}
+                        type="password"
+                        placeholder={"password"}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

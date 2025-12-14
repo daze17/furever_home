@@ -1,14 +1,36 @@
-import { getSession } from "@/utils/get_session";
-import { PetDetails } from "./pet_details";
+import Link from "next/link";
 
-export default async function PetDetailPage(props: {
-  params: Promise<{ id: string }>;
-}) {
-  const params = await props.params;
+import { ErrorCard } from "@/components/error_card";
+import { client } from "@/services/client.server";
 
-  // Fetch session to get current user (null if not authenticated)
-  const session = await getSession();
-  const currentUserId = session?.sub ?? null;
+import PetDetails from "./pet_details";
 
-  return <PetDetails id={params.id} currentUserId={currentUserId} />;
-}
+type Props = {
+  id: number;
+};
+
+const PetDetailPage: React.Page<Props> = async (props) => {
+  const { id } = await props.params;
+
+  // const currentUserId = session?.sub ?? null;
+  const response = await client.pets.getAdoptablePet({
+    params: { id },
+  });
+
+  if (response.status !== 200) {
+    return (
+      <ErrorCard title={"Error"} text={"Some error occured"} className="mb-18">
+        <Link
+          href="/"
+          className="rounded-sm border border-secondary px-6 py-3 text-secondary"
+        >
+          {"Back to homepage"}
+        </Link>
+      </ErrorCard>
+    );
+  }
+
+  return <PetDetails petDetail={response.body} />;
+};
+
+export default PetDetailPage;

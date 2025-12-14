@@ -4,15 +4,12 @@ import {
   ArrowLeft,
   Award,
   Dog,
-  Edit,
   Heart,
   Home,
-  Trash2,
   Users,
   Utensils,
   Zap,
 } from "lucide-react";
-import { useEffect, useState } from "react";
 
 import { PetResponseBody } from "customer_api";
 import Link from "next/link";
@@ -21,108 +18,16 @@ import { useRouter } from "next/navigation";
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "ui";
 
 import ImageWithFallback from "@/components/image_with_fallback";
-import { client } from "@/services/client";
 
-interface PetDetailsProps {
-  id: string;
-  currentUserId: string | null; // UUID from session, null if not authenticated
-}
-
-export function PetDetails({ id, currentUserId }: PetDetailsProps) {
+const PetDetails: React.FC<{
+  petDetail: PetResponseBody;
+}> = ({ petDetail }) => {
   const router = useRouter();
-  const [pet, setPet] = useState<PetResponseBody | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [deleting, setDeleting] = useState(false);
-
-  useEffect(() => {
-    fetchPet();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
-
-  const fetchPet = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await client.pets.getAdoptablePet({
-        params: { id: Number(id) },
-      });
-
-      if (response.status === 200) {
-        setPet(response.body);
-      } else if (response.status === 404) {
-        setError("Pet not found");
-      } else {
-        setError("Failed to fetch pet details");
-      }
-    } catch (err) {
-      setError("An error occurred while fetching pet details");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDelete = async () => {
-    if (!confirm("Are you sure you want to delete this pet?")) {
-      return;
-    }
-
-    setDeleting(true);
-
-    try {
-      const response = await client.pets.deletePet({
-        params: { id: Number(id) },
-        body: {},
-      });
-
-      if (response.status === 204) {
-        router.push("/pets");
-      } else {
-        setError("Failed to delete pet");
-      }
-    } catch (err) {
-      setError("An error occurred while deleting pet");
-      console.error(err);
-    } finally {
-      setDeleting(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="py-12 text-center">
-          <p className="text-gray-500">Loading pet details...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !pet) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="rounded-lg bg-red-50 p-4 text-red-600">
-          {error || "Pet not found"}
-        </div>
-        <Button asChild className="mt-4">
-          <Link href="/pets">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Pets
-          </Link>
-        </Button>
-      </div>
-    );
-  }
+  const pet = petDetail;
 
   const petAge = pet.birth_date
     ? new Date().getFullYear() - new Date(pet.birth_date).getFullYear()
     : null;
-
-  // Calculate ownership
-  const isOwner =
-    pet && currentUserId ? pet.customer_id === currentUserId : false;
 
   const speciesEmoji = {
     dog: "🐕",
@@ -196,45 +101,25 @@ export function PetDetails({ id, currentUserId }: PetDetailsProps) {
           </Link>
         </Button>
 
-        {/* Owner-only actions */}
-        {isOwner && (
-          <div className="flex gap-2">
-            <Button asChild>
-              <Link href={`/pets/${id}/edit`}>
-                <Edit className="mr-2 h-4 w-4" />
-                Edit
-              </Link>
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={handleDelete}
-              disabled={deleting}
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              {deleting ? "Deleting..." : "Delete"}
-            </Button>
-          </div>
-        )}
-
         {/* Public action - Adoption button for non-owners */}
-        {!isOwner && pet?.pet_status === "adopting" && (
-          <Button asChild size="lg">
-            <Link href={`/pets/${id}/adopt`}>
-              <Heart className="mr-2 h-4 w-4" />
-              Adopt This Pet
-            </Link>
-          </Button>
-        )}
+        {/*{!isOwner && pet?.pet_status === "adopting" && (*/}
+        <Button asChild size="lg">
+          <Link href={`/pets/${pet.id}/adopt`}>
+            <Heart className="mr-2 h-4 w-4" />
+            Adopt This Pet
+          </Link>
+        </Button>
+        {/*)}*/}
       </div>
 
-      {/* Main Content Grid */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Left Column - Image */}
         <div className="lg:col-span-1">
           <Card>
             <CardContent className="p-6">
               <ImageWithFallback
-                src={pet.pet_image_url}
+                // TODO
+                // src={pet.pet_image_url}
+                src={"/furever-home-dog.jpg"}
                 alt={pet.name}
                 height={400}
                 width={400}
@@ -245,9 +130,7 @@ export function PetDetails({ id, currentUserId }: PetDetailsProps) {
           </Card>
         </div>
 
-        {/* Right Column - Information */}
         <div className="space-y-6 lg:col-span-2">
-          {/* Basic Info Card */}
           <Card>
             <CardHeader>
               <div className="flex items-start justify-between">
@@ -500,9 +383,7 @@ export function PetDetails({ id, currentUserId }: PetDetailsProps) {
                 </CardContent>
               </Card>
             )}
-
-          {/* System Information Card */}
-          <Card>
+          {/*<Card>
             <CardHeader>
               <CardTitle>System Information</CardTitle>
             </CardHeader>
@@ -526,9 +407,11 @@ export function PetDetails({ id, currentUserId }: PetDetailsProps) {
                 </span>
               </div>
             </CardContent>
-          </Card>
+          </Card>*/}
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default PetDetails;
