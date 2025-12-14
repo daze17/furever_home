@@ -7,6 +7,7 @@ import { session } from "@/configs/default";
 import { Session } from "@/schemas/session";
 
 //
+import { sessionName } from "./constants";
 import { decrypt, encrypt } from "./crypto_cookie";
 
 export const defaultOptions: CookieSerializeOptions = {
@@ -16,7 +17,6 @@ export const defaultOptions: CookieSerializeOptions = {
   sameSite: "lax",
   secure: true,
 };
-export const sessionName = "accessToken";
 
 export const createSession = (
   token: string,

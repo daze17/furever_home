@@ -3,7 +3,7 @@ import { customerContract } from "customer_api";
 
 import { backend } from "@/configs/default";
 import { Session } from "@/schemas/session";
-import { sessionName } from "@/utils/create_session";
+import { sessionName } from "@/utils";
 
 export const client = initClient(
   {

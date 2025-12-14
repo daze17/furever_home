@@ -1,7 +1,7 @@
 import type { NextMiddleware, NextRequest } from "next/server";
 
 import { allowedRoutes, authRoutes, publicRoutes } from "@/configs/default";
-import { getSession } from "@/utils/get_session";
+import { getSession } from "@/utils/server";
 
 export const config = {
   matcher: [

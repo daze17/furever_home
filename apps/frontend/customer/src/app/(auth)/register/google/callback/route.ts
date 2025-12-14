@@ -8,7 +8,7 @@ import {
   createAccessTokenCookie,
   createRefreshTokenCookie,
   refreshTokenName,
-} from "@/utils/create_tokens";
+} from "@/utils/server";
 
 export const runtime = "edge";
 export const POST = async (request: NextRequest) => {

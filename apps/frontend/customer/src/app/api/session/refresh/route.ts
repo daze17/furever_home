@@ -8,7 +8,7 @@ import {
   createAccessTokenCookie,
   createRefreshTokenCookie,
   refreshTokenName,
-} from "@/utils/create_tokens";
+} from "@/utils/server";
 
 // PUT - Refresh access token using refresh token
 export const PUT = async () => {

@@ -7,7 +7,7 @@ import {
   createAccessTokenCookie,
   createRefreshTokenCookie,
   refreshTokenName,
-} from "@/utils/create_tokens";
+} from "@/utils/server";
 
 // GET - Returns access token only
 export const GET = async () => {

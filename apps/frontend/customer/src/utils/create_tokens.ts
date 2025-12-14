@@ -1,8 +1,7 @@
 import type { CookieSerializeOptions } from "cookie";
 import { serialize } from "cookie";
 
-export const accessTokenName = "accessToken";
-export const refreshTokenName = "refreshToken";
+import { accessTokenName, refreshTokenName } from "./constants";
 
 const baseOptions: CookieSerializeOptions = {
   httpOnly: true,

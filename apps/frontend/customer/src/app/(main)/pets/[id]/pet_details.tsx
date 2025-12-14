@@ -18,6 +18,17 @@ import { useRouter } from "next/navigation";
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "ui";
 
 import ImageWithFallback from "@/components/image_with_fallback";
+import {
+  energyLevelColors,
+  energyLevelLabels,
+  friendlinessColors,
+  friendlinessLabels,
+  speciesEmoji,
+  statusColors,
+  statusLabel,
+  trainingLevelColors,
+  trainingLevelLabels,
+} from "@/utils";
 
 const PetDetails: React.FC<{
   petDetail: PetResponseBody;
@@ -28,67 +39,6 @@ const PetDetails: React.FC<{
   const petAge = pet.birth_date
     ? new Date().getFullYear() - new Date(pet.birth_date).getFullYear()
     : null;
-
-  const speciesEmoji = {
-    dog: "🐕",
-    cat: "🐈",
-    bird: "🐦",
-    fish: "🐠",
-    other: "🐾",
-  };
-
-  const statusLabel = {
-    adopting: "Available for Adoption",
-    has_owner: "Has Owner",
-    inactive: "Inactive",
-  };
-
-  const statusColors = {
-    adopting: "bg-green-100 text-green-800",
-    has_owner: "bg-blue-100 text-blue-800",
-    inactive: "bg-gray-100 text-gray-800",
-  };
-
-  // Behavioral data labels and colors
-  const energyLevelLabels = {
-    low: "Low Energy",
-    medium: "Medium Energy",
-    high: "High Energy",
-  };
-
-  const energyLevelColors = {
-    low: "bg-blue-100 text-blue-800",
-    medium: "bg-yellow-100 text-yellow-800",
-    high: "bg-red-100 text-red-800",
-  };
-
-  const friendlinessLabels = {
-    poor: "Poor",
-    fair: "Fair",
-    good: "Good",
-    excellent: "Excellent",
-  };
-
-  const friendlinessColors = {
-    poor: "bg-red-100 text-red-800",
-    fair: "bg-yellow-100 text-yellow-800",
-    good: "bg-green-100 text-green-800",
-    excellent: "bg-emerald-100 text-emerald-800",
-  };
-
-  const trainingLevelLabels = {
-    none: "Not Trained",
-    basic: "Basic Training",
-    intermediate: "Intermediate",
-    advanced: "Advanced",
-  };
-
-  const trainingLevelColors = {
-    none: "bg-gray-100 text-gray-800",
-    basic: "bg-blue-100 text-blue-800",
-    intermediate: "bg-green-100 text-green-800",
-    advanced: "bg-emerald-100 text-emerald-800",
-  };
 
   return (
     <div className="container mx-auto px-4 py-8">

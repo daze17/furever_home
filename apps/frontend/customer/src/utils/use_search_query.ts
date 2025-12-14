@@ -1,8 +1,9 @@
+import type { Dispatch, SetStateAction } from "react";
+import { useCallback, useMemo } from "react";
+
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { ParseOptions } from "query-string";
 import qs from "query-string";
-import type { Dispatch, SetStateAction } from "react";
-import { useCallback, useMemo } from "react";
 
 import { removeFalsyFromObject } from "./remove_falsy_from_object";
 
@@ -28,12 +29,12 @@ export const useSearchQuery = () => {
 
         router.push(`${pathname}${query ? `?${query}` : ""}`);
       },
-      [pathname, router, queryString]
+      [pathname, router, queryString],
     );
 
   const searchQuery = useMemo(
     () => qs.parse(queryString, options),
-    [queryString]
+    [queryString],
   );
 
   const searchQueryString = useMemo(() => queryString, [queryString]);

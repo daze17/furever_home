@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import { Button } from "ui/components/ui/button";
 
-import { accessTokenName } from "@/utils/create_tokens";
+import { accessTokenName } from "@/utils";
 
 import { MobileNav } from "./mobile_nav";
 import { Navigation } from "./navigation";

@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { backend } from "@/configs/default";
-import { decryptSession, sessionName } from "@/utils/create_session";
+import { decryptSession, sessionName } from "@/utils/server";
 
 export const client = initClient(
   { ...customerContract },
