@@ -22,6 +22,26 @@ export class PetsController {
     });
   }
 
+  @TsRestHandler(customerContract.pets.getOwnPetsList)
+  async getOwnPetsList() {
+    return tsRestHandler(
+      customerContract.pets.getOwnPetsList,
+      async ({ query }) => {
+        const result = await this.petsService.getOwnPetsList(query);
+
+        const parsedData = PetsListResponseBody.parse(result.data);
+
+        return {
+          status: 200,
+          body: {
+            data: parsedData,
+            meta: result.meta,
+          },
+        };
+      },
+    );
+  }
+
   @Public()
   @TsRestHandler(customerContract.pets.getAdoptablePetsList)
   async getAdoptablePetsList() {
@@ -46,14 +66,17 @@ export class PetsController {
   @Public()
   @TsRestHandler(customerContract.pets.getAdoptablePet)
   async getAdoptablePet() {
-    return tsRestHandler(customerContract.pets.getAdoptablePet, async ({ params }) => {
-      const pet = await this.petsService.getAdoptablePet(params.id);
+    return tsRestHandler(
+      customerContract.pets.getAdoptablePet,
+      async ({ params }) => {
+        const pet = await this.petsService.getAdoptablePet(params.id);
 
-      return {
-        status: 200,
-        body: pet,
-      };
-    });
+        return {
+          status: 200,
+          body: pet,
+        };
+      },
+    );
   }
 
   @TsRestHandler(customerContract.pets.updatePet)

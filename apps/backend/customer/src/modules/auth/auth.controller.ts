@@ -10,7 +10,6 @@ import { Public } from "@/common/decorators/public";
 import { EmailRateLimitGuard } from "@/common/guards/email_rate_limit.guard";
 import { JwtAuthGuard } from "@/common/guards/jwt_auth.guard";
 import { LocalAuthGuard } from "@/common/guards/local_auth.guard";
-import { PartialJwtAuthGuard } from "@/common/guards/partial_jwt_auth.guard";
 import { PasswordResetJwtAuthGuard } from "@/common/guards/password_reset_jwt_auth.guard";
 import { RefreshTokenGuard } from "@/common/guards/refresh_token.guard";
 import { generateJWT } from "@/common/utils";
@@ -33,17 +32,17 @@ export class AuthController {
     return tsRestHandler(
       customerContract.auth.loginGoogle,
       async ({ body }) => {
-        // TODO: move logic to guard
-
-        const googleAccount = await this.authRepository.getAccountByEmail(
+        const googleAccount = await this.authRepository.getAccountById(
           `google_${body.sub}`,
         );
+
         if (!googleAccount || !googleAccount.customer) {
-          throw new BadRequestException();
+          throw new BadRequestException("Бүртгэлгүй аккаунт байна");
         }
         if (googleAccount.status !== "active") {
-          throw new BadRequestException();
+          throw new BadRequestException("Идэвхгүй аккаунт байна");
         }
+
         const accessToken = await generateJWT({
           expirationTime: this.configService.get<string>(
             "jwt.expiresIn.accessToken",

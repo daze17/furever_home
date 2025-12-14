@@ -135,13 +135,56 @@ export class PetsRepository {
     });
   }
 
+  async getOwnPetsList(customerId: string, query: PetsQuery = {}) {
+    const currentPage = query.current_page ?? 1;
+    const perPage = query.per_page ?? 10;
+
+    // Build WHERE conditions for both pets and pet_extra_informations
+    const conditions = this.mapPetsQuery(query);
+    const where = and(
+      eq(pets.customer_id, customerId),
+      eq(pets.pet_status, PetStatusEnum.Enum.has_owner),
+      conditions.length > 0 ? and(...conditions) : undefined,
+    );
+
+    const _pets = await this.db.query.pets.findMany({
+      where,
+      orderBy: (query.sorting_order === "ascending" ? asc : desc)(
+        this.mapPetsSortingField(query.sorting_field),
+      ),
+      // When provided as 0, it returns all rows without pagination
+      offset: currentPage === 0 ? undefined : (currentPage - 1) * perPage,
+      limit: perPage === 0 ? undefined : perPage,
+    });
+
+    // Count total with same WHERE conditions
+    const _count = await this.db
+      .select({ total: count() })
+      .from(pets)
+      .where(where);
+
+    const total = _count.find(Boolean)?.total ?? 0;
+
+    return {
+      data: _pets,
+      meta: {
+        total,
+        per_page: perPage,
+        current_page: currentPage,
+      },
+    };
+  }
+
   async getAdoptablePetsList(query: PetsQuery = {}) {
     const currentPage = query.current_page ?? 1;
     const perPage = query.per_page ?? 10;
 
     // Build WHERE conditions for both pets and pet_extra_informations
     const conditions = this.mapPetsQuery(query);
-    const where = and(eq(pets.pet_status, PetStatusEnum.Enum.adopting), conditions.length > 0 ? and(...conditions) : undefined);
+    const where = and(
+      eq(pets.pet_status, PetStatusEnum.Enum.adopting),
+      conditions.length > 0 ? and(...conditions) : undefined,
+    );
 
     const _pets = await this.db.query.pets.findMany({
       with: {
@@ -298,7 +341,10 @@ export class PetsRepository {
 
   async getAdoptablePet(id: number) {
     const pet = await this.db.query.pets.findFirst({
-      where: and(eq(pets.id, id), eq(pets.pet_status, PetStatusEnum.Enum.adopting)),
+      where: and(
+        eq(pets.id, id),
+        eq(pets.pet_status, PetStatusEnum.Enum.adopting),
+      ),
       with: {
         pet_extra_information: true,
       },

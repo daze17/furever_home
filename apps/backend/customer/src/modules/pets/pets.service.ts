@@ -26,6 +26,13 @@ export class PetsService {
     );
   }
 
+  async getOwnPetsList(query: PetsQuery = {}) {
+    const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);
+    const response = await this.petsRepository.getOwnPetsList(accountProfile.id, query);
+
+    return response;
+  }
+
   async getAdoptablePetsList(query: PetsQuery = {}) {
     const response = await this.petsRepository.getAdoptablePetsList(query);
 
