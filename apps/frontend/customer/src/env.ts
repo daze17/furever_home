@@ -20,6 +20,7 @@ const env = createEnv({
       process.env.NEXT_PUBLIC_GOOGLE_LOGIN_REDIRECT_URL,
     NEXT_PUBLIC_GOOGLE_REGISTER_REDIRECT_URL:
       process.env.NEXT_PUBLIC_GOOGLE_REGISTER_REDIRECT_URL,
+    SESSION_SECRET: process.env.SESSION_SECRET,
   },
 });
 export default env;
