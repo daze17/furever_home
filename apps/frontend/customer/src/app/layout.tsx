@@ -7,6 +7,8 @@ import "ui/styles/globals.css";
 import { cn } from "utils";
 
 import { GlobalTransition } from "@/components/global_transition";
+import { UserSessionProvider } from "@/contexts/auth";
+import { verifySession } from "@/utils/dal";
 
 import { Footer } from "./_layout/footer";
 import { Header } from "./_layout/header";
@@ -29,17 +31,21 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const sessionPromise = verifySession();
+
   return (
     <html lang="en">
-      <body className={cn(nunito.className)}>
-        <Header />
-        <NuqsAdapter>
-          <main className="mt-[80px]">{children}</main>
-        </NuqsAdapter>
-        <Footer />
-        <GlobalTransition />
-        <Toaster />
-      </body>
+      <UserSessionProvider sessionPromise={sessionPromise}>
+        <body className={cn(nunito.className)}>
+          <Header />
+          <NuqsAdapter>
+            <main className="mt-[80px]">{children}</main>
+          </NuqsAdapter>
+          <Footer />
+          <GlobalTransition />
+          <Toaster />
+        </body>
+      </UserSessionProvider>
     </html>
   );
 }

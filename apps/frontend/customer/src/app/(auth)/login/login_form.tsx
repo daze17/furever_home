@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { startTransition, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -72,7 +72,10 @@ export const LoginForm: React.FC<Props> = ({ redirectTo }) => {
           });
           toast.success("Амжилттай нэвтэрлээ");
           setIsPending(false);
-          router.push("/");
+          startTransition(() => {
+            router.push("/");
+            router.refresh();
+          });
           break;
         case 400:
           toast.error("Буруу хүсэлт");

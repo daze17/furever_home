@@ -47,3 +47,10 @@ export const tryParseJson = <T = unknown>(json: any): T | undefined => {
     return;
   }
 };
+
+export const decryptRefreshToken = async (value: string) => {
+  // TODO: separate secret for refresh token?
+  const decryptedCookie = decrypt(value, session.secret);
+
+  return { refreshToken: decryptedCookie };
+};

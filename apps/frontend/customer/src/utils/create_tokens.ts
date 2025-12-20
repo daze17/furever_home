@@ -6,7 +6,7 @@ import { accessTokenName, refreshTokenName } from "./constants";
 const baseOptions: CookieSerializeOptions = {
   httpOnly: true,
   path: "/",
-  sameSite: "strict",
+  sameSite: "lax",
   secure: process.env.NODE_ENV === "production",
 };
 

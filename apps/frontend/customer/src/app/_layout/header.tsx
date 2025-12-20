@@ -1,21 +1,21 @@
-import { CircleUserRound, Heart, PawPrint } from "lucide-react";
+"use client";
 
-import { cookies } from "next/headers";
+import { CircleUserRound, Heart, PawPrint } from "lucide-react";
+import { use } from "react";
+
 import Link from "next/link";
 
 import { Button } from "ui/components/ui/button";
 
-import { accessTokenName } from "@/utils";
+import { useSession } from "@/contexts/auth";
 
 import { MobileNav } from "./mobile_nav";
 import { Navigation } from "./navigation";
 import { ProfileSection } from "./profile_section";
 
-export const Header = async () => {
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get(accessTokenName)?.value;
-  const isAuthenticated = !!accessToken;
-  console.log(isAuthenticated, "isAuthenticatedisAuthenticated");
+export const Header = () => {
+  const { sessionPromise } = useSession();
+  const session = use(sessionPromise);
 
   return (
     <header className="fixed top-0 z-50 w-full border-b border-orange-100 bg-white/95 shadow-sm backdrop-blur-md">
@@ -45,7 +45,7 @@ export const Header = async () => {
             </Link>
           </Button>
 
-          {isAuthenticated ? (
+          {session ? (
             <ProfileSection />
           ) : (
             <Button asChild>

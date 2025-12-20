@@ -4,6 +4,7 @@ import { customerContract } from "customer_api";
 import { backend } from "@/configs/default";
 import { Session } from "@/schemas/session";
 import { sessionName } from "@/utils";
+import { checkIfTokenIsValid } from "@/utils/check_if_token_is_valid";
 
 export const client = initClient(
   {
@@ -11,26 +12,66 @@ export const client = initClient(
     // ...commonContract,
   },
   {
-    baseHeaders: {},
-    baseUrl: backend.url,
     api: async (args) => {
       const interceptedArgs = await requestInterceptor(args);
-      let response = await tsRestFetchApi(interceptedArgs);
-      const newResponse = await responseInterceptor({
-        ...interceptedArgs,
-        response,
-      });
+      const response = await tsRestFetchApi(interceptedArgs);
+      const interceptedResponse = await responseInterceptor(response);
 
-      // If interceptor returned a new response (from retry), use it
-      return newResponse || response;
+      const handledResponse = await unauthorizedResponseHandler(
+        args,
+        interceptedResponse,
+      );
+
+      if (handledResponse) {
+        return handledResponse;
+      }
+
+      return interceptedResponse;
+    },
+    baseUrl: backend.url,
+    baseHeaders: {
+      // 'x-devalue': 'false',
     },
   },
 );
 type CustomRequestHandlerArgs = ApiFetcherArgs;
+
+const getSession = async () => {
+  // Check if we're on the server or client
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (globalThis.window === undefined) {
+    // When server accesses - directly read from cookies
+    const { cookies } = await import("next/headers");
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("accessToken")?.value;
+
+    if (accessToken) {
+      return accessToken;
+    }
+
+    return null;
+  } else {
+    // When client accesses - fetch from API route
+    try {
+      const sessionResponse = await fetch(`/api/session`);
+
+      if (!sessionResponse.ok) {
+        // unauthenticated
+        return null;
+      }
+
+      const session: Session | null = await sessionResponse.json();
+
+      return session;
+    } catch {
+      // network/configuration error occurred
+      return null;
+    }
+  }
+};
+
 const requestInterceptor = async (_args: CustomRequestHandlerArgs) => {
-  // const session = cookies().get(sessionName)?.value;
-  const _session = await fetch(`/api/session`);
-  const session: Session | null = await _session.json();
+  const session = await getSession();
 
   const args = _args;
 
@@ -47,115 +88,121 @@ type CustomResponseHandlerArgs = CustomRequestHandlerArgs & {
 };
 
 // Track if refresh is in progress to prevent concurrent refresh attempts
-let isRefreshing = false;
-let refreshPromise: Promise<boolean> | null = null;
 
-const responseInterceptor = async (args: CustomResponseHandlerArgs) => {
-  const handlers: ((
-    args: CustomResponseHandlerArgs,
-  ) => Promise<Response | void>)[] = [_handle401, _forceLogout];
-  for (const handler of handlers) {
-    const response = await handler(args);
-    if (response) {
-      // Handler returned a new response, use it
-      return response;
-    }
-  }
+const responseInterceptor = async (
+  response: Awaited<ReturnType<typeof tsRestFetchApi>>,
+) => {
+  // NOTE: devalue added DEVALUE_STRING_ prefix
+  const body = response.body;
+
+  // if (typeof body === 'string' && body.startsWith(devaluePrefix)) {
+  //   const devalue = await import('devalue')
+  //   const devalueString = body.replace(new RegExp(`^${devaluePrefix}`), '')
+
+  //   return {
+  //     ...response,
+  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  //     body: devalue.parse(devalueString),
+  //   }
+  // }
+
+  // FIXME: renmove after devalue added DEVALUE_STRING_ prefix
+  // const devalueHeader = response.headers.get('x-devalue')
+
+  // if (devalueHeader === 'true') {
+  //   const devalue = await import('devalue')
+
+  //   return {
+  //     ...response,
+  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  //     body: devalue.parse(response.body as string),
+  //   }
+  // }
+
+  return response;
 };
 
-// Handle 401 errors with token refresh
-const _handle401 = async ({
-  path,
-  response,
-  ...requestArgs
-}: CustomResponseHandlerArgs): Promise<Response | void> => {
-  // Skip 401 handling for authentication endpoints (they're expected to return 401)
-  const authEndpoints = [
-    "/login/credentials",
-    "/login/google",
-    "/register",
-    "/reset-password",
-    "/refresh",
-  ];
-  const isAuthEndpoint = authEndpoints.some((endpoint) =>
-    path.includes(endpoint),
-  );
-
-  if (response.status !== 401 || isAuthEndpoint) {
+const unauthorizedResponseHandler = async (
+  request: ApiFetcherArgs,
+  response: Awaited<ReturnType<typeof tsRestFetchApi>>,
+) => {
+  if (response.status !== 401) {
     return;
   }
 
-  // If already refreshing, wait for it to complete
-  if (isRefreshing && refreshPromise) {
-    const success = await refreshPromise;
-    if (success) {
-      // Retry the original request with new token
-      const newSession = await fetch(`/api/session`);
-      const session = await newSession.json();
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const isServer = globalThis.window === undefined;
 
-      if (session) {
-        requestArgs.headers["Authorization"] = `Bearer ${session}`;
-        return await tsRestFetchApi(requestArgs as ApiFetcherArgs);
-      }
-    }
+  // Don't handle if it is refresh token request 401
+  // because it will create infinite loop
+  if (request.path.endsWith("/auth/refresh")) {
     return;
   }
 
-  // Start refresh process
-  isRefreshing = true;
-  refreshPromise = attemptTokenRefresh();
+  let refreshToken: null | string = null;
 
-  const success = await refreshPromise;
-  isRefreshing = false;
-  refreshPromise = null;
+  if (isServer) {
+    const nextHeaders = await import("next/headers");
+    const cookieStore = await nextHeaders.cookies();
+    const refreshTokenCookie = cookieStore.get("refreshToken")?.value;
+    const { decryptRefreshToken } = await import("@/utils/create_session");
 
-  if (success) {
-    // Retry the original request with new token
-    const newSession = await fetch(`/api/session`);
-    const session = await newSession.json();
+    if (refreshTokenCookie) {
+      const decryptedToken = await decryptRefreshToken(refreshTokenCookie);
 
-    if (session) {
-      requestArgs.headers["Authorization"] = `Bearer ${session}`;
-      return await tsRestFetchApi(requestArgs as ApiFetcherArgs);
+      refreshToken = decryptedToken.refreshToken;
+    } else {
+      refreshToken = null;
     }
   } else {
-    // Refresh failed, force logout
-    await fetch("/api/session", { method: "DELETE" });
-    window.location.href = "/login?session_expired=true";
+    // const { clientEnv } = await import('@/configs/env/env.client')
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const refreshTokenResponse: { refreshToken: null | string } = await fetch(
+      "/api/refresh_token",
+      {
+        headers: {
+          // TODO: check
+          // [API_GUARD_NAME]: clientEnv.apiGuard.token,
+        },
+      },
+    ).then((res) => res.json());
+
+    refreshToken = refreshTokenResponse.refreshToken;
   }
-};
 
-// Attempt to refresh the token
-const attemptTokenRefresh = async (): Promise<boolean> => {
-  try {
-    const response = await fetch("/api/session/refresh", {
-      method: "PUT",
-    });
+  //  Cant refresh token if it is expired or not found
+  if (!refreshToken || !checkIfTokenIsValid(refreshToken)) {
+    if (!isServer) {
+      globalThis.location.reload();
+    }
 
-    return response.ok;
-  } catch (error) {
-    console.error("Token refresh failed:", error);
-    return false;
-  }
-};
-
-
-// const _login = async ({ path, response }: CustomResponseHandlerArgs) => {
-//   if (!path.endsWith("/login/google") || response.status !== 200) {
-//     return;
-//   }
-
-//   await fetch("/api/session", {
-//     method: "POST",
-//     body: JSON.stringify(response.body),
-//   });
-// };
-
-const _forceLogout = async ({ path, response }: CustomResponseHandlerArgs) => {
-  if (!path.endsWith("change_password") || response.status !== 200) {
     return;
   }
-  await fetch("/api/session", {
-    method: "DELETE",
+
+  const { body, status } = await client.auth.refreshToken({
+    body: {
+      refreshToken,
+    },
   });
+
+  if (status !== 201) {
+    if (!isServer) {
+      globalThis.location.reload();
+    }
+
+    return;
+  }
+
+  const accessToken = body.accessToken;
+
+  const retryRequest = request;
+
+  retryRequest.headers.Authorization = `Bearer ${accessToken}`;
+  // Get locale if available
+  // const locale = await getLocale()
+
+  // retryRequest.headers['X-Locale'] = locale
+
+  return await tsRestFetchApi(retryRequest);
 };
