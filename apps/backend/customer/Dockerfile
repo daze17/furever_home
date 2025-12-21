@@ -34,4 +34,4 @@ USER nestjs
 
 COPY --from=builder /app .
 
-CMD node apps/backend/customer/dist/src/main.js
+CMD node apps/backend/customer/dist/main.js
