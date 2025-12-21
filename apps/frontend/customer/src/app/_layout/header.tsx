@@ -5,7 +5,7 @@ import { use } from "react";
 
 import Link from "next/link";
 
-import { Button } from "ui/components/ui/button";
+import { Button } from "ui";
 
 import { useSession } from "@/contexts/auth";
 

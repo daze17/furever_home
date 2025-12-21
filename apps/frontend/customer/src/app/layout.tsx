@@ -3,7 +3,7 @@ import { Nunito } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { Toaster } from "ui";
-import "ui/styles/globals.css";
+import "ui/globals.css";
 import { cn } from "utils";
 
 import { GlobalTransition } from "@/components/global_transition";
