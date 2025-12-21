@@ -14,10 +14,14 @@ type Props = {
   redirectTo?: string;
 };
 export const GoogleLogin: React.FC<Props> = ({ isPending, redirectTo }) => {
-  const loginUrl = new URL(google.loginRedirectUrl!);
-  if (redirectTo) {
+  const loginUrl = google.loginRedirectUrl
+    ? new URL(google.loginRedirectUrl)
+    : null;
+  if (loginUrl && redirectTo) {
     loginUrl.searchParams.set("redirectTo", redirectTo);
   }
+
+  if (!loginUrl) return null;
 
   useEffect(() => {
     const script = document.createElement("script");
