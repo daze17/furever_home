@@ -21,6 +21,5 @@ const env = createEnv({
     NEXT_PUBLIC_GOOGLE_REGISTER_REDIRECT_URL:
       process.env.NEXT_PUBLIC_GOOGLE_REGISTER_REDIRECT_URL,
   },
-  // test
 });
 export default env;
