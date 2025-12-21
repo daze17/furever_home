@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: customer-backend
+    runtime: image
+    image:
+      url: ghcr.io/daze17/furever_home/customer-backend:latest
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
