@@ -1,19 +1,19 @@
-import { BullModule } from '@nestjs/bullmq';
-import { Module, RequestMethod } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ClsModule } from 'nestjs-cls';
-import { LoggerModule } from 'nestjs-pino';
+import { BullModule } from "@nestjs/bullmq";
+import { Module, RequestMethod } from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { ClsModule } from "nestjs-cls";
+import { LoggerModule } from "nestjs-pino";
 
-import { configuration, validate } from '@/common/config/configuration';
-import { AuthModule } from '@/modules/auth/auth.module';
-import { CustomerSettingsModule } from '@/modules/customer_settings/customer_settings.module';
-import { EmailQueueModule } from '@/modules/email_queue/email_queue.module';
-import { PetsModule } from '@/modules/pets/pets.module';
+import { configuration, validate } from "@/common/config/configuration";
+import { AuthModule } from "@/modules/auth/auth.module";
+import { CustomerSettingsModule } from "@/modules/customer_settings/customer_settings.module";
+import { EmailQueueModule } from "@/modules/email_queue/email_queue.module";
+import { PetsModule } from "@/modules/pets/pets.module";
 
-import { DatabaseModule } from '../database/database.module';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { HealthModule } from './health.module';
+import { DatabaseModule } from "../database/database.module";
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
+import { HealthModule } from "./health.module";
 
 @Module({
   imports: [
@@ -21,12 +21,12 @@ import { HealthModule } from './health.module';
       exclude: [
         {
           method: RequestMethod.ALL,
-          path: '/health',
+          path: "/health",
         },
       ],
       pinoHttp: {
         transport: {
-          target: 'pino-pretty',
+          target: "pino-pretty",
           options: {
             singleLine: true,
           },
@@ -48,8 +48,9 @@ import { HealthModule } from './health.module';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         connection: {
-          host: configService.get<string>('redis.host'),
-          port: configService.get<number>('redis.port'),
+          url: configService.get<string>("redis.url"),
+          // host: configService.get<string>("redis.host"),
+          // port: configService.get<number>("redis.port"),
         },
       }),
       inject: [ConfigService],
