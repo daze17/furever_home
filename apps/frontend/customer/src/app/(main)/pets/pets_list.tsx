@@ -36,26 +36,26 @@ const PetsList: React.FC<{
           <div className="sticky top-0 z-10 h-16 border-b bg-white px-6 py-3 shadow-sm">
             <div className="flex items-center justify-between">
               <p className="text-sm text-gray-600">
-                Showing{" "}
-                <span className="font-semibold text-gray-900">
-                  {pets.length}
-                </span>{" "}
-                of{" "}
+                Нийт{" "}
                 <span className="font-semibold text-gray-900">
                   {meta.total}
                 </span>{" "}
-                pets
+                тэжээвэр амьтнаас{" "}
+                <span className="font-semibold text-gray-900">
+                  {pets.length}
+                </span>{" "}
+                харуулж байна
               </p>
               <div className="flex items-center gap-4">
                 <Select defaultValue="newest">
                   <SelectTrigger className="w-44 border-gray-200 bg-white">
-                    <SelectValue placeholder="Sort by" />
+                    <SelectValue placeholder="Эрэмбэлэх" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="newest">Newest First</SelectItem>
-                    <SelectItem value="oldest">Oldest First</SelectItem>
-                    <SelectItem value="name_asc">Name A-Z</SelectItem>
-                    <SelectItem value="name_desc">Name Z-A</SelectItem>
+                    <SelectItem value="newest">Шинэ нь эхэндээ</SelectItem>
+                    <SelectItem value="oldest">Хуучин нь эхэндээ</SelectItem>
+                    <SelectItem value="name_asc">Нэр А-Я</SelectItem>
+                    <SelectItem value="name_desc">Нэр Я-А</SelectItem>
                   </SelectContent>
                 </Select>
                 {pagination}
@@ -77,10 +77,10 @@ const PetsList: React.FC<{
                     <span className="text-3xl">🐾</span>
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900">
-                    No pets found
+                    Тэжээвэр амьтан олдсонгүй
                   </h3>
                   <p className="mt-2 text-gray-500">
-                    Try adjusting your filters or add a new pet
+                    Шүүлтүүрээ өөрчлөх эсвэл шинэ тэжээвэр амьтан нэмнэ үү
                   </p>
                 </div>
               </div>

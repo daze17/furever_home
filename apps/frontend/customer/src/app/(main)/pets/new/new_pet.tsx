@@ -13,14 +13,14 @@ export function NewPet() {
         <Button variant="ghost" asChild>
           <Link href="/pets">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Pets
+            Тэжээвэр амьтад руу буцах
           </Link>
         </Button>
       </div>
 
       <Card className="mx-auto max-w-2xl">
         <CardHeader>
-          <CardTitle>Create New Pet</CardTitle>
+          <CardTitle>Шинэ тэжээвэр амьтан үүсгэх</CardTitle>
         </CardHeader>
         <CardContent>
           <PetForm mode="create" />

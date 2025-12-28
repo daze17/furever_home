@@ -35,12 +35,12 @@ export function EditPet({ id }: EditPetProps) {
       if (response.status === 200) {
         setPet(response.body);
       } else if (response.status === 404) {
-        setError("Pet not found");
+        setError("Тэжээвэр амьтан олдсонгүй");
       } else {
-        setError("Failed to fetch pet details");
+        setError("Тэжээвэр амьтны мэдээллийг авч чадсангүй");
       }
     } catch (err) {
-      setError("An error occurred while fetching pet details");
+      setError("Тэжээвэр амьтны мэдээллийг авахад алдаа гарлаа");
       console.error(err);
     } finally {
       setLoading(false);
@@ -51,7 +51,7 @@ export function EditPet({ id }: EditPetProps) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="py-12 text-center">
-          <p className="text-gray-500">Loading pet details...</p>
+          <p className="text-gray-500">Тэжээвэр амьтны мэдээллийг ачааллаж байна...</p>
         </div>
       </div>
     );
@@ -61,12 +61,12 @@ export function EditPet({ id }: EditPetProps) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="rounded-lg bg-red-50 p-4 text-red-600">
-          {error || "Pet not found"}
+          {error || "Тэжээвэр амьтан олдсонгүй"}
         </div>
         <Button asChild className="mt-4">
           <Link href="/pets">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Pets
+            Тэжээвэр амьтад руу буцах
           </Link>
         </Button>
       </div>
@@ -79,14 +79,14 @@ export function EditPet({ id }: EditPetProps) {
         <Button variant="ghost" asChild>
           <Link href={`/pets/${id}`}>
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Pet Details
+            Тэжээвэр амьтны дэлгэрэнгүй рүү буцах
           </Link>
         </Button>
       </div>
 
       <Card className="mx-auto max-w-2xl">
         <CardHeader>
-          <CardTitle>Edit Pet: {pet.name}</CardTitle>
+          <CardTitle>Тэжээвэр амьтан засах: {pet.name}</CardTitle>
         </CardHeader>
         <CardContent>
           <PetForm mode="edit" pet={pet} />

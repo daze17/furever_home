@@ -47,7 +47,7 @@ const PetDetails: React.FC<{
         <Button variant="ghost" asChild>
           <Link href="/pets">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Pets
+            Тэжээвэр амьтад руу буцах
           </Link>
         </Button>
 
@@ -56,7 +56,7 @@ const PetDetails: React.FC<{
         <Button asChild size="lg">
           <Link href={`/pets/${pet.id}/adopt`}>
             <Heart className="mr-2 h-4 w-4" />
-            Adopt This Pet
+            Энэ тэжээвэр амьтныг үрчлэх
           </Link>
         </Button>
         {/*)}*/}
@@ -88,7 +88,7 @@ const PetDetails: React.FC<{
                   <CardTitle className="text-3xl">{pet.name}</CardTitle>
                   {petAge !== null && (
                     <p className="mt-1 text-lg text-muted-foreground">
-                      {petAge} years old
+                      {petAge} настай
                     </p>
                   )}
                 </div>
@@ -101,7 +101,7 @@ const PetDetails: React.FC<{
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">
-                    Species
+                    Төрөл
                   </p>
                   <p className="mt-1 text-lg">
                     {speciesEmoji[pet.species]} {pet.species}
@@ -111,7 +111,7 @@ const PetDetails: React.FC<{
                 {pet.size && (
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">
-                      Size
+                      Хэмжээ
                     </p>
                     <p className="mt-1 text-lg capitalize">{pet.size}</p>
                   </div>
@@ -120,7 +120,7 @@ const PetDetails: React.FC<{
                 {pet.birth_date && (
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">
-                      Birth Date
+                      Төрсөн огноо
                     </p>
                     <p className="mt-1">
                       {new Date(pet.birth_date).toLocaleDateString()}
@@ -132,7 +132,7 @@ const PetDetails: React.FC<{
               {pet.notes && (
                 <div className="mt-4">
                   <p className="text-sm font-medium text-muted-foreground">
-                    Notes
+                    Тэмдэглэл
                   </p>
                   <p className="mt-1 text-gray-700">{pet.notes}</p>
                 </div>
@@ -144,7 +144,7 @@ const PetDetails: React.FC<{
           {pet.pet_extra_information && (
             <Card>
               <CardHeader>
-                <CardTitle>Behavioral Information</CardTitle>
+                <CardTitle>Зан төлөвийн мэдээлэл</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -155,7 +155,7 @@ const PetDetails: React.FC<{
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-medium text-muted-foreground">
-                        Energy Level
+                        Эрч хүчний түвшин
                       </p>
                       {pet.pet_extra_information.energy_level ? (
                         <Badge
@@ -169,7 +169,7 @@ const PetDetails: React.FC<{
                         </Badge>
                       ) : (
                         <p className="mt-1 text-sm text-muted-foreground">
-                          Not specified
+                          Тодорхойлоогүй
                         </p>
                       )}
                     </div>
@@ -182,7 +182,7 @@ const PetDetails: React.FC<{
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-medium text-muted-foreground">
-                        Friendliness with Children
+                        Хүүхэдтэй найрсаг байдал
                       </p>
                       {pet.pet_extra_information.friendliness_with_children ? (
                         <Badge
@@ -197,7 +197,7 @@ const PetDetails: React.FC<{
                         </Badge>
                       ) : (
                         <p className="mt-1 text-sm text-muted-foreground">
-                          Not specified
+                          Тодорхойлоогүй
                         </p>
                       )}
                     </div>
@@ -210,7 +210,7 @@ const PetDetails: React.FC<{
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-medium text-muted-foreground">
-                        Friendliness with Pets
+                        Бусад амьтантай найрсаг байдал
                       </p>
                       {pet.pet_extra_information.friendliness_with_pets ? (
                         <Badge
@@ -224,7 +224,7 @@ const PetDetails: React.FC<{
                         </Badge>
                       ) : (
                         <p className="mt-1 text-sm text-muted-foreground">
-                          Not specified
+                          Тодорхойлоогүй
                         </p>
                       )}
                     </div>
@@ -237,7 +237,7 @@ const PetDetails: React.FC<{
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-medium text-muted-foreground">
-                        House Trained
+                        Гэрийн сургалттай
                       </p>
                       {pet.pet_extra_information.is_house_trained !== null ? (
                         <Badge
@@ -248,12 +248,12 @@ const PetDetails: React.FC<{
                           }`}
                         >
                           {pet.pet_extra_information.is_house_trained
-                            ? "Yes"
-                            : "No"}
+                            ? "Тийм"
+                            : "Үгүй"}
                         </Badge>
                       ) : (
                         <p className="mt-1 text-sm text-muted-foreground">
-                          Not specified
+                          Тодорхойлоогүй
                         </p>
                       )}
                     </div>
@@ -266,7 +266,7 @@ const PetDetails: React.FC<{
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-medium text-muted-foreground">
-                        Training Level
+                        Сургалтын түвшин
                       </p>
                       {pet.pet_extra_information.training_level ? (
                         <Badge
@@ -280,7 +280,7 @@ const PetDetails: React.FC<{
                         </Badge>
                       ) : (
                         <p className="mt-1 text-sm text-muted-foreground">
-                          Not specified
+                          Тодорхойлоогүй
                         </p>
                       )}
                     </div>
@@ -296,7 +296,7 @@ const PetDetails: React.FC<{
               pet.pet_extra_information.dietary_restrictions) && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Additional Details</CardTitle>
+                  <CardTitle>Нэмэлт дэлгэрэнгүй</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {pet.pet_extra_information.special_needs && (
@@ -306,7 +306,7 @@ const PetDetails: React.FC<{
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-medium text-muted-foreground">
-                          Special Needs
+                          Онцгой хэрэгцээ
                         </p>
                         <p className="mt-1 text-gray-700">
                           {pet.pet_extra_information.special_needs}
@@ -322,7 +322,7 @@ const PetDetails: React.FC<{
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-medium text-muted-foreground">
-                          Dietary Restrictions
+                          Хоолны хязгаарлалт
                         </p>
                         <p className="mt-1 text-gray-700">
                           {pet.pet_extra_information.dietary_restrictions}
