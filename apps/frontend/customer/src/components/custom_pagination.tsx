@@ -63,72 +63,73 @@ export const CustomPagination: React.FC<PaginationProps> = ({
   const totalPages = Math.ceil(meta.total / meta.per_page);
   const pages = paginate(meta.current_page, totalPages);
   return (
-    <div className="flex items-center justify-between px-2">
-      <div className="flex items-center space-x-6 lg:space-x-8">
-        <div className="flex items-center">
-          <Button
-            variant="outline"
-            className="hidden h-11 w-11 p-0 lg:flex"
-            onClick={() => setPage(1)}
-            disabled={meta.current_page === 1}
-          >
-            <span className="sr-only">Go to first page</span>
-            <ChevronsLeftIcon className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            className="h-11 w-11 p-0"
-            onClick={() => setPage(meta.current_page - 1)}
-            disabled={meta.current_page === 1}
-          >
-            <span className="sr-only">Go to previous page</span>
-            <ChevronLeftIcon className="h-4 w-4" />
-          </Button>
-          <Pagination>
-            <PaginationContent>
-              {pages.map((page, index) => {
-                if (page === "...") {
-                  return (
-                    <PaginationItem key={`ellipsis-${index}`}>
-                      <PaginationEllipsis />
-                    </PaginationItem>
-                  );
-                }
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-1">
+        <Button
+          variant="outline"
+          className="hidden h-9 w-9 rounded-lg border-gray-200 p-0 transition-colors hover:border-[#11D0BC] hover:bg-[#11D0BC]/5 lg:flex"
+          onClick={() => setPage(1)}
+          disabled={meta.current_page === 1}
+        >
+          <span className="sr-only">Go to first page</span>
+          <ChevronsLeftIcon className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="outline"
+          className="h-9 w-9 rounded-lg border-gray-200 p-0 transition-colors hover:border-[#11D0BC] hover:bg-[#11D0BC]/5"
+          onClick={() => setPage(meta.current_page - 1)}
+          disabled={meta.current_page === 1}
+        >
+          <span className="sr-only">Go to previous page</span>
+          <ChevronLeftIcon className="h-4 w-4" />
+        </Button>
+        <Pagination>
+          <PaginationContent className="gap-1">
+            {pages.map((page, index) => {
+              if (page === "...") {
                 return (
-                  <PaginationItem key={page}>
-                    <Button
-                      variant={
-                        page === meta.current_page ? "default" : "outline"
-                      }
-                      className="min-h-11 min-w-11 p-0 text-xs font-light transition-opacity"
-                      onClick={() => setPage(page)}
-                    >
-                      {page}
-                    </Button>
+                  <PaginationItem key={`ellipsis-${index}`}>
+                    <PaginationEllipsis className="text-gray-400" />
                   </PaginationItem>
                 );
-              })}
-            </PaginationContent>
-          </Pagination>
-          <Button
-            variant="outline"
-            className="h-11 w-11 p-0"
-            onClick={() => setPage(meta.current_page + 1)}
-            disabled={meta.current_page === totalPages}
-          >
-            <span className="sr-only">Go to next page</span>
-            <ChevronRightIcon className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            className="hidden h-11 w-11 p-0 lg:flex"
-            onClick={() => setPage(totalPages)}
-            disabled={meta.current_page === totalPages}
-          >
-            <span className="sr-only">Go to last page</span>
-            <ChevronsRightIcon className="h-4 w-4" />
-          </Button>
-        </div>
+              }
+              const isActive = page === meta.current_page;
+              return (
+                <PaginationItem key={page}>
+                  <Button
+                    variant={isActive ? "default" : "outline"}
+                    className={`h-9 w-9 rounded-lg p-0 text-sm font-medium transition-all ${
+                      isActive
+                        ? "bg-[#11D0BC] text-white hover:bg-[#0fb8a6]"
+                        : "border-gray-200 hover:border-[#11D0BC] hover:bg-[#11D0BC]/5"
+                    }`}
+                    onClick={() => setPage(page)}
+                  >
+                    {page}
+                  </Button>
+                </PaginationItem>
+              );
+            })}
+          </PaginationContent>
+        </Pagination>
+        <Button
+          variant="outline"
+          className="h-9 w-9 rounded-lg border-gray-200 p-0 transition-colors hover:border-[#11D0BC] hover:bg-[#11D0BC]/5"
+          onClick={() => setPage(meta.current_page + 1)}
+          disabled={meta.current_page === totalPages}
+        >
+          <span className="sr-only">Go to next page</span>
+          <ChevronRightIcon className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="outline"
+          className="hidden h-9 w-9 rounded-lg border-gray-200 p-0 transition-colors hover:border-[#11D0BC] hover:bg-[#11D0BC]/5 lg:flex"
+          onClick={() => setPage(totalPages)}
+          disabled={meta.current_page === totalPages}
+        >
+          <span className="sr-only">Go to last page</span>
+          <ChevronsRightIcon className="h-4 w-4" />
+        </Button>
       </div>
     </div>
   );

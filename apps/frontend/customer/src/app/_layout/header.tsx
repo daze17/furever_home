@@ -18,9 +18,8 @@ export const Header = () => {
   const session = use(sessionPromise);
 
   return (
-    <header className="fixed top-0 z-50 w-full border-b border-orange-100 bg-white/95 shadow-sm backdrop-blur-md">
+    <header className="fixed top-0 z-50 w-full border-b bg-white/95">
       <div className="container mx-auto flex h-[80px] items-center justify-between px-5">
-        {/* Logo */}
         <Link
           href="/"
           className="flex items-center gap-2 transition-transform hover:scale-105"
@@ -33,10 +32,8 @@ export const Header = () => {
           </span>
         </Link>
 
-        {/* Desktop Navigation */}
         <Navigation />
 
-        {/* Right Actions */}
         <div className="hidden items-center gap-2 md:flex">
           <Button variant="ghost" size="sm" asChild>
             <Link href="/favorites" className="flex items-center gap-2">
@@ -57,7 +54,6 @@ export const Header = () => {
           )}
         </div>
 
-        {/* Mobile Menu */}
         <MobileNav />
       </div>
     </header>

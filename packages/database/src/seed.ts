@@ -199,6 +199,7 @@ async function seed() {
     const petExtraInfos = await db
       .insert(pet_extra_informations)
       .values([
+        // Original 6
         {
           energy_level: "high",
           friendliness_with_children: "excellent",
@@ -253,6 +254,223 @@ async function seed() {
           special_needs: "Blind in one eye",
           dietary_restrictions: "None",
         },
+        // New pets 7-30 extra info
+        {
+          energy_level: "high",
+          friendliness_with_children: "excellent",
+          friendliness_with_pets: "excellent",
+          is_house_trained: true,
+          training_level: "advanced",
+          special_needs: "None",
+          dietary_restrictions: "None",
+        },
+        {
+          energy_level: "medium",
+          friendliness_with_children: "good",
+          friendliness_with_pets: "good",
+          is_house_trained: true,
+          training_level: "intermediate",
+          special_needs: "None",
+          dietary_restrictions: "None",
+        },
+        {
+          energy_level: "low",
+          friendliness_with_children: "excellent",
+          friendliness_with_pets: "excellent",
+          is_house_trained: true,
+          training_level: "basic",
+          special_needs: "Deaf, uses hand signals",
+          dietary_restrictions: "None",
+        },
+        {
+          energy_level: "high",
+          friendliness_with_children: "good",
+          friendliness_with_pets: "fair",
+          is_house_trained: true,
+          training_level: "intermediate",
+          special_needs: "None",
+          dietary_restrictions: "Sensitive stomach",
+        },
+        {
+          energy_level: "medium",
+          friendliness_with_children: "fair",
+          friendliness_with_pets: "good",
+          is_house_trained: true,
+          training_level: "basic",
+          special_needs: "None",
+          dietary_restrictions: "None",
+        },
+        {
+          energy_level: "low",
+          friendliness_with_children: "good",
+          friendliness_with_pets: "excellent",
+          is_house_trained: true,
+          training_level: "none",
+          special_needs: "Senior pet",
+          dietary_restrictions: "Low sodium diet",
+        },
+        {
+          energy_level: "high",
+          friendliness_with_children: "excellent",
+          friendliness_with_pets: "good",
+          is_house_trained: false,
+          training_level: "none",
+          special_needs: "Puppy, needs training",
+          dietary_restrictions: "None",
+        },
+        {
+          energy_level: "medium",
+          friendliness_with_children: "excellent",
+          friendliness_with_pets: "excellent",
+          is_house_trained: true,
+          training_level: "advanced",
+          special_needs: "None",
+          dietary_restrictions: "None",
+        },
+        {
+          energy_level: "low",
+          friendliness_with_children: "fair",
+          friendliness_with_pets: "poor",
+          is_house_trained: true,
+          training_level: "basic",
+          special_needs: "Prefers to be only pet",
+          dietary_restrictions: "None",
+        },
+        {
+          energy_level: "high",
+          friendliness_with_children: "good",
+          friendliness_with_pets: "good",
+          is_house_trained: true,
+          training_level: "intermediate",
+          special_needs: "None",
+          dietary_restrictions: "Grain-free",
+        },
+        {
+          energy_level: "medium",
+          friendliness_with_children: "excellent",
+          friendliness_with_pets: "fair",
+          is_house_trained: true,
+          training_level: "basic",
+          special_needs: "None",
+          dietary_restrictions: "None",
+        },
+        {
+          energy_level: "low",
+          friendliness_with_children: "good",
+          friendliness_with_pets: "good",
+          is_house_trained: true,
+          training_level: "intermediate",
+          special_needs: "Arthritis, needs soft bedding",
+          dietary_restrictions: "Joint supplement required",
+        },
+        {
+          energy_level: "high",
+          friendliness_with_children: "fair",
+          friendliness_with_pets: "excellent",
+          is_house_trained: true,
+          training_level: "advanced",
+          special_needs: "None",
+          dietary_restrictions: "None",
+        },
+        {
+          energy_level: "medium",
+          friendliness_with_children: "good",
+          friendliness_with_pets: "good",
+          is_house_trained: true,
+          training_level: "basic",
+          special_needs: "None",
+          dietary_restrictions: "None",
+        },
+        {
+          energy_level: "low",
+          friendliness_with_children: "excellent",
+          friendliness_with_pets: "excellent",
+          is_house_trained: true,
+          training_level: "none",
+          special_needs: "None",
+          dietary_restrictions: "None",
+        },
+        {
+          energy_level: "high",
+          friendliness_with_children: "excellent",
+          friendliness_with_pets: "fair",
+          is_house_trained: false,
+          training_level: "none",
+          special_needs: "Kitten, needs supervision",
+          dietary_restrictions: "None",
+        },
+        {
+          energy_level: "medium",
+          friendliness_with_children: "good",
+          friendliness_with_pets: "excellent",
+          is_house_trained: true,
+          training_level: "basic",
+          special_needs: "None",
+          dietary_restrictions: "Hypoallergenic food",
+        },
+        {
+          energy_level: "low",
+          friendliness_with_children: "fair",
+          friendliness_with_pets: "good",
+          is_house_trained: true,
+          training_level: "intermediate",
+          special_needs: "Shy, needs patient owner",
+          dietary_restrictions: "None",
+        },
+        {
+          energy_level: "high",
+          friendliness_with_children: "good",
+          friendliness_with_pets: "good",
+          is_house_trained: true,
+          training_level: "advanced",
+          special_needs: "None",
+          dietary_restrictions: "None",
+        },
+        {
+          energy_level: "medium",
+          friendliness_with_children: "excellent",
+          friendliness_with_pets: "excellent",
+          is_house_trained: true,
+          training_level: "intermediate",
+          special_needs: "None",
+          dietary_restrictions: "None",
+        },
+        {
+          energy_level: "low",
+          friendliness_with_children: "good",
+          friendliness_with_pets: "fair",
+          is_house_trained: true,
+          training_level: "basic",
+          special_needs: "Senior bird",
+          dietary_restrictions: "Special seed mix",
+        },
+        {
+          energy_level: "medium",
+          friendliness_with_children: "fair",
+          friendliness_with_pets: "poor",
+          is_house_trained: true,
+          training_level: "none",
+          special_needs: "Needs large tank",
+          dietary_restrictions: "None",
+        },
+        {
+          energy_level: "low",
+          friendliness_with_children: "excellent",
+          friendliness_with_pets: "good",
+          is_house_trained: true,
+          training_level: "basic",
+          special_needs: "None",
+          dietary_restrictions: "Timothy hay based diet",
+        },
+        {
+          energy_level: "medium",
+          friendliness_with_children: "good",
+          friendliness_with_pets: "fair",
+          is_house_trained: false,
+          training_level: "none",
+          special_needs: "Nocturnal",
+          dietary_restrictions: "None",
+        },
       ])
       .returning();
 
@@ -265,6 +483,7 @@ async function seed() {
     const petsData = await db
       .insert(pets)
       .values([
+        // Original 6 pets
         {
           name: "Max",
           birth_date: "2020-03-15",
@@ -335,6 +554,296 @@ async function seed() {
           customer_id: customersData[1].id,
           pet_extra_information_id: petExtraInfos[5].id,
         },
+        // New dogs (7-16)
+        {
+          name: "Rocky",
+          birth_date: "2021-06-20",
+          species: "dog",
+          notes: "Loyal German Shepherd, excellent guard dog",
+          pet_image_url:
+            "https://images.dog.ceo/breeds/germanshepherd/n02106662_1234.jpg",
+          size: "large",
+          pet_status: "adopting",
+          customer_id: customersData[0].id,
+          pet_extra_information_id: petExtraInfos[6].id,
+        },
+        {
+          name: "Duke",
+          birth_date: "2019-02-14",
+          species: "dog",
+          notes: "Gentle boxer, loves cuddles and playtime",
+          pet_image_url:
+            "https://images.dog.ceo/breeds/boxer/n02108089_1234.jpg",
+          size: "large",
+          pet_status: "adopting",
+          customer_id: customersData[1].id,
+          pet_extra_information_id: petExtraInfos[7].id,
+        },
+        {
+          name: "Cooper",
+          birth_date: "2016-08-05",
+          species: "dog",
+          notes: "Deaf dalmatian, trained with hand signals",
+          pet_image_url:
+            "https://images.dog.ceo/breeds/dalmatian/cooper1.jpg",
+          size: "large",
+          pet_status: "adopting",
+          customer_id: customersData[2].id,
+          pet_extra_information_id: petExtraInfos[8].id,
+        },
+        {
+          name: "Tucker",
+          birth_date: "2020-11-03",
+          species: "dog",
+          notes: "Playful corgi with a big personality",
+          pet_image_url:
+            "https://images.dog.ceo/breeds/corgi-cardigan/n02113186_1234.jpg",
+          size: "small",
+          pet_status: "adopting",
+          customer_id: customersData[3].id,
+          pet_extra_information_id: petExtraInfos[9].id,
+        },
+        {
+          name: "Bear",
+          birth_date: "2022-01-28",
+          species: "dog",
+          notes: "Fluffy chow chow, independent but loving",
+          pet_image_url:
+            "https://images.dog.ceo/breeds/chow/n02112137_1234.jpg",
+          size: "large",
+          pet_status: "adopting",
+          customer_id: customersData[4].id,
+          pet_extra_information_id: petExtraInfos[10].id,
+        },
+        {
+          name: "Milo",
+          birth_date: "2015-04-17",
+          species: "dog",
+          notes: "Sweet senior poodle, calm and well-mannered",
+          pet_image_url:
+            "https://images.dog.ceo/breeds/poodle-standard/n02113799_1234.jpg",
+          size: "medium",
+          pet_status: "adopting",
+          customer_id: customersData[0].id,
+          pet_extra_information_id: petExtraInfos[11].id,
+        },
+        {
+          name: "Oscar",
+          birth_date: "2023-09-10",
+          species: "dog",
+          notes: "Adorable french bulldog puppy, needs training",
+          pet_image_url:
+            "https://images.dog.ceo/breeds/bulldog-french/n02108915_1234.jpg",
+          size: "small",
+          pet_status: "adopting",
+          customer_id: customersData[1].id,
+          pet_extra_information_id: petExtraInfos[12].id,
+        },
+        {
+          name: "Finn",
+          birth_date: "2020-07-22",
+          species: "dog",
+          notes: "Intelligent border collie, loves agility",
+          pet_image_url:
+            "https://images.dog.ceo/breeds/collie-border/n02106166_1234.jpg",
+          size: "medium",
+          pet_status: "adopting",
+          customer_id: customersData[2].id,
+          pet_extra_information_id: petExtraInfos[13].id,
+        },
+        {
+          name: "Scout",
+          birth_date: "2018-12-01",
+          species: "dog",
+          notes: "Shy shiba inu, prefers to be the only pet",
+          pet_image_url:
+            "https://images.dog.ceo/breeds/shiba/shiba-1.jpg",
+          size: "medium",
+          pet_status: "adopting",
+          customer_id: customersData[3].id,
+          pet_extra_information_id: petExtraInfos[14].id,
+        },
+        {
+          name: "Zeus",
+          birth_date: "2021-03-08",
+          species: "dog",
+          notes: "Majestic great dane, gentle giant",
+          pet_image_url:
+            "https://images.dog.ceo/breeds/dane-great/n02109047_1234.jpg",
+          size: "large",
+          pet_status: "adopting",
+          customer_id: customersData[4].id,
+          pet_extra_information_id: petExtraInfos[15].id,
+        },
+        // New cats (17-24)
+        {
+          name: "Shadow",
+          birth_date: "2019-05-15",
+          species: "cat",
+          notes: "Mysterious black cat, very affectionate once comfortable",
+          pet_image_url: "https://cdn2.thecatapi.com/images/MTk1NTQ2OQ.jpg",
+          size: "medium",
+          pet_status: "adopting",
+          customer_id: customersData[0].id,
+          pet_extra_information_id: petExtraInfos[16].id,
+        },
+        {
+          name: "Oliver",
+          birth_date: "2017-10-20",
+          species: "cat",
+          notes: "Senior orange tabby with arthritis, needs gentle care",
+          pet_image_url: "https://cdn2.thecatapi.com/images/7iu.jpg",
+          size: "large",
+          pet_status: "adopting",
+          customer_id: customersData[1].id,
+          pet_extra_information_id: petExtraInfos[17].id,
+        },
+        {
+          name: "Simba",
+          birth_date: "2021-08-30",
+          species: "cat",
+          notes: "Playful maine coon, loves to climb",
+          pet_image_url: "https://cdn2.thecatapi.com/images/OGTWqNNOt.jpg",
+          size: "large",
+          pet_status: "adopting",
+          customer_id: customersData[2].id,
+          pet_extra_information_id: petExtraInfos[18].id,
+        },
+        {
+          name: "Cleo",
+          birth_date: "2020-02-28",
+          species: "cat",
+          notes: "Elegant siamese, very vocal and social",
+          pet_image_url: "https://cdn2.thecatapi.com/images/ai6Jps4sx.jpg",
+          size: "medium",
+          pet_status: "adopting",
+          customer_id: customersData[3].id,
+          pet_extra_information_id: petExtraInfos[19].id,
+        },
+        {
+          name: "Mochi",
+          birth_date: "2022-04-12",
+          species: "cat",
+          notes: "Fluffy persian, needs regular grooming",
+          pet_image_url: "https://cdn2.thecatapi.com/images/e3.jpg",
+          size: "medium",
+          pet_status: "has_owner",
+          customer_id: customersData[4].id,
+          pet_extra_information_id: petExtraInfos[20].id,
+        },
+        {
+          name: "Ginger",
+          birth_date: "2023-06-15",
+          species: "cat",
+          notes: "Curious kitten, full of energy",
+          pet_image_url: "https://cdn2.thecatapi.com/images/MjA3ODA2Nw.jpg",
+          size: "small",
+          pet_status: "adopting",
+          customer_id: customersData[0].id,
+          pet_extra_information_id: petExtraInfos[21].id,
+        },
+        {
+          name: "Smokey",
+          birth_date: "2018-09-08",
+          species: "cat",
+          notes: "Russian blue, hypoallergenic and quiet",
+          pet_image_url: "https://cdn2.thecatapi.com/images/j6oFGLpRG.jpg",
+          size: "medium",
+          pet_status: "adopting",
+          customer_id: customersData[1].id,
+          pet_extra_information_id: petExtraInfos[22].id,
+        },
+        {
+          name: "Tiger",
+          birth_date: "2019-01-25",
+          species: "cat",
+          notes: "Beautiful bengal, shy but sweet",
+          pet_image_url: "https://cdn2.thecatapi.com/images/O3F3_S1XN.jpg",
+          size: "medium",
+          pet_status: "adopting",
+          customer_id: customersData[2].id,
+          pet_extra_information_id: petExtraInfos[23].id,
+        },
+        // Birds (25-27)
+        {
+          name: "Rio",
+          birth_date: "2020-05-10",
+          species: "bird",
+          notes: "Colorful macaw, can say a few words",
+          pet_image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Ara_ararauna_Luc_Viatour.jpg/220px-Ara_ararauna_Luc_Viatour.jpg",
+          size: "medium",
+          pet_status: "adopting",
+          customer_id: customersData[3].id,
+          pet_extra_information_id: petExtraInfos[24].id,
+        },
+        {
+          name: "Kiwi",
+          birth_date: "2021-11-20",
+          species: "bird",
+          notes: "Friendly cockatiel, loves to whistle",
+          pet_image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Cockatiel_crest.jpg/220px-Cockatiel_crest.jpg",
+          size: "small",
+          pet_status: "adopting",
+          customer_id: customersData[4].id,
+          pet_extra_information_id: petExtraInfos[25].id,
+        },
+        {
+          name: "Sunny",
+          birth_date: "2016-03-15",
+          species: "bird",
+          notes: "Senior budgie, calm and gentle",
+          pet_image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Melopsittacus_undulatus_-facing_left-8a.jpg/220px-Melopsittacus_undulatus_-facing_left-8a.jpg",
+          size: "small",
+          pet_status: "adopting",
+          customer_id: customersData[0].id,
+          pet_extra_information_id: petExtraInfos[26].id,
+        },
+        // Fish (28-29)
+        {
+          name: "Bubbles",
+          birth_date: "2023-01-05",
+          species: "fish",
+          notes: "Beautiful betta fish, needs own tank",
+          pet_image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Siamese_fighting_fish_-_Betta_splendens.jpg/220px-Siamese_fighting_fish_-_Betta_splendens.jpg",
+          size: "small",
+          pet_status: "adopting",
+          customer_id: customersData[1].id,
+          pet_extra_information_id: petExtraInfos[27].id,
+        },
+        {
+          name: "Nemo",
+          birth_date: "2022-08-22",
+          species: "fish",
+          notes: "Clownfish, needs saltwater aquarium",
+          pet_image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Amphiprion_ocellaris_%28Clown_anemonefish%29_in_Heteractis_magnifica_%28Sea_anemone%29.jpg/220px-Amphiprion_ocellaris_%28Clown_anemonefish%29_in_Heteractis_magnifica_%28Sea_anemone%29.jpg",
+          size: "small",
+          pet_status: "adopting",
+          customer_id: customersData[2].id,
+          pet_extra_information_id: petExtraInfos[27].id,
+        },
+        // Other (30-31)
+        {
+          name: "Thumper",
+          birth_date: "2022-03-18",
+          species: "other",
+          notes: "Friendly holland lop rabbit, litter trained",
+          pet_image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Oryctolagus_cuniculus_Rcdo.jpg/220px-Oryctolagus_cuniculus_Rcdo.jpg",
+          size: "small",
+          pet_status: "adopting",
+          customer_id: customersData[3].id,
+          pet_extra_information_id: petExtraInfos[28].id,
+        },
+        {
+          name: "Peanut",
+          birth_date: "2023-05-01",
+          species: "other",
+          notes: "Cute syrian hamster, loves running on wheel",
+          pet_image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Pearl_Winter_White_Russian_Dwarf_Hamster_-_Front.jpg/220px-Pearl_Winter_White_Russian_Dwarf_Hamster_-_Front.jpg",
+          size: "small",
+          pet_status: "adopting",
+          customer_id: customersData[4].id,
+          pet_extra_information_id: petExtraInfos[29].id,
+        },
       ])
       .returning();
 
@@ -343,6 +852,7 @@ async function seed() {
     // 7. Create Pet Medical Records
     console.log("💉 Creating pet medical records...");
     await db.insert(pet_medical_records).values([
+      // Original 6
       {
         pet_id: petsData[0].id,
         vaccination_name: "Rabies",
@@ -397,103 +907,295 @@ async function seed() {
         medical_notes: "Vision impairment in right eye, otherwise healthy",
         allergies: "None",
       },
+      // New dogs (6-15)
+      {
+        pet_id: petsData[6].id,
+        vaccination_name: "Rabies",
+        vaccination_date: "2024-05-10",
+        next_vaccination_date: "2025-05-10",
+        is_spayed_neutered: true,
+        medical_notes: "Healthy and active",
+        allergies: "None",
+      },
+      {
+        pet_id: petsData[7].id,
+        vaccination_name: "DHPP",
+        vaccination_date: "2024-03-22",
+        next_vaccination_date: "2025-03-22",
+        is_spayed_neutered: true,
+        medical_notes: "All vaccinations current",
+        allergies: "None",
+      },
+      {
+        pet_id: petsData[8].id,
+        vaccination_name: "Rabies",
+        vaccination_date: "2024-07-05",
+        next_vaccination_date: "2025-07-05",
+        is_spayed_neutered: true,
+        medical_notes: "Deaf, otherwise healthy",
+        allergies: "None",
+      },
+      {
+        pet_id: petsData[9].id,
+        vaccination_name: "DHPP",
+        vaccination_date: "2024-08-15",
+        next_vaccination_date: "2025-08-15",
+        is_spayed_neutered: true,
+        medical_notes: "Sensitive stomach, on special diet",
+        allergies: "Beef",
+      },
+      {
+        pet_id: petsData[10].id,
+        vaccination_name: "Rabies",
+        vaccination_date: "2024-04-01",
+        next_vaccination_date: "2025-04-01",
+        is_spayed_neutered: true,
+        medical_notes: "Healthy",
+        allergies: "None",
+      },
+      {
+        pet_id: petsData[11].id,
+        vaccination_name: "DHPP",
+        vaccination_date: "2024-02-28",
+        next_vaccination_date: "2025-02-28",
+        is_spayed_neutered: true,
+        medical_notes: "Senior check-up complete, low sodium diet",
+        allergies: "None",
+      },
+      {
+        pet_id: petsData[12].id,
+        vaccination_name: "Rabies",
+        vaccination_date: "2024-10-01",
+        next_vaccination_date: "2025-10-01",
+        is_spayed_neutered: false,
+        medical_notes: "Puppy, needs neutering",
+        allergies: "None",
+      },
+      {
+        pet_id: petsData[13].id,
+        vaccination_name: "DHPP",
+        vaccination_date: "2024-06-18",
+        next_vaccination_date: "2025-06-18",
+        is_spayed_neutered: true,
+        medical_notes: "Very healthy, high energy",
+        allergies: "None",
+      },
+      {
+        pet_id: petsData[14].id,
+        vaccination_name: "Rabies",
+        vaccination_date: "2024-09-12",
+        next_vaccination_date: "2025-09-12",
+        is_spayed_neutered: true,
+        medical_notes: "Healthy but anxious",
+        allergies: "None",
+      },
+      {
+        pet_id: petsData[15].id,
+        vaccination_name: "DHPP",
+        vaccination_date: "2024-05-25",
+        next_vaccination_date: "2025-05-25",
+        is_spayed_neutered: true,
+        medical_notes: "Large breed, joint supplements recommended",
+        allergies: "Chicken",
+      },
+      // Cats (16-23)
+      {
+        pet_id: petsData[16].id,
+        vaccination_name: "FVRCP",
+        vaccination_date: "2024-04-08",
+        next_vaccination_date: "2025-04-08",
+        is_spayed_neutered: true,
+        medical_notes: "Healthy",
+        allergies: "None",
+      },
+      {
+        pet_id: petsData[17].id,
+        vaccination_name: "FVRCP",
+        vaccination_date: "2024-01-22",
+        next_vaccination_date: "2025-01-22",
+        is_spayed_neutered: true,
+        medical_notes: "Arthritis medication required",
+        allergies: "None",
+      },
+      {
+        pet_id: petsData[18].id,
+        vaccination_name: "FVRCP",
+        vaccination_date: "2024-07-14",
+        next_vaccination_date: "2025-07-14",
+        is_spayed_neutered: true,
+        medical_notes: "Healthy, large breed",
+        allergies: "None",
+      },
+      {
+        pet_id: petsData[19].id,
+        vaccination_name: "FVRCP",
+        vaccination_date: "2024-03-30",
+        next_vaccination_date: "2025-03-30",
+        is_spayed_neutered: true,
+        medical_notes: "Healthy and vocal",
+        allergies: "None",
+      },
+      {
+        pet_id: petsData[20].id,
+        vaccination_name: "FVRCP",
+        vaccination_date: "2024-06-02",
+        next_vaccination_date: "2025-06-02",
+        is_spayed_neutered: true,
+        medical_notes: "Needs regular grooming",
+        allergies: "None",
+      },
+      {
+        pet_id: petsData[21].id,
+        vaccination_name: "FVRCP",
+        vaccination_date: "2024-08-20",
+        next_vaccination_date: "2025-08-20",
+        is_spayed_neutered: false,
+        medical_notes: "Kitten, needs spaying",
+        allergies: "None",
+      },
+      {
+        pet_id: petsData[22].id,
+        vaccination_name: "FVRCP",
+        vaccination_date: "2024-02-14",
+        next_vaccination_date: "2025-02-14",
+        is_spayed_neutered: true,
+        medical_notes: "Hypoallergenic, healthy",
+        allergies: "Seafood",
+      },
+      {
+        pet_id: petsData[23].id,
+        vaccination_name: "FVRCP",
+        vaccination_date: "2024-05-05",
+        next_vaccination_date: "2025-05-05",
+        is_spayed_neutered: true,
+        medical_notes: "Healthy but shy",
+        allergies: "None",
+      },
+      // Birds (24-26)
+      {
+        pet_id: petsData[24].id,
+        vaccination_name: "Polyomavirus",
+        vaccination_date: "2024-04-12",
+        next_vaccination_date: "2025-04-12",
+        is_spayed_neutered: false,
+        medical_notes: "Healthy, wing clipped",
+        allergies: "None",
+      },
+      {
+        pet_id: petsData[25].id,
+        vaccination_name: "Polyomavirus",
+        vaccination_date: "2024-06-28",
+        next_vaccination_date: "2025-06-28",
+        is_spayed_neutered: false,
+        medical_notes: "Healthy and active",
+        allergies: "None",
+      },
+      {
+        pet_id: petsData[26].id,
+        vaccination_name: "Polyomavirus",
+        vaccination_date: "2024-03-15",
+        next_vaccination_date: "2025-03-15",
+        is_spayed_neutered: false,
+        medical_notes: "Senior bird, special seed mix",
+        allergies: "None",
+      },
+      // Fish (27-28) - No vaccinations for fish
+      {
+        pet_id: petsData[27].id,
+        vaccination_name: "None",
+        vaccination_date: "2024-01-05",
+        next_vaccination_date: "2025-01-05",
+        is_spayed_neutered: false,
+        medical_notes: "Healthy, needs warm water tank",
+        allergies: "None",
+      },
+      {
+        pet_id: petsData[28].id,
+        vaccination_name: "None",
+        vaccination_date: "2024-08-22",
+        next_vaccination_date: "2025-08-22",
+        is_spayed_neutered: false,
+        medical_notes: "Healthy, requires saltwater setup",
+        allergies: "None",
+      },
+      // Other (29-30)
+      {
+        pet_id: petsData[29].id,
+        vaccination_name: "RHDV",
+        vaccination_date: "2024-04-18",
+        next_vaccination_date: "2025-04-18",
+        is_spayed_neutered: true,
+        medical_notes: "Healthy rabbit, litter trained",
+        allergies: "None",
+      },
+      {
+        pet_id: petsData[30].id,
+        vaccination_name: "None",
+        vaccination_date: "2024-05-01",
+        next_vaccination_date: "2025-05-01",
+        is_spayed_neutered: false,
+        medical_notes: "Healthy hamster",
+        allergies: "None",
+      },
     ]);
 
-    console.log("✅ Created 6 pet medical records");
+    console.log(`✅ Created ${petsData.length} pet medical records`);
 
     // 8. Create Pet Images
     console.log("📸 Creating pet images...");
-    await db.insert(pet_images).values([
-      {
-        pet_id: petsData[0].id,
-        image_url:
-          "https://images.dog.ceo/breeds/retriever-golden/n02099601_1003.jpg",
-        is_primary: true,
-        display_order: 1,
-      },
-      {
-        pet_id: petsData[0].id,
-        image_url:
-          "https://images.dog.ceo/breeds/retriever-golden/n02099601_2209.jpg",
-        is_primary: false,
-        display_order: 2,
-      },
-      {
-        pet_id: petsData[1].id,
-        image_url: "https://cdn2.thecatapi.com/images/0XYvRd7oD.jpg",
-        is_primary: true,
-        display_order: 1,
-      },
-      {
-        pet_id: petsData[2].id,
-        image_url: "https://images.dog.ceo/breeds/beagle/n02088364_11136.jpg",
-        is_primary: true,
-        display_order: 1,
-      },
-      {
-        pet_id: petsData[3].id,
-        image_url: "https://images.dog.ceo/breeds/husky/n02110185_10047.jpg",
-        is_primary: true,
-        display_order: 1,
-      },
-    ]);
+    const petImagesData = petsData.map((pet) => ({
+      pet_id: pet.id,
+      image_url: pet.pet_image_url,
+      is_primary: true,
+      display_order: 1,
+    }));
+    // Add extra image for Max
+    petImagesData.push({
+      pet_id: petsData[0].id,
+      image_url:
+        "https://images.dog.ceo/breeds/retriever-golden/n02099601_2209.jpg",
+      is_primary: false,
+      display_order: 2,
+    });
+    await db.insert(pet_images).values(petImagesData);
 
-    console.log("✅ Created 5 pet images");
+    console.log(`✅ Created ${petImagesData.length} pet images`);
 
     // 9. Create Adoption Posts
     console.log("📝 Creating adoption posts...");
+
+    // Create adoption posts for all pets with status "adopting"
+    const adoptablePets = petsData.filter((pet) => pet.pet_status === "adopting");
+    const addresses = [
+      "123 Main St, Seattle, WA 98101",
+      "456 Oak Ave, Portland, OR 97201",
+      "789 Pine St, San Francisco, CA 94102",
+      "321 Elm St, Los Angeles, CA 90001",
+      "654 Maple Dr, Austin, TX 73301",
+    ];
+    const contacts = [
+      "+1-206-555-0101",
+      "+1-503-555-0202",
+      "+1-415-555-0303",
+      "+1-213-555-0404",
+      "+1-512-555-0505",
+    ];
+    const adoptionPostValues = adoptablePets.map((pet, index) => {
+      const customerIndex = index % 5;
+      return {
+        pet_id: pet.id,
+        owner: customersData[customerIndex].id,
+        price: Math.floor(Math.random() * 300) + 50, // Random price $50-$350
+        address: addresses[customerIndex],
+        contact: contacts[customerIndex],
+        notes: `${pet.name} is looking for a loving forever home. ${pet.notes}`,
+        post_status: "active" as const,
+      };
+    });
+
     const adoptionPostsData = await db
       .insert(adoption_posts)
-      .values([
-        {
-          pet_id: petsData[0].id,
-          owner: customersData[0].id,
-          price: 200,
-          address: "123 Main St, Seattle, WA 98101",
-          contact: "+1-206-555-0101",
-          notes:
-            "Max is a wonderful family dog. Great with kids and loves outdoor activities.",
-          post_status: "active",
-        },
-        {
-          pet_id: petsData[1].id,
-          owner: customersData[1].id,
-          price: 150,
-          address: "456 Oak Ave, Portland, OR 97201",
-          contact: "+1-503-555-0202",
-          notes: "Luna is looking for a quiet home where she can relax.",
-          post_status: "active",
-        },
-        {
-          pet_id: petsData[2].id,
-          owner: customersData[0].id,
-          price: 250,
-          address: "123 Main St, Seattle, WA 98101",
-          contact: "+1-206-555-0101",
-          notes: "Bella is fully trained and very obedient. Perfect first dog.",
-          post_status: "active",
-        },
-        {
-          pet_id: petsData[3].id,
-          owner: customersData[2].id,
-          price: 300,
-          address: "789 Pine St, San Francisco, CA 94102",
-          contact: "+1-415-555-0303",
-          notes:
-            "Charlie needs an active owner who can keep up with his energy!",
-          post_status: "active",
-        },
-        {
-          pet_id: petsData[5].id,
-          owner: customersData[1].id,
-          price: 100,
-          address: "456 Oak Ave, Portland, OR 97201",
-          contact: "+1-503-555-0202",
-          notes:
-            "Buddy is a sweet senior dog looking for a loving retirement home.",
-          post_status: "active",
-        },
-      ])
+      .values(adoptionPostValues)
       .returning();
 
     console.log(`✅ Created ${adoptionPostsData.length} adoption posts`);
@@ -647,8 +1349,8 @@ async function seed() {
     console.log("   - 4 pet preferences");
     console.log(`   - ${petExtraInfos.length} pet extra information records`);
     console.log(`   - ${petsData.length} pets`);
-    console.log("   - 6 pet medical records");
-    console.log("   - 5 pet images");
+    console.log(`   - ${petsData.length} pet medical records`);
+    console.log(`   - ${petImagesData.length} pet images`);
     console.log(`   - ${adoptionPostsData.length} adoption posts`);
     console.log(`   - ${applicationsData.length} adoption applications`);
     console.log(`   - ${transactionsData.length} adoption transactions`);
