@@ -20,10 +20,11 @@ export class EmailRateLimitGuard implements CanActivate {
     private reflector: Reflector,
     private configService: ConfigService,
   ) {
-    this.redis = new Redis({
-      host: this.configService.get<string>("redis.host"),
-      port: this.configService.get<number>("redis.port"),
-    });
+    this.redis = new Redis(`${this.configService.get<string>("redis.url")}`);
+    // this.redis = new Redis({
+    //   // host: this.configService.get<string>("redis.host"),
+    //   // port: this.configService.get<number>("redis.port"),
+    // });
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

@@ -29,6 +29,7 @@ export const configuration = (overrides?: Partial<ENV>) => {
       bucket: env.MINIO_BUCKET,
     },
     redis: {
+      url: env.REDIS_URL,
       host: env.REDIS_HOST,
       port: env.REDIS_PORT,
     },

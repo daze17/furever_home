@@ -8,6 +8,7 @@ const commonSchema = z.object({
   EMAIL_FROM_NAME: z.string(),
   REDIS_HOST: z.string(),
   REDIS_PORT: z.coerce.number(),
+  REDIS_URL: z.string(),
   JWT_EXPIRES_IN_ACCESS_TOKEN: z.string(),
   JWT_EXPIRES_IN_EMAIL_VERIFICATION: z.string(),
   JWT_EXPIRES_IN_PASSWORD_RESET: z.string(),
