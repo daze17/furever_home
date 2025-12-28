@@ -43,7 +43,7 @@ export const Header = () => {
           </Button>
 
           {session ? (
-            <ProfileSection />
+            <ProfileSection profile={session} />
           ) : (
             <Button asChild>
               <Link href="/login" className="flex items-center gap-2">

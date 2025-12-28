@@ -2,10 +2,9 @@
 
 import { createContext, type ReactNode, useContext } from "react";
 
-export type Session = {
-  nickname: null | string;
-  profileId: string;
-};
+import { CustomerProfileResponseBody } from "customer_api";
+
+export type Session = CustomerProfileResponseBody;
 
 type SessionContextType = {
   sessionPromise: Promise<null | Session>;

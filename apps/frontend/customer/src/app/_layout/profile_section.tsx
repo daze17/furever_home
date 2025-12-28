@@ -1,7 +1,7 @@
-"use client";
-
+import { CustomerProfileResponseBody } from "customer_api";
 import { useAtom } from "jotai";
 import Link from "next/link";
+
 import {
   Avatar,
   AvatarFallback,
@@ -18,27 +18,30 @@ import {
 
 import { LogoutDialog, setIsOpenAtom } from "./logout_dialog";
 
-export const ProfileSection: React.FC = () => {
+export const ProfileSection: React.FC<{
+  profile: CustomerProfileResponseBody;
+}> = ({ profile }) => {
   const [isOpen, setIsOpen] = useAtom(setIsOpenAtom);
-  // const firstLetters = user?.firstName.charAt(0) + user?.lastName.charAt(0);
+  const firstLetters =
+    profile?.first_name.charAt(0) + profile?.last_name.charAt(0);
   return (
     <div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar className="border">
-            {/* <AvatarImage src={user.profileImage} /> */}
-            {/* <AvatarFallback>{firstLetters}</AvatarFallback> */}
+            <AvatarImage src={profile.profile_image_url || ""} />
+            <AvatarFallback>{firstLetters}</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuLabel>Миний бүртгэл</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <Link href="/profile">
-              <DropdownMenuItem>Profile</DropdownMenuItem>
+              <DropdownMenuItem>Профайл</DropdownMenuItem>
             </Link>
             <Link href="/settings">
-              <DropdownMenuItem>Settings</DropdownMenuItem>
+              <DropdownMenuItem>Тохиргоо</DropdownMenuItem>
             </Link>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
@@ -51,7 +54,7 @@ export const ProfileSection: React.FC = () => {
                 setIsOpen(true);
               }}
             >
-              Logout
+              Гарах
             </Button>
           </DropdownMenuItem>
         </DropdownMenuContent>

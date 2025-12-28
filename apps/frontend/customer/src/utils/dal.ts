@@ -32,12 +32,7 @@ export const verifySession = cache(async () => {
       return null;
     }
 
-    const { id: profileId, nickname } = profile.body;
-
-    return {
-      nickname,
-      profileId,
-    };
+    return profile.body;
   } catch (err) {
     console.log(err, "err");
     return null;
