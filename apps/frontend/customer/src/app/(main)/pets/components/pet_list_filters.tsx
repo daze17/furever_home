@@ -1,10 +1,17 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryStates } from "nuqs";
 import { z } from "zod";
+
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+  Button,
   Form,
   FormControl,
   FormField,
@@ -12,16 +19,15 @@ import {
   FormLabel,
   FormMessage,
   Input,
-  Button,
+  MultiSelect,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-  MultiSelect,
 } from "ui";
 
-import { petsListSPParsers, paginationParsers } from "../search_params";
+import { paginationParsers, petsListSPParsers } from "../search_params";
 
 // Form schema matching URL params structure
 const filterFormSchema = z.object({
@@ -126,275 +132,361 @@ export const PetListFilters: React.FC = () => {
     });
   };
 
+  // Count active filters for badges
+  const speciesCount = form.watch("species")?.length || 0;
+  const sizeCount = form.watch("size")?.length || 0;
+  const basicCount = speciesCount + sizeCount;
+
+  const energyCount = form.watch("energy_level")?.length || 0;
+  const childrenCount = form.watch("friendliness_with_children")?.length || 0;
+  const petsCount = form.watch("friendliness_with_pets")?.length || 0;
+  const houseTrainedCount = form.watch("is_house_trained") ? 1 : 0;
+  const trainingCount = form.watch("training_level")?.length || 0;
+  const behaviorCount =
+    energyCount + childrenCount + petsCount + houseTrainedCount + trainingCount;
+
+  const birthFromCount = form.watch("birth_date_from") ? 1 : 0;
+  const birthToCount = form.watch("birth_date_to") ? 1 : 0;
+  const ageCount = birthFromCount + birthToCount;
+
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex h-full flex-col"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
         {/* Header */}
-        <div className="border-b px-6 py-4">
-          <h2 className="text-lg font-semibold">Filters</h2>
+        <div className="h-16 border-b bg-white px-6 py-3">
+          <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
         </div>
 
         {/* Scrollable Filter Fields */}
-        <div className="flex-1 overflow-y-auto px-6 py-6">
-          <div className="space-y-6">
-            {/* Name Search */}
+        <div className="flex-1 overflow-y-auto">
+          {/* Name Search - Always visible */}
+          <div className="border-b px-6 py-4">
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Search by name</FormLabel>
+                  <FormLabel className="text-gray-700">
+                    Search by name
+                  </FormLabel>
                   <FormControl>
-                    <Input placeholder="Search pets..." {...field} />
+                    <Input
+                      placeholder="Search pets..."
+                      className="border-gray-200 focus:border-[#11D0BC] focus:ring-[#11D0BC]"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+          </div>
 
+          <Accordion
+            type="multiple"
+            defaultValue={["basic", "behavior", "age"]}
+            className="w-full"
+          >
             {/* Basic Filters Section */}
-            <div className="space-y-4">
-              <h3 className="text-sm font-medium text-muted-foreground">
-                Basic Info
-              </h3>
+            <AccordionItem value="basic" className="border-b">
+              <AccordionTrigger className="px-6 py-4 hover:bg-gray-50 hover:no-underline">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-gray-900">
+                    Basic Info
+                  </span>
+                  {basicCount > 0 && (
+                    <span className="rounded-full bg-[#11D0BC] px-2 py-0.5 text-xs font-medium text-white">
+                      {basicCount}
+                    </span>
+                  )}
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-6 pb-4">
+                <div className="space-y-4">
+                  {/* Species Multi-Select */}
+                  <FormField
+                    control={form.control}
+                    name="species"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-700">Species</FormLabel>
+                        <FormControl>
+                          <MultiSelect
+                            options={[
+                              { label: "Dog", value: "dog" },
+                              { label: "Cat", value: "cat" },
+                              { label: "Bird", value: "bird" },
+                              { label: "Fish", value: "fish" },
+                              { label: "Other", value: "other" },
+                            ]}
+                            value={field.value || []}
+                            onChange={field.onChange}
+                            placeholder="All species"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              {/* Species Multi-Select */}
-              <FormField
-                control={form.control}
-                name="species"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Species</FormLabel>
-                    <FormControl>
-                      <MultiSelect
-                        options={[
-                          { label: "Dog", value: "dog" },
-                          { label: "Cat", value: "cat" },
-                          { label: "Bird", value: "bird" },
-                          { label: "Fish", value: "fish" },
-                          { label: "Other", value: "other" },
-                        ]}
-                        value={field.value || []}
-                        onChange={field.onChange}
-                        placeholder="All species"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Size Multi-Select */}
-              <FormField
-                control={form.control}
-                name="size"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Size</FormLabel>
-                    <FormControl>
-                      <MultiSelect
-                        options={[
-                          { label: "Small", value: "small" },
-                          { label: "Medium", value: "medium" },
-                          { label: "Large", value: "large" },
-                        ]}
-                        value={field.value || []}
-                        onChange={field.onChange}
-                        placeholder="All sizes"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+                  {/* Size Multi-Select */}
+                  <FormField
+                    control={form.control}
+                    name="size"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-700">Size</FormLabel>
+                        <FormControl>
+                          <MultiSelect
+                            options={[
+                              { label: "Small", value: "small" },
+                              { label: "Medium", value: "medium" },
+                              { label: "Large", value: "large" },
+                            ]}
+                            value={field.value || []}
+                            onChange={field.onChange}
+                            placeholder="All sizes"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </AccordionContent>
+            </AccordionItem>
 
             {/* Behavioral Filters Section */}
-            <div className="space-y-4 border-t pt-6">
-              <h3 className="text-sm font-medium text-muted-foreground">
-                Behavior & Training
-              </h3>
+            <AccordionItem value="behavior" className="border-b">
+              <AccordionTrigger className="px-6 py-4 hover:bg-gray-50 hover:no-underline">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-gray-900">
+                    Behavior & Training
+                  </span>
+                  {behaviorCount > 0 && (
+                    <span className="rounded-full bg-[#11D0BC] px-2 py-0.5 text-xs font-medium text-white">
+                      {behaviorCount}
+                    </span>
+                  )}
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-6 pb-4">
+                <div className="space-y-4">
+                  {/* Energy Level */}
+                  <FormField
+                    control={form.control}
+                    name="energy_level"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-700">
+                          Energy Level
+                        </FormLabel>
+                        <FormControl>
+                          <MultiSelect
+                            options={[
+                              { label: "Low", value: "low" },
+                              { label: "Medium", value: "medium" },
+                              { label: "High", value: "high" },
+                            ]}
+                            value={field.value || []}
+                            onChange={field.onChange}
+                            placeholder="Any level"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              {/* Energy Level */}
-              <FormField
-                control={form.control}
-                name="energy_level"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Energy Level</FormLabel>
-                    <FormControl>
-                      <MultiSelect
-                        options={[
-                          { label: "Low", value: "low" },
-                          { label: "Medium", value: "medium" },
-                          { label: "High", value: "high" },
-                        ]}
-                        value={field.value || []}
-                        onChange={field.onChange}
-                        placeholder="Any level"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                  {/* Friendliness with Children */}
+                  <FormField
+                    control={form.control}
+                    name="friendliness_with_children"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-700">
+                          Friendliness with Children
+                        </FormLabel>
+                        <FormControl>
+                          <MultiSelect
+                            options={[
+                              { label: "Poor", value: "poor" },
+                              { label: "Fair", value: "fair" },
+                              { label: "Good", value: "good" },
+                              { label: "Excellent", value: "excellent" },
+                            ]}
+                            value={field.value || []}
+                            onChange={field.onChange}
+                            placeholder="Any level"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              {/* Friendliness with Children */}
-              <FormField
-                control={form.control}
-                name="friendliness_with_children"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Friendliness with Children</FormLabel>
-                    <FormControl>
-                      <MultiSelect
-                        options={[
-                          { label: "Poor", value: "poor" },
-                          { label: "Fair", value: "fair" },
-                          { label: "Good", value: "good" },
-                          { label: "Excellent", value: "excellent" },
-                        ]}
-                        value={field.value || []}
-                        onChange={field.onChange}
-                        placeholder="Any level"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                  {/* Friendliness with Pets */}
+                  <FormField
+                    control={form.control}
+                    name="friendliness_with_pets"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-700">
+                          Friendliness with Pets
+                        </FormLabel>
+                        <FormControl>
+                          <MultiSelect
+                            options={[
+                              { label: "Poor", value: "poor" },
+                              { label: "Fair", value: "fair" },
+                              { label: "Good", value: "good" },
+                              { label: "Excellent", value: "excellent" },
+                            ]}
+                            value={field.value || []}
+                            onChange={field.onChange}
+                            placeholder="Any level"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              {/* Friendliness with Pets */}
-              <FormField
-                control={form.control}
-                name="friendliness_with_pets"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Friendliness with Pets</FormLabel>
-                    <FormControl>
-                      <MultiSelect
-                        options={[
-                          { label: "Poor", value: "poor" },
-                          { label: "Fair", value: "fair" },
-                          { label: "Good", value: "good" },
-                          { label: "Excellent", value: "excellent" },
-                        ]}
-                        value={field.value || []}
-                        onChange={field.onChange}
-                        placeholder="Any level"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                  {/* House Trained */}
+                  <FormField
+                    control={form.control}
+                    name="is_house_trained"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-700">
+                          House Trained
+                        </FormLabel>
+                        <Select
+                          onValueChange={(value) => {
+                            field.onChange(value === "any" ? "" : value);
+                          }}
+                          value={field.value || "any"}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="border-gray-200">
+                              <SelectValue placeholder="Any" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="any">Any</SelectItem>
+                            <SelectItem value="true">Yes</SelectItem>
+                            <SelectItem value="false">No</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              {/* House Trained */}
-              <FormField
-                control={form.control}
-                name="is_house_trained"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>House Trained</FormLabel>
-                    <Select
-                      onValueChange={(value) => {
-                        field.onChange(value === "any" ? "" : value);
-                      }}
-                      value={field.value || "any"}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Any" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="any">Any</SelectItem>
-                        <SelectItem value="true">Yes</SelectItem>
-                        <SelectItem value="false">No</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Training Level */}
-              <FormField
-                control={form.control}
-                name="training_level"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Training Level</FormLabel>
-                    <FormControl>
-                      <MultiSelect
-                        options={[
-                          { label: "None", value: "none" },
-                          { label: "Basic", value: "basic" },
-                          { label: "Intermediate", value: "intermediate" },
-                          { label: "Advanced", value: "advanced" },
-                        ]}
-                        value={field.value || []}
-                        onChange={field.onChange}
-                        placeholder="Any level"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+                  {/* Training Level */}
+                  <FormField
+                    control={form.control}
+                    name="training_level"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-700">
+                          Training Level
+                        </FormLabel>
+                        <FormControl>
+                          <MultiSelect
+                            options={[
+                              { label: "None", value: "none" },
+                              { label: "Basic", value: "basic" },
+                              { label: "Intermediate", value: "intermediate" },
+                              { label: "Advanced", value: "advanced" },
+                            ]}
+                            value={field.value || []}
+                            onChange={field.onChange}
+                            placeholder="Any level"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </AccordionContent>
+            </AccordionItem>
 
             {/* Age Range Filter Section */}
-            <div className="space-y-4 border-t pt-6">
-              <h3 className="text-sm font-medium text-muted-foreground">
-                Age Range
-              </h3>
+            <AccordionItem value="age" className="border-b">
+              <AccordionTrigger className="px-6 py-4 hover:bg-gray-50 hover:no-underline">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-gray-900">
+                    Age Range
+                  </span>
+                  {ageCount > 0 && (
+                    <span className="rounded-full bg-[#11D0BC] px-2 py-0.5 text-xs font-medium text-white">
+                      {ageCount}
+                    </span>
+                  )}
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-6 pb-4">
+                <div className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="birth_date_from"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-700">
+                          Born After
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            type="date"
+                            className="border-gray-200"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              <FormField
-                control={form.control}
-                name="birth_date_from"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Born After</FormLabel>
-                    <FormControl>
-                      <Input type="date" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="birth_date_to"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Born Before</FormLabel>
-                    <FormControl>
-                      <Input type="date" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div>
+                  <FormField
+                    control={form.control}
+                    name="birth_date_to"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-700">
+                          Born Before
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            type="date"
+                            className="border-gray-200"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
 
-        {/* Fixed Action Buttons Footer */}
-        <div className="border-t bg-background px-6 py-4">
+        <div className="sticky bottom-0 border-t bg-white px-6 py-4">
           <div className="flex flex-col gap-2">
-            <Button type="submit" className="w-full">
+            <Button
+              type="submit"
+              className="w-full bg-[#11D0BC] hover:bg-[#0fb8a6]"
+            >
               Apply Filters
             </Button>
             <Button
               type="button"
               variant="outline"
               onClick={onReset}
-              className="w-full"
+              className="w-full border-gray-200 text-gray-700 hover:bg-gray-50"
             >
               Reset All
             </Button>

@@ -1,11 +1,14 @@
 "use client";
 
-import { PlusCircle } from "lucide-react";
-
 import { PetsListResponseBody } from "customer_api";
-import Link from "next/link";
 
-import { Button } from "ui";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "ui";
 
 import { PetCard } from "@/components/pet_card";
 
@@ -23,72 +26,66 @@ const PetsList: React.FC<{
   pagination: React.ReactNode;
 }> = ({ pets, meta, pagination }) => {
   return (
-    <div className="flex h-screen flex-col">
-      {/* Header */}
-      <div className="border-b px-6 py-4">
-        <div className="container mx-auto flex items-center justify-between">
-          <h1 className="text-3xl font-bold">Pets</h1>
-          <Button asChild>
-            <Link href="/pets/new">
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Add New Pet
-            </Link>
-          </Button>
-        </div>
-      </div>
-
-      {/* Two Column Layout */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Left Sidebar - Filters */}
-        <aside className="flex w-80 shrink-0 flex-col border-r">
+    <div className="min-h-screen bg-gray-50">
+      <div className="flex">
+        <aside className="w-80 shrink-0 border-r bg-white shadow-sm">
           <PetListFilters />
         </aside>
 
-        {/* Right Content - Results */}
-        <div className="flex flex-1 flex-col overflow-hidden">
-          {/* Top Pagination */}
-          <div className="border-b bg-background px-6 py-4">
+        <div className="flex-1">
+          <div className="sticky top-0 z-10 h-16 border-b bg-white px-6 py-3 shadow-sm">
             <div className="flex items-center justify-between">
-              {/* Results Count */}
-              <p className="text-sm text-muted-foreground">
-                Showing {pets.length} of {meta.total} pets
+              <p className="text-sm text-gray-600">
+                Showing{" "}
+                <span className="font-semibold text-gray-900">
+                  {pets.length}
+                </span>{" "}
+                of{" "}
+                <span className="font-semibold text-gray-900">
+                  {meta.total}
+                </span>{" "}
+                pets
               </p>
-              {/* Pagination */}
-              <div>{pagination}</div>
+              <div className="flex items-center gap-4">
+                <Select defaultValue="newest">
+                  <SelectTrigger className="w-44 border-gray-200 bg-white">
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="newest">Newest First</SelectItem>
+                    <SelectItem value="oldest">Oldest First</SelectItem>
+                    <SelectItem value="name_asc">Name A-Z</SelectItem>
+                    <SelectItem value="name_desc">Name Z-A</SelectItem>
+                  </SelectContent>
+                </Select>
+                {pagination}
+              </div>
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto">
-            <div className="p-6">
-              {/* Pets Grid */}
-              {pets.length > 0 ? (
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
-                  {pets.map((pet) => (
-                    <PetCard key={pet.id} pet={pet} />
-                  ))}
-                </div>
-              ) : (
-                <div className="flex min-h-[400px] items-center justify-center rounded-lg border-2 border-dashed">
-                  <div className="text-center">
-                    <h3 className="text-lg font-semibold">No pets found</h3>
-                    <p className="mt-2 text-muted-foreground">
-                      Try adjusting your filters or add a new pet
-                    </p>
+          <div className="p-6">
+            {pets.length > 0 ? (
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+                {pets.map((pet) => (
+                  <PetCard key={pet.id} pet={pet} />
+                ))}
+              </div>
+            ) : (
+              <div className="flex min-h-[400px] items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-white">
+                <div className="text-center">
+                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
+                    <span className="text-3xl">🐾</span>
                   </div>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    No pets found
+                  </h3>
+                  <p className="mt-2 text-gray-500">
+                    Try adjusting your filters or add a new pet
+                  </p>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
-
-          {/* Bottom Pagination */}
-          {/*<div className="border-t bg-background px-6 py-4">
-            <div className="flex items-center justify-between">
-              <p className="text-muted-foreground text-sm">
-                Showing {pets.length} of {meta.total} pets
-              </p>
-              <div>{pagination}</div>
-            </div>
-          </div>*/}
         </div>
       </div>
     </div>
