@@ -37,12 +37,12 @@ const MyPetsListPage: React.Page = async (props) => {
 
   if (response.status !== 200) {
     return (
-      <ErrorCard title={"Error"} text={"Some error occured"} className="mb-18">
+      <ErrorCard title={"Алдаа"} text={"Алдаа гарлаа"} className="mb-18">
         <Link
           href="/"
           className="rounded-sm border border-secondary px-6 py-3 text-secondary"
         >
-          {"Back to homepage"}
+          {"Нүүр хуудас руу буцах"}
         </Link>
       </ErrorCard>
     );

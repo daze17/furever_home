@@ -154,7 +154,7 @@ export const PetListFilters: React.FC = () => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
         {/* Header */}
         <div className="h-16 border-b bg-white px-6 py-3">
-          <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
+          <h2 className="text-lg font-semibold text-gray-900">Шүүлтүүр</h2>
         </div>
 
         {/* Scrollable Filter Fields */}
@@ -166,12 +166,10 @@ export const PetListFilters: React.FC = () => {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-gray-700">
-                    Search by name
-                  </FormLabel>
+                  <FormLabel className="text-gray-700">Нэрээр хайх</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Search pets..."
+                      placeholder="Тэжээвэр амьтан хайх..."
                       className="border-gray-200 focus:border-[#11D0BC] focus:ring-[#11D0BC]"
                       {...field}
                     />
@@ -192,7 +190,7 @@ export const PetListFilters: React.FC = () => {
               <AccordionTrigger className="px-6 py-4 hover:bg-gray-50 hover:no-underline">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-gray-900">
-                    Basic Info
+                    Үндсэн мэдээлэл
                   </span>
                   {basicCount > 0 && (
                     <span className="rounded-full bg-[#11D0BC] px-2 py-0.5 text-xs font-medium text-white">
@@ -209,19 +207,19 @@ export const PetListFilters: React.FC = () => {
                     name="species"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-gray-700">Species</FormLabel>
+                        <FormLabel className="text-gray-700">Төрөл</FormLabel>
                         <FormControl>
                           <MultiSelect
                             options={[
-                              { label: "Dog", value: "dog" },
-                              { label: "Cat", value: "cat" },
-                              { label: "Bird", value: "bird" },
-                              { label: "Fish", value: "fish" },
-                              { label: "Other", value: "other" },
+                              { label: "Нохой", value: "dog" },
+                              { label: "Муур", value: "cat" },
+                              { label: "Шувуу", value: "bird" },
+                              { label: "Загас", value: "fish" },
+                              { label: "Бусад", value: "other" },
                             ]}
                             value={field.value || []}
                             onChange={field.onChange}
-                            placeholder="All species"
+                            placeholder="Бүх төрөл"
                           />
                         </FormControl>
                         <FormMessage />
@@ -235,17 +233,17 @@ export const PetListFilters: React.FC = () => {
                     name="size"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-gray-700">Size</FormLabel>
+                        <FormLabel className="text-gray-700">Хэмжээ</FormLabel>
                         <FormControl>
                           <MultiSelect
                             options={[
-                              { label: "Small", value: "small" },
-                              { label: "Medium", value: "medium" },
-                              { label: "Large", value: "large" },
+                              { label: "Жижиг", value: "small" },
+                              { label: "Дунд", value: "medium" },
+                              { label: "Том", value: "large" },
                             ]}
                             value={field.value || []}
                             onChange={field.onChange}
-                            placeholder="All sizes"
+                            placeholder="Бүх хэмжээ"
                           />
                         </FormControl>
                         <FormMessage />
@@ -261,7 +259,7 @@ export const PetListFilters: React.FC = () => {
               <AccordionTrigger className="px-6 py-4 hover:bg-gray-50 hover:no-underline">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-gray-900">
-                    Behavior & Training
+                    Зан төлөв & Сургалт
                   </span>
                   {behaviorCount > 0 && (
                     <span className="rounded-full bg-[#11D0BC] px-2 py-0.5 text-xs font-medium text-white">
@@ -279,18 +277,18 @@ export const PetListFilters: React.FC = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-gray-700">
-                          Energy Level
+                          Эрч хүчний түвшин
                         </FormLabel>
                         <FormControl>
                           <MultiSelect
                             options={[
-                              { label: "Low", value: "low" },
-                              { label: "Medium", value: "medium" },
-                              { label: "High", value: "high" },
+                              { label: "Бага", value: "low" },
+                              { label: "Дунд", value: "medium" },
+                              { label: "Өндөр", value: "high" },
                             ]}
                             value={field.value || []}
                             onChange={field.onChange}
-                            placeholder="Any level"
+                            placeholder="Бүх түвшин"
                           />
                         </FormControl>
                         <FormMessage />
@@ -305,19 +303,19 @@ export const PetListFilters: React.FC = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-gray-700">
-                          Friendliness with Children
+                          Хүүхэдтэй найрсаг байдал
                         </FormLabel>
                         <FormControl>
                           <MultiSelect
                             options={[
-                              { label: "Poor", value: "poor" },
-                              { label: "Fair", value: "fair" },
-                              { label: "Good", value: "good" },
-                              { label: "Excellent", value: "excellent" },
+                              { label: "Муу", value: "poor" },
+                              { label: "Дунд зэрэг", value: "fair" },
+                              { label: "Сайн", value: "good" },
+                              { label: "Маш сайн", value: "excellent" },
                             ]}
                             value={field.value || []}
                             onChange={field.onChange}
-                            placeholder="Any level"
+                            placeholder="Бүх түвшин"
                           />
                         </FormControl>
                         <FormMessage />
@@ -332,19 +330,19 @@ export const PetListFilters: React.FC = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-gray-700">
-                          Friendliness with Pets
+                          Бусад амьтантай найрсаг байдал
                         </FormLabel>
                         <FormControl>
                           <MultiSelect
                             options={[
-                              { label: "Poor", value: "poor" },
-                              { label: "Fair", value: "fair" },
-                              { label: "Good", value: "good" },
-                              { label: "Excellent", value: "excellent" },
+                              { label: "Муу", value: "poor" },
+                              { label: "Дунд зэрэг", value: "fair" },
+                              { label: "Сайн", value: "good" },
+                              { label: "Маш сайн", value: "excellent" },
                             ]}
                             value={field.value || []}
                             onChange={field.onChange}
-                            placeholder="Any level"
+                            placeholder="Бүх түвшин"
                           />
                         </FormControl>
                         <FormMessage />
@@ -359,7 +357,7 @@ export const PetListFilters: React.FC = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-gray-700">
-                          House Trained
+                          Гэрийн сургалттай
                         </FormLabel>
                         <Select
                           onValueChange={(value) => {
@@ -369,13 +367,13 @@ export const PetListFilters: React.FC = () => {
                         >
                           <FormControl>
                             <SelectTrigger className="border-gray-200">
-                              <SelectValue placeholder="Any" />
+                              <SelectValue placeholder="Аль ч" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="any">Any</SelectItem>
-                            <SelectItem value="true">Yes</SelectItem>
-                            <SelectItem value="false">No</SelectItem>
+                            <SelectItem value="any">Аль ч</SelectItem>
+                            <SelectItem value="true">Тийм</SelectItem>
+                            <SelectItem value="false">Үгүй</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -390,19 +388,19 @@ export const PetListFilters: React.FC = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-gray-700">
-                          Training Level
+                          Сургалтын түвшин
                         </FormLabel>
                         <FormControl>
                           <MultiSelect
                             options={[
-                              { label: "None", value: "none" },
-                              { label: "Basic", value: "basic" },
-                              { label: "Intermediate", value: "intermediate" },
-                              { label: "Advanced", value: "advanced" },
+                              { label: "Байхгүй", value: "none" },
+                              { label: "Үндсэн", value: "basic" },
+                              { label: "Дундаж", value: "intermediate" },
+                              { label: "Дэвшилтэт", value: "advanced" },
                             ]}
                             value={field.value || []}
                             onChange={field.onChange}
-                            placeholder="Any level"
+                            placeholder="Бүх түвшин"
                           />
                         </FormControl>
                         <FormMessage />
@@ -418,7 +416,7 @@ export const PetListFilters: React.FC = () => {
               <AccordionTrigger className="px-6 py-4 hover:bg-gray-50 hover:no-underline">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-gray-900">
-                    Age Range
+                    Насны хязгаар
                   </span>
                   {ageCount > 0 && (
                     <span className="rounded-full bg-[#11D0BC] px-2 py-0.5 text-xs font-medium text-white">
@@ -435,7 +433,7 @@ export const PetListFilters: React.FC = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-gray-700">
-                          Born After
+                          Төрсөн хойш
                         </FormLabel>
                         <FormControl>
                           <Input
@@ -455,7 +453,7 @@ export const PetListFilters: React.FC = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-gray-700">
-                          Born Before
+                          Төрсөн өмнө
                         </FormLabel>
                         <FormControl>
                           <Input
@@ -480,7 +478,7 @@ export const PetListFilters: React.FC = () => {
               type="submit"
               className="w-full bg-[#11D0BC] hover:bg-[#0fb8a6]"
             >
-              Apply Filters
+              Хайлт хийх
             </Button>
             <Button
               type="button"
@@ -488,7 +486,7 @@ export const PetListFilters: React.FC = () => {
               onClick={onReset}
               className="w-full border-gray-200 text-gray-700 hover:bg-gray-50"
             >
-              Reset All
+              Бүгдийг арилгах
             </Button>
           </div>
         </div>

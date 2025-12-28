@@ -30,13 +30,13 @@ import {
 import { client } from "@/services/client";
 
 const petFormSchema = z.object({
-  name: z.string().min(1, "Name is required"),
+  name: z.string().min(1, "Нэр шаардлагатай"),
   birth_date: z.string().optional(),
   species: z.enum(["dog", "cat", "bird", "fish", "other"]),
   notes: z.string().optional(),
   pet_image_url: z
     .string()
-    .url("Must be a valid URL")
+    .url("Зөв URL байх ёстой")
     .optional()
     .or(z.literal("")),
   size: z.enum(["small", "medium", "large"]).optional(),
@@ -96,13 +96,13 @@ export function PetForm({ pet, mode }: PetFormProps) {
         });
 
         if (response.status === 201) {
-          toast.success("Success", {
-            description: "Pet created successfully",
+          toast.success("Амжилттай", {
+            description: "Тэжээвэр амьтан амжилттай үүсгэгдлээ",
           });
           router.push("/pets");
         } else {
-          toast.error("Error", {
-            description: "Failed to create pet",
+          toast.error("Алдаа", {
+            description: "Тэжээвэр амьтан үүсгэж чадсангүй",
           });
         }
       } else if (mode === "edit" && pet) {
@@ -121,19 +121,19 @@ export function PetForm({ pet, mode }: PetFormProps) {
         });
 
         if (response.status === 200) {
-          toast.success("Success", {
-            description: "Pet updated successfully",
+          toast.success("Амжилттай", {
+            description: "Тэжээвэр амьтан амжилттай шинэчлэгдлээ",
           });
           router.push(`/pets/${pet.id}`);
         } else {
-          toast.error("Error", {
-            description: "Failed to update pet",
+          toast.error("Алдаа", {
+            description: "Тэжээвэр амьтан шинэчлэж чадсангүй",
           });
         }
       }
     } catch (error) {
-      toast.error("Error", {
-        description: "An unexpected error occurred",
+      toast.error("Алдаа", {
+        description: "Гэнэтийн алдаа гарлаа",
       });
       console.error(error);
     } finally {
@@ -150,9 +150,9 @@ export function PetForm({ pet, mode }: PetFormProps) {
           required
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Нэр</FormLabel>
               <FormControl>
-                <Input placeholder="Enter pet name" {...field} />
+                <Input placeholder="Тэжээвэр амьтны нэр оруулна уу" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -166,19 +166,19 @@ export function PetForm({ pet, mode }: PetFormProps) {
             required
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Species</FormLabel>
+                <FormLabel>Төрөл</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select species" />
+                      <SelectValue placeholder="Төрөл сонгох" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="dog">Dog</SelectItem>
-                    <SelectItem value="cat">Cat</SelectItem>
-                    <SelectItem value="bird">Bird</SelectItem>
-                    <SelectItem value="fish">Fish</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
+                    <SelectItem value="dog">Нохой</SelectItem>
+                    <SelectItem value="cat">Муур</SelectItem>
+                    <SelectItem value="bird">Шувуу</SelectItem>
+                    <SelectItem value="fish">Загас</SelectItem>
+                    <SelectItem value="other">Бусад</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -191,20 +191,20 @@ export function PetForm({ pet, mode }: PetFormProps) {
             name="size"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Size</FormLabel>
+                <FormLabel>Хэмжээ</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   value={field.value || undefined}
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select size" />
+                      <SelectValue placeholder="Хэмжээ сонгох" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="small">Small</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="large">Large</SelectItem>
+                    <SelectItem value="small">Жижиг</SelectItem>
+                    <SelectItem value="medium">Дунд</SelectItem>
+                    <SelectItem value="large">Том</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -219,7 +219,7 @@ export function PetForm({ pet, mode }: PetFormProps) {
             name="birth_date"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Birth Date</FormLabel>
+                <FormLabel>Төрсөн огноо</FormLabel>
                 <FormControl>
                   <Input type="date" {...field} />
                 </FormControl>
@@ -234,19 +234,19 @@ export function PetForm({ pet, mode }: PetFormProps) {
             required
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Status</FormLabel>
+                <FormLabel>Төлөв</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select status" />
+                      <SelectValue placeholder="Төлөв сонгох" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
                     <SelectItem value="adopting">
-                      Available for Adoption
+                      Үрчлүүлэх боломжтой
                     </SelectItem>
-                    <SelectItem value="has_owner">Has Owner</SelectItem>
-                    <SelectItem value="inactive">Inactive</SelectItem>
+                    <SelectItem value="has_owner">Эзэнтэй</SelectItem>
+                    <SelectItem value="inactive">Идэвхгүй</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -260,7 +260,7 @@ export function PetForm({ pet, mode }: PetFormProps) {
           name="pet_image_url"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Image URL</FormLabel>
+              <FormLabel>Зургийн URL</FormLabel>
               <FormControl>
                 <Input
                   type="url"
@@ -269,7 +269,7 @@ export function PetForm({ pet, mode }: PetFormProps) {
                 />
               </FormControl>
               <FormDescription>
-                Enter the URL of the pet's image
+                Тэжээвэр амьтны зургийн URL оруулна уу
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -281,10 +281,10 @@ export function PetForm({ pet, mode }: PetFormProps) {
           name="notes"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Notes</FormLabel>
+              <FormLabel>Тэмдэглэл</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Enter any additional notes about the pet"
+                  placeholder="Тэжээвэр амьтны талаарх нэмэлт тэмдэглэл оруулна уу"
                   className="min-h-[100px]"
                   {...field}
                 />
@@ -299,12 +299,12 @@ export function PetForm({ pet, mode }: PetFormProps) {
           name="pet_extra_information_id"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Extra Information ID</FormLabel>
+              <FormLabel>Нэмэлт мэдээллийн ID</FormLabel>
               <FormControl>
-                <Input placeholder="UUID of pet extra information" {...field} />
+                <Input placeholder="Тэжээвэр амьтны нэмэлт мэдээллийн UUID" {...field} />
               </FormControl>
               <FormDescription>
-                Optional: Link to additional pet information record
+                Нэмэлт: Тэжээвэр амьтны нэмэлт мэдээллийн бичлэгийн холбоос
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -314,10 +314,10 @@ export function PetForm({ pet, mode }: PetFormProps) {
         <div className="flex gap-4">
           <Button type="submit" disabled={isPending}>
             {isPending
-              ? "Saving..."
+              ? "Хадгалж байна..."
               : mode === "create"
-                ? "Create Pet"
-                : "Update Pet"}
+                ? "Тэжээвэр амьтан үүсгэх"
+                : "Тэжээвэр амьтан шинэчлэх"}
           </Button>
           <Button
             type="button"
@@ -325,7 +325,7 @@ export function PetForm({ pet, mode }: PetFormProps) {
             onClick={() => router.back()}
             disabled={isPending}
           >
-            Cancel
+            Цуцлах
           </Button>
         </div>
       </form>
