@@ -64,22 +64,16 @@ jobs:
     needs: build-and-push
 
     steps:
-      - name: Trigger Render Deploy Hook
-        run: |
-          echo "🚀 Triggering deployment..."
-          response=$(curl -s -w "\n%{http_code}" -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}")
-          http_code=$(echo "$response" | tail -n1)
-
-          if [ "$http_code" -eq 200 ] || [ "$http_code" -eq 201 ]; then
-            echo "✅ Deploy webhook sent successfully!"
-          else
-            echo "❌ Deploy webhook failed with HTTP $http_code"
-            exit 1
-          fi
+      - name: Deploy to Render
+        uses: JorgeLNJunior/render-deploy@v1.4.7
+        with:
+          service_id: ${{ secrets.RENDER_SERVICE_ID }}
+          api_key: ${{ secrets.RENDER_API_KEY }}
+          wait_deploy: true
 
       - name: Deployment Summary
         run: |
-          echo "### 🚀 Deployment Triggered!" >> $GITHUB_STEP_SUMMARY
+          echo "### Deployment Complete!" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Image:** \`${{ needs.build-and-push.outputs.image_tag }}\`" >> $GITHUB_STEP_SUMMARY
           echo "**Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
