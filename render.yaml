@@ -1,10 +1,10 @@
 services:
   - type: web
-    name: customer-backend
+    name: customer-backend-staging
     runtime: image
     image:
-      url: ghcr.io/daze17/furever_home/customer-backend:latest
+      url: ghcr.io/daze17/furever_home/customer-backend-staging
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
-        value: production
+        value: staging
