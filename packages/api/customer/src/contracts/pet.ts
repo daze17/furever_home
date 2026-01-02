@@ -39,6 +39,20 @@ export const petContract = c.router({
     summary: "List all adoptable pets with optional filters",
   },
 
+  // Get a single owned pet by ID
+  getOwnPet: {
+    method: "GET",
+    path: "/own_pets/:id",
+    pathParams: z.object({
+      id: z.coerce.number(),
+    }),
+    responses: {
+      200: PetResponseBody,
+      404: CustomError,
+    },
+    summary: "Get own pet by ID",
+  },
+
   // Get all adoptable pets (with optional filters)
   getAdoptablePetsList: {
     method: "GET",
@@ -68,18 +82,19 @@ export const petContract = c.router({
     summary: "Get an adoptable pet by ID",
   },
 
-  // Get a single owned pet by ID
-  getOwnPet: {
+  // Get a list of favorite pets
+  getFavoritePetsList: {
     method: "GET",
-    path: "/own_pets/:id",
-    pathParams: z.object({
-      id: z.coerce.number(),
-    }),
+    path: "/favorite_pets",
+    query: PetsQuery,
     responses: {
-      200: PetResponseBody,
+      200: z.object({
+        data: PetsListResponseBody,
+        meta: PaginationMeta,
+      }),
       404: CustomError,
     },
-    summary: "Get own pet by ID",
+    summary: "Get a list of favorite pets",
   },
 
   // Update a pet

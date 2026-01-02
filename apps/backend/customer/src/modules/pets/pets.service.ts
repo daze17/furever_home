@@ -1,6 +1,7 @@
 import {
   ForbiddenException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from "@nestjs/common";
 import { CreatePetRequestBody, PetsQuery } from "customer_api";
@@ -29,6 +30,16 @@ export class PetsService {
   async getOwnPetsList(query: PetsQuery = {}) {
     const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);
     const response = await this.petsRepository.getOwnPetsList(accountProfile.id, query);
+
+    return response;
+  }
+
+  async getFavoritePetsList(query: PetsQuery = {}) {
+    const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);
+    const response = await this.petsRepository.getFavoritePetsList(accountProfile.id, query);
+    if(!response) {
+      throw new InternalServerErrorException();
+    }
 
     return response;
   }

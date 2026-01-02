@@ -42,6 +42,26 @@ export class PetsController {
     );
   }
 
+  @TsRestHandler(customerContract.pets.getFavoritePetsList)
+  async getFavoritePetsList() {
+    return tsRestHandler(
+      customerContract.pets.getFavoritePetsList,
+      async ({ query }) => {
+        const result = await this.petsService.getFavoritePetsList(query);
+
+        const parsedData = PetsListResponseBody.parse(result.data);
+
+        return {
+          status: 200,
+          body: {
+            data: parsedData,
+            meta: result.meta,
+          },
+        };
+      },
+    );
+  }
+
   @Public()
   @TsRestHandler(customerContract.pets.getAdoptablePetsList)
   async getAdoptablePetsList() {

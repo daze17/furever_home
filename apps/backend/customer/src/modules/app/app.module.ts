@@ -7,10 +7,10 @@ import { LoggerModule } from "nestjs-pino";
 import { configuration, validate } from "@/common/config/configuration";
 import { AuthModule } from "@/modules/auth/auth.module";
 import { CustomerSettingsModule } from "@/modules/customer_settings/customer_settings.module";
+import { DatabaseModule } from "@/modules/database/database.module";
 import { EmailQueueModule } from "@/modules/email_queue/email_queue.module";
 import { PetsModule } from "@/modules/pets/pets.module";
 
-import { DatabaseModule } from "../database/database.module";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { HealthModule } from "./health.module";
