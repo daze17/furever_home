@@ -356,6 +356,7 @@ export const messages = pgTable(
 export const favorites = pgTable(
   "favorites",
   {
+    // TODO: no need id
     id: serial("id").primaryKey(),
     customer_id: uuid("customer_id")
       .references(() => customers.id, {

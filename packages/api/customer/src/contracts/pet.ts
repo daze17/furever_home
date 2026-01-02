@@ -3,6 +3,7 @@ import { z } from "zod";
 import { c } from "@/contract";
 import { CustomError } from "@/models/custom_error";
 import {
+    AddFavoritePetRequestBody,
   CreatePetRequestBody,
   PetResponseBody,
   PetsListResponseBody,
@@ -95,6 +96,21 @@ export const petContract = c.router({
       404: CustomError,
     },
     summary: "Get a list of favorite pets",
+  },
+
+  // Add pet to favorite pets list
+  addFavoritePet: {
+    method: "POST",
+    path: "/favorite_pets/:id",
+    pathParams: z.object({
+      id: z.coerce.number(),
+    }),
+    body: z.object({}),
+    responses: {
+      201: z.object({}),
+      404: CustomError,
+    },
+    summary: "Add pet to favorite pets list",
   },
 
   // Update a pet

@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from "@nestjs/common";
-import { CreatePetRequestBody, PetsQuery } from "customer_api";
+import {  CreatePetRequestBody, PetsQuery } from "customer_api";
 import { ClsService } from "nestjs-cls";
 
 import { CLS_KEYS } from "@/common/constants/cls.constants";
@@ -17,6 +17,15 @@ export class PetsService {
     private readonly cls: ClsService,
     private readonly petsRepository: PetsRepository,
   ) {}
+
+  async addFavoritePet(petId: number) {
+    const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);
+
+    await this.petsRepository.addFavoritePet(
+      accountProfile.id,
+      petId,
+    );
+  }
 
   async createPet(data: CreatePetRequestBody) {
     const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);

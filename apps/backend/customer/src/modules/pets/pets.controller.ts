@@ -22,6 +22,18 @@ export class PetsController {
     });
   }
 
+  @TsRestHandler(customerContract.pets.addFavoritePet)
+  async addFavoritePet() {
+    return tsRestHandler(customerContract.pets.addFavoritePet, async ({ params }) => {
+      await this.petsService.addFavoritePet(params.id);
+
+      return {
+        body: {},
+        status: 201,
+      };
+    });
+  }
+
   @TsRestHandler(customerContract.pets.getOwnPetsList)
   async getOwnPetsList() {
     return tsRestHandler(

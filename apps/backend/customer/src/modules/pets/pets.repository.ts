@@ -20,13 +20,24 @@ import {
   lte,
   SQL,
 } from "drizzle-orm";
+import { exists } from "drizzle-orm";
 
 import type { Database } from "@/modules/database/database.providers";
-import { exists } from "drizzle-orm";
 
 @Injectable()
 export class PetsRepository {
   constructor(@Inject("DATABASE") private readonly db: Database) {}
+
+  async addFavoritePet(
+    customerId: string,
+    petId: number,
+  ) {
+
+    await this.db.insert(favorites).values({
+      customer_id: customerId,
+      pet_id: petId,
+    });
+  }
 
   async createPet(
     customerId: string,
