@@ -28,6 +28,7 @@ export const allowedRoutes: (string | RegExp)[] = [
   "/",
   "/my_pets",
   "/pets",
+  "/favorites",
   "/users",
   /^\/users.*$/,
 ];

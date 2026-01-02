@@ -192,7 +192,6 @@ export class PetsRepository {
 
   async getFavoritePetsList(customerId: string, query: PetsQuery = {}) {
     const condition = and(
-      eq(pets.customer_id, customerId),
       exists(
         this.db
           .select()
@@ -207,8 +206,7 @@ export class PetsRepository {
     )
     if (!condition) return null
 
-    const _pets = this.getPetsListByCondition(query, condition);
-    return _pets
+    return await this.getPetsListByCondition(query, condition);
   }
 
   async getPetsListByCondition(query: PetsQuery = {}, condition: SQL<unknown>) {

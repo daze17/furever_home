@@ -161,7 +161,7 @@ export class PetsController {
     return tsRestHandler(
       customerContract.pets.removeFavoritePet,
       async ({ params }) => {
-        await this.petsService.deletePet(params.id);
+        await this.petsService.removeFavoritePet(params.id);
 
         return {
           status: 204,

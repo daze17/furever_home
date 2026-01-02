@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "ui";
 
+import { FavoriteButton } from "@/components/favorite_button";
 import ImageWithFallback from "@/components/image_with_fallback";
 import {
   energyLevelColors,
@@ -52,15 +53,18 @@ const PetDetails: React.FC<{
           </Link>
         </Button>
 
-        {/* Public action - Adoption button for non-owners */}
-        {/*{!isOwner && pet?.pet_status === "adopting" && (*/}
-        <Button asChild size="lg">
-          <Link href={`/pets/${pet.id}/adopt`}>
-            <Heart className="mr-2 h-4 w-4" />
-            Энэ тэжээвэр амьтныг үрчлэх
-          </Link>
-        </Button>
-        {/*)}*/}
+        {/* Public action - Favorite and Adoption buttons */}
+        <div className="flex gap-2">
+          <FavoriteButton petId={pet.id} petName={pet.name} variant="button" />
+          {/*{!isOwner && pet?.pet_status === "adopting" && (*/}
+          <Button asChild size="lg">
+            <Link href={`/pets/${pet.id}/adopt`}>
+              <Heart className="mr-2 h-4 w-4" />
+              Энэ тэжээвэр амьтныг үрчлэх
+            </Link>
+          </Button>
+          {/*)}*/}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
