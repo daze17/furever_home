@@ -32,6 +32,7 @@ export type CreatePetRequestBody = z.infer<typeof CreatePetRequestBody>;
 
 export const PetResponseBody = PetModel.extend({
   pet_extra_information: PetExtraInformationModel.nullable(),
+  owner_phone: z.string().nullable().optional(),
 });
 export type PetResponseBody = z.infer<typeof PetResponseBody>;
 

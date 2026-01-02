@@ -68,6 +68,20 @@ export const petContract = c.router({
     summary: "Get an adoptable pet by ID",
   },
 
+  // Get a single owned pet by ID
+  getOwnPet: {
+    method: "GET",
+    path: "/own_pets/:id",
+    pathParams: z.object({
+      id: z.coerce.number(),
+    }),
+    responses: {
+      200: PetResponseBody,
+      404: CustomError,
+    },
+    summary: "Get own pet by ID",
+  },
+
   // Update a pet
   updatePet: {
     method: "PATCH",

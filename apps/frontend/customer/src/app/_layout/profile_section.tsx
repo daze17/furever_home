@@ -40,6 +40,9 @@ export const ProfileSection: React.FC<{
             <Link href="/profile">
               <DropdownMenuItem>Профайл</DropdownMenuItem>
             </Link>
+            <Link href="/my_pets">
+              <DropdownMenuItem>Миний тэжээвэр амьтад</DropdownMenuItem>
+            </Link>
             <Link href="/settings">
               <DropdownMenuItem>Тохиргоо</DropdownMenuItem>
             </Link>

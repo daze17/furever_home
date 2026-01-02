@@ -73,7 +73,8 @@ export const LoginForm: React.FC<Props> = ({ redirectTo }) => {
           toast.success("Амжилттай нэвтэрлээ");
           setIsPending(false);
           startTransition(() => {
-            router.push("/");
+            const callbackUrl = params.get("callbackUrl") || "/";
+            router.push(callbackUrl);
             router.refresh();
           });
           break;

@@ -49,6 +49,17 @@ export class PetsService {
     return pet;
   }
 
+  async getOwnPet(id: number) {
+    const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);
+    const pet = await this.petsRepository.getOwnPet(accountProfile.id, id);
+
+    if (!pet) {
+      throw new NotFoundException(`Pet with ID ${id} not found`);
+    }
+
+    return pet;
+  }
+
   async updatePet(id: number, data: any) {
     // Get current user
     const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);

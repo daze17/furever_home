@@ -4,9 +4,10 @@ import {
   ArrowLeft,
   Award,
   Dog,
+  Edit,
   Heart,
   Home,
-  Phone,
+  Trash2,
   Users,
   Utensils,
   Zap,
@@ -14,7 +15,6 @@ import {
 
 import { PetResponseBody } from "customer_api";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "ui";
 
@@ -25,51 +25,62 @@ import {
   friendlinessColors,
   friendlinessLabels,
   speciesEmoji,
-  statusColors,
-  statusLabel,
   trainingLevelColors,
   trainingLevelLabels,
 } from "@/utils";
 
-const PetDetails: React.FC<{
+export const MyPetDetails: React.FC<{
   petDetail: PetResponseBody;
 }> = ({ petDetail }) => {
-  const router = useRouter();
   const pet = petDetail;
 
   const petAge = pet.birth_date
     ? new Date().getFullYear() - new Date(pet.birth_date).getFullYear()
     : null;
 
+  const statusLabel = {
+    adopting: "Үрчлүүлэх",
+    has_owner: "Эзэнтэй",
+    inactive: "Идэвхгүй",
+  };
+
+  const statusColors = {
+    adopting: "bg-green-100 text-green-800",
+    has_owner: "bg-blue-100 text-blue-800",
+    inactive: "bg-gray-100 text-gray-800",
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <Button variant="ghost" asChild>
-          <Link href="/pets">
+          <Link href="/my_pets">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Тэжээвэр амьтад руу буцах
+            Миний тэжээвэр амьтад руу буцах
           </Link>
         </Button>
 
-        {/* Public action - Adoption button for non-owners */}
-        {/*{!isOwner && pet?.pet_status === "adopting" && (*/}
-        <Button asChild size="lg">
-          <Link href={`/pets/${pet.id}/adopt`}>
-            <Heart className="mr-2 h-4 w-4" />
-            Энэ тэжээвэр амьтныг үрчлэх
-          </Link>
-        </Button>
-        {/*)}*/}
+        {/* Owner Actions - Edit and Delete buttons */}
+        <div className="flex gap-2">
+          <Button variant="outline" asChild>
+            <Link href={`/my_pets/${pet.id}/edit`}>
+              <Edit className="mr-2 h-4 w-4" />
+              Засах
+            </Link>
+          </Button>
+          <Button variant="destructive">
+            <Trash2 className="mr-2 h-4 w-4" />
+            Устгах
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="space-y-4 lg:col-span-1">
+        <div className="lg:col-span-1">
           <Card>
             <CardContent className="p-6">
               <ImageWithFallback
-                // TODO
-                // src={pet.pet_image_url}
                 src={"/furever-home-dog.jpg"}
                 alt={pet.name}
                 height={400}
@@ -77,30 +88,6 @@ const PetDetails: React.FC<{
                 fallbackSrc="/furever-home-dog.jpg"
                 className="h-[400px] w-full rounded-lg object-cover"
               />
-            </CardContent>
-          </Card>
-
-          {/* Contact Information */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg">Холбоо барих</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {pet.owner_phone ? (
-                <Button
-                  className="w-full bg-[#11D0BC] hover:bg-[#0fb8a6]"
-                  asChild
-                >
-                  <a href={`tel:${pet.owner_phone}`}>
-                    <Phone className="mr-2 h-4 w-4" />
-                    Залгах
-                  </a>
-                </Button>
-              ) : (
-                <p className="text-center text-sm text-muted-foreground">
-                  Утасны дугаар бүртгэгдээгүй
-                </p>
-              )}
             </CardContent>
           </Card>
         </div>
@@ -358,35 +345,8 @@ const PetDetails: React.FC<{
                 </CardContent>
               </Card>
             )}
-          {/*<Card>
-            <CardHeader>
-              <CardTitle>System Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Pet ID:</span>
-                <span className="text-sm font-medium">{pet.id}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Created:</span>
-                <span className="text-sm font-medium">
-                  {new Date(pet.created_at).toLocaleDateString()}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">
-                  Last Updated:
-                </span>
-                <span className="text-sm font-medium">
-                  {new Date(pet.updated_at).toLocaleDateString()}
-                </span>
-              </div>
-            </CardContent>
-          </Card>*/}
         </div>
       </div>
     </div>
   );
 };
-
-export default PetDetails;

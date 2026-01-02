@@ -1,84 +1,104 @@
-# Turborepo starter
 
-This Turborepo starter is maintained by the Turborepo core team.
+# Furever Home Deployment Guide
 
-## Using this example
+## Quick Reference
 
-Run the following command:
+| Environment | Backend | Frontend |
+|-------------|---------|----------|
+| **Local** | `docker-compose up` | `pnpm dev --filter=customer_front` |
+| **Staging** | Push to `staging` branch | N/A |
+| **Production** | Push to `main` branch | Push to `main` branch |
 
-```sh
-npx create-turbo@latest
+---
+
+## Local Development
+
+```bash
+# Start all services (Postgres, Redis, Mailhog, MinIO)
+docker-compose up -d
+
+# Run backend
+pnpm dev --filter=customer_backend
+
+# Run frontend
+pnpm dev --filter=customer_front
 ```
 
-## What's inside?
+**Services:**
+- Backend: http://localhost:3001
+- Frontend: http://localhost:3000
+- Mailhog UI: http://localhost:8025
+- MinIO Console: http://localhost:9001
 
-This Turborepo includes the following packages/apps:
+---
 
-### Apps and Packages
+## Staging Deployment
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+**Automatic**: Push to `staging` branch triggers:
+1. Docker build → GHCR (`customer-backend-staging`)
+2. Render deployment via GitHub Action
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm build
+```bash
+git checkout staging
+git merge <feature-branch>
+git push origin staging
 ```
 
-### Develop
+---
+## Production Deployment
 
-To develop all apps and packages, run the following command:
+**Backend**: Push to `main` triggers:
+1. Docker build → GHCR (`customer-backend:latest`)
+2. Render webhook deployment
 
-```
-cd my-turborepo
-pnpm dev
-```
+**Frontend**: Push to `main` triggers:
+1. Vercel build & deploy
 
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
+```bash
+git checkout main
+git merge staging
+git push origin main
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+---
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+## Required Secrets (GitHub)
 
+**Backend:**
+- `GHCR_TOKEN` - GitHub Container Registry token
+- `RENDER_DEPLOY_HOOK_URL` - Render webhook (prod)
+- `RENDER_API_KEY` - Render API key (staging)
+- `RENDER_SERVICE_ID` - Render service ID (staging)
+
+**Frontend:**
+- `VERCEL_TOKEN`
+- `VERCEL_ORG_ID`
+- `VERCEL_CUSTOMER_PROJECT_ID`
+
+---
+
+## Manual Render Deploy
+
+```bash
+# Trigger via webhook
+curl -X POST $RENDER_DEPLOY_HOOK_URL
 ```
-npx turbo link
+
+---
+
+## Health Check
+
+```bash
+curl https://your-backend-url/health
 ```
 
-## Useful Links
+---
 
-Learn more about the power of Turborepo:
+## Key Files
 
-- [Tasks](https://turbo.build/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/docs/reference/command-line-reference)
+- `.github/workflows/prod.yml` - Production backend
+- `.github/workflows/stg.yml` - Staging backend
+- `.github/workflows/vercel-customer.yml` - Frontend
+- `apps/backend/customer/Dockerfile` - Backend image
+- `docker-compose.yaml` - Local services
+- `render.yaml` - Render config

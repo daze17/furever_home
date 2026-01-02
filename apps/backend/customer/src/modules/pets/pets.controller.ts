@@ -79,6 +79,21 @@ export class PetsController {
     );
   }
 
+  @TsRestHandler(customerContract.pets.getOwnPet)
+  async getOwnPet() {
+    return tsRestHandler(
+      customerContract.pets.getOwnPet,
+      async ({ params }) => {
+        const pet = await this.petsService.getOwnPet(params.id);
+
+        return {
+          status: 200,
+          body: pet,
+        };
+      },
+    );
+  }
+
   @TsRestHandler(customerContract.pets.updatePet)
   async updatePet() {
     return tsRestHandler(

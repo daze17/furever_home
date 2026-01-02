@@ -53,7 +53,9 @@ const authRoutesGuard = (request: NextRequest, session: Session | null) => {
   }
 
   if (session) {
-    return Response.redirect(new URL("/", request.nextUrl), 307);
+    // Redirect authenticated users to callback URL or home
+    const callbackUrl = request.nextUrl.searchParams.get("callbackUrl") || "/";
+    return Response.redirect(new URL(callbackUrl, request.nextUrl), 307);
   }
 };
 
@@ -74,7 +76,9 @@ const protectedRoutesGuard = (
     return;
   }
   if (!session) {
-    return Response.redirect(new URL("/login", request.nextUrl), 307);
+    const loginUrl = new URL("/login", request.nextUrl);
+    loginUrl.searchParams.set("callbackUrl", pathname);
+    return Response.redirect(loginUrl, 307);
   }
 
   const isAllowedRoute = allowedRoutes.some((route) => {
@@ -84,6 +88,8 @@ const protectedRoutesGuard = (
     return route.test(pathname);
   });
   if (!isAllowedRoute) {
-    return Response.redirect(new URL("/login", request.nextUrl), 307);
+    const loginUrl = new URL("/login", request.nextUrl);
+    loginUrl.searchParams.set("callbackUrl", pathname);
+    return Response.redirect(loginUrl, 307);
   }
 };

@@ -10,17 +10,9 @@ export const navLinks = [
     href: "/",
   },
   {
-    label: "Амьтдын төрөл",
+    label: "Тэжээвэр амьтад",
     href: "/pets",
   },
-  {
-    label: "Үрчлүүлэх",
-    href: "/adoption",
-  },
-  // {
-  //   label: "Хандив",
-  //   href: "/donation",
-  // },
   {
     label: "Асуулт хариулт",
     href: "/faq",

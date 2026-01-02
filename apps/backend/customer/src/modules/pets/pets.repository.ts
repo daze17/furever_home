@@ -1,4 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
+import { PetStatusEnum } from "common_api";
 import {
   CreatePetExtraInformationRequestBody,
   CreatePetRequestBody,
@@ -21,7 +22,6 @@ import {
 } from "drizzle-orm";
 
 import type { Database } from "@/modules/database/database.providers";
-import { PetStatusEnum } from "common_api";
 
 @Injectable()
 export class PetsRepository {
@@ -149,6 +149,9 @@ export class PetsRepository {
 
     const _pets = await this.db.query.pets.findMany({
       where,
+      with: {
+        pet_extra_information: true,
+      },
       orderBy: (query.sorting_order === "ascending" ? asc : desc)(
         this.mapPetsSortingField(query.sorting_field),
       ),
@@ -345,6 +348,23 @@ export class PetsRepository {
         eq(pets.id, id),
         eq(pets.pet_status, PetStatusEnum.Enum.adopting),
       ),
+      with: {
+        pet_extra_information: true,
+        customer: true,
+      },
+    });
+
+    if (!pet) return null;
+
+    return {
+      ...pet,
+      owner_phone: pet.customer?.phone ?? null,
+    };
+  }
+
+  async getOwnPet(customerId: string, id: number) {
+    const pet = await this.db.query.pets.findFirst({
+      where: and(eq(pets.id, id), eq(pets.customer_id, customerId)),
       with: {
         pet_extra_information: true,
       },
