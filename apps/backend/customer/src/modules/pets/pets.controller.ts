@@ -155,4 +155,19 @@ export class PetsController {
       },
     );
   }
+
+  @TsRestHandler(customerContract.pets.removeFavoritePet)
+  async removeFavoritePet() {
+    return tsRestHandler(
+      customerContract.pets.removeFavoritePet,
+      async ({ params }) => {
+        await this.petsService.deletePet(params.id);
+
+        return {
+          status: 204,
+          body: {},
+        };
+      },
+    );
+  }
 }

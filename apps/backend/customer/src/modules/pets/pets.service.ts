@@ -121,4 +121,20 @@ export class PetsService {
     // Delete pet
     await this.petsRepository.deletePet(id);
   }
+
+  async removeFavoritePet(petId: number) {
+    // Get current user
+    const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);
+
+    // Check if pet exists
+    const pet = await this.getAdoptablePet(petId);
+
+    // Verify ownership
+    if (!pet) {
+      throw new NotFoundException("Pet not found");
+    }
+
+    // Delete pet
+    await this.petsRepository.removeFavoritePet(accountProfile.id, petId);
+  }
 }

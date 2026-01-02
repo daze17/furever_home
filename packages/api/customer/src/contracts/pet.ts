@@ -3,7 +3,6 @@ import { z } from "zod";
 import { c } from "@/contract";
 import { CustomError } from "@/models/custom_error";
 import {
-    AddFavoritePetRequestBody,
   CreatePetRequestBody,
   PetResponseBody,
   PetsListResponseBody,
@@ -142,5 +141,20 @@ export const petContract = c.router({
       404: CustomError,
     },
     summary: "Delete a pet by ID",
+  },
+
+  //"Remove a pet from favorite pets list by ID",
+  removeFavoritePet: {
+    method: "DELETE",
+    path: "/favorite_pets/:id",
+    pathParams: z.object({
+      id: z.coerce.number(),
+    }),
+    body: z.object({}),
+    responses: {
+      204: z.object({}),
+      404: CustomError,
+    },
+    summary: "Remove a pet from favorite pets list by ID",
   },
 });

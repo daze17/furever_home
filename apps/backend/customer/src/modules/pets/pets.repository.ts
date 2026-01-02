@@ -471,4 +471,8 @@ export class PetsRepository {
   async deletePet(id: number) {
     await this.db.delete(pets).where(eq(pets.id, id));
   }
+
+  async removeFavoritePet(customerId: string, petId: number) {
+    await this.db.delete(favorites).where(and(eq(favorites.customer_id, customerId),eq(favorites.pet_id, petId)));
+  }
 }
