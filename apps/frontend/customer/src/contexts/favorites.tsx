@@ -3,12 +3,14 @@
 import {
   createContext,
   type ReactNode,
+  use,
   useCallback,
   useContext,
   useEffect,
   useState,
 } from "react";
 
+import { useSession } from "@/contexts/auth";
 import { client } from "@/services/client";
 
 type FavoritesContextType = {
@@ -33,10 +35,19 @@ export const useFavorites = (): FavoritesContextType => {
 };
 
 export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
+  const { sessionPromise } = useSession();
+  const session = use(sessionPromise);
+
   const [favoriteIds, setFavoriteIds] = useState<Set<number>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
 
   const refreshFavorites = useCallback(async () => {
+    // Don't fetch if user is not authenticated
+    if (!session) {
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const response = await client.pets.getFavoritePetsList({ query: {} });
       if (response.status === 200) {
@@ -44,12 +55,12 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
         setFavoriteIds(ids);
       }
     } catch {
-      // User might not be authenticated, that's fine
+      // API error, reset favorites
       setFavoriteIds(new Set());
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [session]);
 
   useEffect(() => {
     refreshFavorites();

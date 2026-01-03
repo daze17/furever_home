@@ -1,4 +1,4 @@
-import { PetsQuery } from "customer_api";
+import { AdoptionPostsQuery } from "customer_api";
 import Link from "next/link";
 
 import { ErrorCard } from "@/components/error_card";
@@ -25,11 +25,11 @@ const PetsListPage: React.Page = async (props) => {
   };
 
   const validQuery = filterValidFieldsFromObjectBySchema(
-    PetsQuery.unwrap(),
+    AdoptionPostsQuery.unwrap(),
     _searchParams,
   );
 
-  const response = await client.pets.getAdoptablePetsList({
+  const response = await client.adoptionPosts.getAdoptionPostsList({
     query: validQuery,
   });
 
@@ -50,7 +50,7 @@ const PetsListPage: React.Page = async (props) => {
 
   return (
     <PetsList
-      pets={response.body.data}
+      posts={response.body.data}
       meta={response.body.meta}
       pagination={<PetListPagination meta={response.body.meta} />}
     />

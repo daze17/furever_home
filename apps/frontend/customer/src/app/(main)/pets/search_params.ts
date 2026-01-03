@@ -1,4 +1,4 @@
-import { PetsQuery } from "customer_api";
+import { AdoptionPostsQuery } from "customer_api";
 import {
   createSearchParamsCache,
   parseAsArrayOf,
@@ -9,8 +9,8 @@ import {
 import z from "zod";
 
 const orderSchema = z.object({
-  sorting_field: PetsQuery.unwrap().shape.sorting_field.unwrap().nullable(),
-  sorting_order: PetsQuery.unwrap().shape.sorting_order.unwrap().nullable(),
+  sorting_field: AdoptionPostsQuery.unwrap().shape.sorting_field.unwrap().nullable(),
+  sorting_order: AdoptionPostsQuery.unwrap().shape.sorting_order.unwrap().nullable(),
 });
 
 export type OrderSchema = z.infer<typeof orderSchema>;

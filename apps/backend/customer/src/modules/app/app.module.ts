@@ -5,6 +5,7 @@ import { ClsModule } from "nestjs-cls";
 import { LoggerModule } from "nestjs-pino";
 
 import { configuration, validate } from "@/common/config/configuration";
+import { AdoptionPostsModule } from "@/modules/adoption_posts/adoption_posts.module";
 import { AuthModule } from "@/modules/auth/auth.module";
 import { CustomerSettingsModule } from "@/modules/customer_settings/customer_settings.module";
 import { DatabaseModule } from "@/modules/database/database.module";
@@ -55,6 +56,7 @@ import { HealthModule } from "./health.module";
       }),
       inject: [ConfigService],
     }),
+    AdoptionPostsModule,
     AuthModule,
     CustomerSettingsModule,
     EmailQueueModule,

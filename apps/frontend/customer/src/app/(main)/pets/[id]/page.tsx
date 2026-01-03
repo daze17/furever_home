@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ErrorCard } from "@/components/error_card";
 import { client } from "@/services/client.server";
 
-import PetDetails from "./pet_details";
+import AdoptionPostDetails from "./pet_details";
 
 type Props = {
   id: number;
@@ -12,8 +12,7 @@ type Props = {
 const PetDetailPage: React.Page<Props> = async (props) => {
   const { id } = await props.params;
 
-  // const currentUserId = session?.sub ?? null;
-  const response = await client.pets.getAdoptablePet({
+  const response = await client.adoptionPosts.getAdoptionPost({
     params: { id },
   });
 
@@ -30,7 +29,7 @@ const PetDetailPage: React.Page<Props> = async (props) => {
     );
   }
 
-  return <PetDetails petDetail={response.body} />;
+  return <AdoptionPostDetails post={response.body} />;
 };
 
 export default PetDetailPage;
