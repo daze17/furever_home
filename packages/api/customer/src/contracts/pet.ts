@@ -82,36 +82,6 @@ export const petContract = c.router({
     summary: "Get an adoptable pet by ID",
   },
 
-  // Get a list of favorite pets
-  getFavoritePetsList: {
-    method: "GET",
-    path: "/favorite_pets",
-    query: PetsQuery,
-    responses: {
-      200: z.object({
-        data: PetsListResponseBody,
-        meta: PaginationMeta,
-      }),
-      404: CustomError,
-    },
-    summary: "Get a list of favorite pets",
-  },
-
-  // Add pet to favorite pets list
-  addFavoritePet: {
-    method: "POST",
-    path: "/favorite_pets/:id",
-    pathParams: z.object({
-      id: z.coerce.number(),
-    }),
-    body: z.object({}),
-    responses: {
-      201: z.object({}),
-      404: CustomError,
-    },
-    summary: "Add pet to favorite pets list",
-  },
-
   // Update a pet
   updatePet: {
     method: "PATCH",
@@ -141,20 +111,5 @@ export const petContract = c.router({
       404: CustomError,
     },
     summary: "Delete a pet by ID",
-  },
-
-  //"Remove a pet from favorite pets list by ID",
-  removeFavoritePet: {
-    method: "DELETE",
-    path: "/favorite_pets/:id",
-    pathParams: z.object({
-      id: z.coerce.number(),
-    }),
-    body: z.object({}),
-    responses: {
-      204: z.object({}),
-      404: CustomError,
-    },
-    summary: "Remove a pet from favorite pets list by ID",
   },
 });

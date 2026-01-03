@@ -53,4 +53,55 @@ export class AdoptionPostsController {
       },
     );
   }
+
+  @TsRestHandler(customerContract.adoptionPosts.addFavoriteAdoptionPost)
+  async addFavoriteAdoptionPost() {
+    return tsRestHandler(
+      customerContract.adoptionPosts.addFavoriteAdoptionPost,
+      async ({ params }) => {
+        await this.adoptionPostsService.addFavoriteAdoptionPost(params.id);
+
+        return {
+          body: {},
+          status: 201,
+        };
+      },
+    );
+  }
+
+  @TsRestHandler(customerContract.adoptionPosts.getFavoriteAdoptionPostsList)
+  async getFavoriteAdoptionPostsList() {
+    return tsRestHandler(
+      customerContract.adoptionPosts.getFavoriteAdoptionPostsList,
+      async ({ query }) => {
+        const result =
+          await this.adoptionPostsService.getFavoriteAdoptionPostsList(query);
+
+        const parsedData = AdoptionPostsListResponseBody.parse(result.data);
+
+        return {
+          status: 200,
+          body: {
+            data: parsedData,
+            meta: result.meta,
+          },
+        };
+      },
+    );
+  }
+
+  @TsRestHandler(customerContract.adoptionPosts.removeFavoriteAdoptionPost)
+  async removeFavoriteAdoptionPost() {
+    return tsRestHandler(
+      customerContract.adoptionPosts.removeFavoriteAdoptionPost,
+      async ({ params }) => {
+        await this.adoptionPostsService.removeFavoriteAdoptionPost(params.id);
+
+        return {
+          status: 204,
+          body: {},
+        };
+      },
+    );
+  }
 }

@@ -2,6 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { AdoptionPostsQuery } from "customer_api";
 import {
   adoption_posts,
+  favorites,
   pet_extra_informations,
   pets,
 } from "database";
@@ -11,6 +12,7 @@ import {
   count,
   desc,
   eq,
+  exists,
   gte,
   ilike,
   inArray,
@@ -25,12 +27,80 @@ import type { Database } from "@/modules/database/database.providers";
 export class AdoptionPostsRepository {
   constructor(@Inject("DATABASE") private readonly db: Database) {}
 
-  async getAdoptionPostsList(query: AdoptionPostsQuery = {}) {
-    const currentPage = query?.current_page ?? 1;
-    const perPage = query?.per_page ?? 10;
+  async addFavoriteAdoptionPost(customerId: string, adoptionPostId: number) {
+    await this.db.insert(favorites).values({
+      customer_id: customerId,
+      adoption_post_id: adoptionPostId,
+    });
+  }
 
+  async removeFavoriteAdoptionPost(customerId: string, adoptionPostId: number) {
+    await this.db
+      .delete(favorites)
+      .where(
+        and(
+          eq(favorites.customer_id, customerId),
+          eq(favorites.adoption_post_id, adoptionPostId),
+        ),
+      );
+  }
+
+  async getFavoriteAdoptionPostsList(
+    customerId: string,
+    query: AdoptionPostsQuery = {},
+  ) {
+    const condition = and(
+      exists(
+        this.db
+          .select()
+          .from(favorites)
+          .where(
+            and(
+              eq(favorites.adoption_post_id, adoption_posts.id),
+              eq(favorites.customer_id, customerId),
+            ),
+          ),
+      ),
+    );
+    if (!condition) return null;
+
+    return await this.getAdoptionPostsListByCondition(query, condition);
+  }
+
+  async getAdoptionPostsList(query: AdoptionPostsQuery = {}) {
+    const condition = eq(adoption_posts.post_status, "active");
+    return await this.getAdoptionPostsListByCondition(query, condition);
+  }
+
+  async getAdoptionPost(id: number) {
+    const post = await this.db.query.adoption_posts.findFirst({
+      where: and(
+        eq(adoption_posts.id, id),
+        eq(adoption_posts.post_status, "active"),
+      ),
+      with: {
+        pet: {
+          with: {
+            pet_extra_information: true,
+          },
+        },
+      },
+    });
+
+    return post;
+  }
+
+  private async getAdoptionPostsListByCondition(
+    query: AdoptionPostsQuery = {},
+    condition: SQL<unknown>,
+  ) {
+    const currentPage = query.current_page ?? 1;
+    const perPage = query.per_page ?? 10;
+
+    // Build WHERE conditions for both pets and pet_extra_informations
     const conditions = this.mapAdoptionPostsQuery(query);
     const where = and(
+      condition,
       eq(adoption_posts.post_status, "active"),
       conditions.length > 0 ? and(...conditions) : undefined,
     );
@@ -44,13 +114,15 @@ export class AdoptionPostsRepository {
           },
         },
       },
-      orderBy: (query?.sorting_order === "ascending" ? asc : desc)(
-        this.mapSortingField(query?.sorting_field),
+      orderBy: (query.sorting_order === "ascending" ? asc : desc)(
+        this.mapSortingField(query.sorting_field),
       ),
+      // When provided as 0, it returns all rows without pagination
       offset: currentPage === 0 ? undefined : (currentPage - 1) * perPage,
       limit: perPage === 0 ? undefined : perPage,
     });
 
+    // Count total with same WHERE conditions
     const _count = await this.db
       .select({ total: count() })
       .from(adoption_posts)
@@ -71,25 +143,6 @@ export class AdoptionPostsRepository {
         current_page: currentPage,
       },
     };
-  }
-
-  async getAdoptionPost(id: number) {
-    const post = await this.db.query.adoption_posts.findFirst({
-      where: and(
-        eq(adoption_posts.id, id),
-        eq(adoption_posts.post_status, "active"),
-      ),
-      with: {
-        pet: {
-          with: {
-            pet_extra_information: true,
-
-          },
-        },
-      },
-    });
-
-    return post;
   }
 
   private mapAdoptionPostsQuery(query: AdoptionPostsQuery = {}) {

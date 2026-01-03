@@ -22,44 +22,12 @@ export class PetsController {
     });
   }
 
-  @TsRestHandler(customerContract.pets.addFavoritePet)
-  async addFavoritePet() {
-    return tsRestHandler(customerContract.pets.addFavoritePet, async ({ params }) => {
-      await this.petsService.addFavoritePet(params.id);
-
-      return {
-        body: {},
-        status: 201,
-      };
-    });
-  }
-
   @TsRestHandler(customerContract.pets.getOwnPetsList)
   async getOwnPetsList() {
     return tsRestHandler(
       customerContract.pets.getOwnPetsList,
       async ({ query }) => {
         const result = await this.petsService.getOwnPetsList(query);
-
-        const parsedData = PetsListResponseBody.parse(result.data);
-
-        return {
-          status: 200,
-          body: {
-            data: parsedData,
-            meta: result.meta,
-          },
-        };
-      },
-    );
-  }
-
-  @TsRestHandler(customerContract.pets.getFavoritePetsList)
-  async getFavoritePetsList() {
-    return tsRestHandler(
-      customerContract.pets.getFavoritePetsList,
-      async ({ query }) => {
-        const result = await this.petsService.getFavoritePetsList(query);
 
         const parsedData = PetsListResponseBody.parse(result.data);
 
@@ -147,21 +115,6 @@ export class PetsController {
       customerContract.pets.deletePet,
       async ({ params }) => {
         await this.petsService.deletePet(params.id);
-
-        return {
-          status: 204,
-          body: {},
-        };
-      },
-    );
-  }
-
-  @TsRestHandler(customerContract.pets.removeFavoritePet)
-  async removeFavoritePet() {
-    return tsRestHandler(
-      customerContract.pets.removeFavoritePet,
-      async ({ params }) => {
-        await this.petsService.removeFavoritePet(params.id);
 
         return {
           status: 204,

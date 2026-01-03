@@ -15,6 +15,13 @@
       "when": 1763827040329,
       "tag": "0001_wealthy_boomer",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1767439195132,
+      "tag": "0002_narrow_meteorite",
+      "breakpoints": true
     }
   ]
 }

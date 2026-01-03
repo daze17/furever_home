@@ -356,14 +356,12 @@ export const messages = pgTable(
 export const favorites = pgTable(
   "favorites",
   {
-    // TODO: no need id
-    id: serial("id").primaryKey(),
     customer_id: uuid("customer_id")
       .references(() => customers.id, {
         onDelete: "cascade",
       })
       .notNull(),
-    pet_id: integer("pet_id")
+    adoption_post_id: integer("pet_id")
       .references(() => pets.id, {
         onDelete: "cascade",
       })
@@ -375,10 +373,10 @@ export const favorites = pgTable(
       // Prevent duplicate favorites
       uniqueFavorite: unique("unique_favorite").on(
         table.customer_id,
-        table.pet_id,
+        table.adoption_post_id,
       ),
       customerIdx: index("favorite_customer_idx").on(table.customer_id),
-      petIdx: index("favorite_pet_idx").on(table.pet_id),
+      adoptionPostIdx: index("favorite_pet_idx").on(table.adoption_post_id),
     };
   },
 );

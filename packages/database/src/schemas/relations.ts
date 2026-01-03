@@ -247,8 +247,8 @@ export const favoritesRelations = relations(favorites, ({ one }) => ({
     fields: [favorites.customer_id],
     references: [customers.id],
   }),
-  pet: one(pets, {
-    fields: [favorites.pet_id],
+  adoption_posts: one(pets, {
+    fields: [favorites.adoption_post_id],
     references: [pets.id],
   }),
 }));

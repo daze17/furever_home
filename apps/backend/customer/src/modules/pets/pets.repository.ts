@@ -5,7 +5,7 @@ import {
   CreatePetRequestBody,
   PetsQuery,
 } from "customer_api";
-import { favorites, pet_extra_informations, pets } from "database";
+import { pet_extra_informations, pets } from "database";
 import {
   and,
   asc,
@@ -16,28 +16,15 @@ import {
   ilike,
   inArray,
   isNotNull,
-  isNull,
   lte,
   SQL,
 } from "drizzle-orm";
-import { exists } from "drizzle-orm";
 
 import type { Database } from "@/modules/database/database.providers";
 
 @Injectable()
 export class PetsRepository {
   constructor(@Inject("DATABASE") private readonly db: Database) {}
-
-  async addFavoritePet(
-    customerId: string,
-    petId: number,
-  ) {
-
-    await this.db.insert(favorites).values({
-      customer_id: customerId,
-      pet_id: petId,
-    });
-  }
 
   async createPet(
     customerId: string,
@@ -156,67 +143,6 @@ export class PetsRepository {
     const where = and(
       eq(pets.customer_id, customerId),
       eq(pets.pet_status, PetStatusEnum.Enum.has_owner),
-      conditions.length > 0 ? and(...conditions) : undefined,
-    );
-
-    const _pets = await this.db.query.pets.findMany({
-      where,
-      with: {
-        pet_extra_information: true,
-      },
-      orderBy: (query.sorting_order === "ascending" ? asc : desc)(
-        this.mapPetsSortingField(query.sorting_field),
-      ),
-      // When provided as 0, it returns all rows without pagination
-      offset: currentPage === 0 ? undefined : (currentPage - 1) * perPage,
-      limit: perPage === 0 ? undefined : perPage,
-    });
-
-    // Count total with same WHERE conditions
-    const _count = await this.db
-      .select({ total: count() })
-      .from(pets)
-      .where(where);
-
-    const total = _count.find(Boolean)?.total ?? 0;
-
-    return {
-      data: _pets,
-      meta: {
-        total,
-        per_page: perPage,
-        current_page: currentPage,
-      },
-    };
-  }
-
-  async getFavoritePetsList(customerId: string, query: PetsQuery = {}) {
-    const condition = and(
-      exists(
-        this.db
-          .select()
-          .from(favorites)
-          .where(
-            and(
-              eq(favorites.pet_id, pets.id),
-              eq(favorites.customer_id, customerId),
-            ),
-          ),
-      ),
-    )
-    if (!condition) return null
-
-    return await this.getPetsListByCondition(query, condition);
-  }
-
-  async getPetsListByCondition(query: PetsQuery = {}, condition: SQL<unknown>) {
-    const currentPage = query.current_page ?? 1;
-    const perPage = query.per_page ?? 10;
-
-    // Build WHERE conditions for both pets and pet_extra_informations
-    const conditions = this.mapPetsQuery(query);
-    const where = and(
-      condition,
       conditions.length > 0 ? and(...conditions) : undefined,
     );
 
@@ -468,9 +394,5 @@ export class PetsRepository {
 
   async deletePet(id: number) {
     await this.db.delete(pets).where(eq(pets.id, id));
-  }
-
-  async removeFavoritePet(customerId: string, petId: number) {
-    await this.db.delete(favorites).where(and(eq(favorites.customer_id, customerId),eq(favorites.pet_id, petId)));
   }
 }
