@@ -1,11 +1,11 @@
 "use client";
 
 import { HeartOff } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { PetsListResponseBody, PetResponseBody } from "customer_api";
+import { AdoptionPostsListResponseBody, PetResponseBody } from "customer_api";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import {
   Button,
@@ -20,6 +20,8 @@ import {
 
 import ImageWithFallback from "@/components/image_with_fallback";
 import { client } from "@/services/client";
+
+import { FavoriteRemoveButton } from "./favorite_remove_button";
 
 const speciesEmoji: Record<string, string> = {
   dog: "🐕",
@@ -68,37 +70,38 @@ const calculateAge = (birthDate: string | Date | null): string => {
 };
 
 type Props = {
-  pets: PetsListResponseBody;
+  posts: AdoptionPostsListResponseBody;
 };
 
-export const FavoritesTable: React.FC<Props> = ({ pets }) => {
+export const FavoritesTable: React.FC<Props> = ({ posts }) => {
   const router = useRouter();
   const [removingIds, setRemovingIds] = useState<Set<number>>(new Set());
 
   const handleRemoveFavorite = async (pet: PetResponseBody) => {
     setRemovingIds((prev) => new Set(prev).add(pet.id));
 
-    try {
-      const response = await client.pets.removeFavoritePet({
-        params: { id: pet.id },
-        body: {},
-      });
+    // TODO: WRONG
+    // try {
+    //   const response = await client.pets.removeFavoritePet({
+    //     params: { id: pet.id },
+    //     body: {},
+    //   });
 
-      if (response.status === 204) {
-        toast.success(`${pet.name} дуртай жагсаалтаас хасагдлаа`);
-        router.refresh();
-      } else {
-        toast.error("Алдаа гарлаа. Дахин оролдоно уу.");
-      }
-    } catch {
-      toast.error("Алдаа гарлаа. Дахин оролдоно уу.");
-    } finally {
-      setRemovingIds((prev) => {
-        const next = new Set(prev);
-        next.delete(pet.id);
-        return next;
-      });
-    }
+    //   if (response.status === 204) {
+    //     toast.success(`${pet.name} дуртай жагсаалтаас хасагдлаа`);
+    //     router.refresh();
+    //   } else {
+    //     toast.error("Алдаа гарлаа. Дахин оролдоно уу.");
+    //   }
+    // } catch {
+    //   toast.error("Алдаа гарлаа. Дахин оролдоно уу.");
+    // } finally {
+    //   setRemovingIds((prev) => {
+    //     const next = new Set(prev);
+    //     next.delete(pet.id);
+    //     return next;
+    //   });
+    // }
   };
 
   return (
@@ -116,16 +119,16 @@ export const FavoritesTable: React.FC<Props> = ({ pets }) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {pets.map((pet) => (
+          {posts.map((post) => (
             <TableRow
-              key={pet.id}
+              key={post.pet.id}
               className="cursor-pointer transition-colors hover:bg-gray-50"
             >
               <TableCell>
-                <Link href={`/pets/${pet.id}`}>
+                <Link href={`/pets/${post.pet.id}`}>
                   <ImageWithFallback
                     src={"/furever-home-dog.jpg"}
-                    alt={pet.name}
+                    alt={post.pet.name}
                     height={48}
                     width={48}
                     fallbackSrc="/furever-home-dog.jpg"
@@ -135,21 +138,22 @@ export const FavoritesTable: React.FC<Props> = ({ pets }) => {
               </TableCell>
               <TableCell>
                 <Link
-                  href={`/pets/${pet.id}`}
+                  href={`/pets/${post.pet.id}`}
                   className="font-medium text-gray-900 hover:text-[#11D0BC] hover:underline"
                 >
-                  {pet.name}
+                  {post.pet.name}
                 </Link>
               </TableCell>
               <TableCell>
                 <span className="inline-flex items-center gap-1 rounded-full bg-[#11D0BC]/10 px-2.5 py-1 text-xs font-medium text-[#11D0BC]">
-                  {speciesEmoji[pet.species]} {speciesLabel[pet.species]}
+                  {speciesEmoji[post.pet.species]}{" "}
+                  {speciesLabel[post.pet.species]}
                 </span>
               </TableCell>
               <TableCell>
-                {pet.size ? (
+                {post.pet.size ? (
                   <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
-                    {sizeLabel[pet.size]}
+                    {sizeLabel[post.pet.size]}
                   </span>
                 ) : (
                   <span className="text-gray-400">-</span>
@@ -157,18 +161,19 @@ export const FavoritesTable: React.FC<Props> = ({ pets }) => {
               </TableCell>
               <TableCell>
                 <span className="text-sm text-gray-600">
-                  {calculateAge(pet.birth_date)}
+                  {calculateAge(post.pet.birth_date)}
                 </span>
               </TableCell>
               <TableCell>
                 <span
-                  className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusColors[pet.pet_status] || "bg-gray-100 text-gray-600"}`}
+                  className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusColors[post.pet.pet_status] || "bg-gray-100 text-gray-600"}`}
                 >
-                  {statusLabel[pet.pet_status] || pet.pet_status}
+                  {statusLabel[post.pet.pet_status] || post.pet.pet_status}
                 </span>
               </TableCell>
               <TableCell className="text-center">
-                <Button
+                <FavoriteRemoveButton postId={post.id} />
+                {/*<Button
                   variant="ghost"
                   size="sm"
                   onClick={(e) => {
@@ -180,7 +185,7 @@ export const FavoritesTable: React.FC<Props> = ({ pets }) => {
                   title="Дуртай жагсаалтаас хасах"
                 >
                   <HeartOff className="h-4 w-4" />
-                </Button>
+                </Button>*/}
               </TableCell>
             </TableRow>
           ))}

@@ -1,6 +1,6 @@
 "use client";
 
-import { PetsListResponseBody } from "customer_api";
+import { AdoptionPostsListResponseBody } from "customer_api";
 
 import {
   Select,
@@ -20,10 +20,10 @@ type PaginationMeta = {
 };
 
 const FavoritesList: React.FC<{
-  pets: PetsListResponseBody;
+  adoptionPosts: AdoptionPostsListResponseBody;
   meta: PaginationMeta;
   pagination: React.ReactNode;
-}> = ({ pets, meta, pagination }) => {
+}> = ({ adoptionPosts, meta, pagination }) => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="flex">
@@ -41,7 +41,7 @@ const FavoritesList: React.FC<{
                 </span>{" "}
                 дуртай тэжээвэр амьтнаас{" "}
                 <span className="font-semibold text-gray-900">
-                  {pets.length}
+                  {adoptionPosts.length}
                 </span>{" "}
                 харуулж байна
               </p>
@@ -63,8 +63,8 @@ const FavoritesList: React.FC<{
           </div>
 
           <div className="p-6">
-            {pets.length > 0 ? (
-              <FavoritesTable pets={pets} />
+            {adoptionPosts.length > 0 ? (
+              <FavoritesTable posts={adoptionPosts} />
             ) : (
               <div className="flex min-h-[400px] items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-white">
                 <div className="text-center">

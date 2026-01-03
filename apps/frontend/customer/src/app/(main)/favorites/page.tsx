@@ -3,7 +3,10 @@ import Link from "next/link";
 
 import { ErrorCard } from "@/components/error_card";
 import { client } from "@/services/client.server";
-import { filterValidFieldsFromObjectBySchema, removeNullFromObject } from "@/utils";
+import {
+  filterValidFieldsFromObjectBySchema,
+  removeNullFromObject,
+} from "@/utils";
 
 import FavoritesList from "./components/favorites_list";
 import { FavoritesListPagination } from "./components/favorites_list_pagination";
@@ -26,7 +29,7 @@ const FavoritesPage: React.Page = async (props) => {
     _searchParams,
   );
 
-  const response = await client.pets.getFavoritePetsList({
+  const response = await client.adoptionPosts.getFavoriteAdoptionPostsList({
     query: validQuery,
   });
 
@@ -45,7 +48,7 @@ const FavoritesPage: React.Page = async (props) => {
 
   return (
     <FavoritesList
-      pets={response.body.data}
+      adoptionPosts={response.body.data}
       meta={response.body.meta}
       pagination={<FavoritesListPagination meta={response.body.meta} />}
     />

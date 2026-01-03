@@ -49,11 +49,11 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
     }
 
     try {
-      const response = await client.pets.getFavoritePetsList({ query: {} });
-      if (response.status === 200) {
-        const ids = new Set(response.body.data.map((pet) => pet.id));
-        setFavoriteIds(ids);
-      }
+      // const response = await client.pets.getFavoritePetsList({ query: {} });
+      // if (response.status === 200) {
+      //   const ids = new Set(response.body.data.map((pet) => pet.id));
+      //   setFavoriteIds(ids);
+      // }
     } catch {
       // API error, reset favorites
       setFavoriteIds(new Set());
@@ -68,46 +68,49 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
 
   const isFavorited = useCallback(
     (petId: number) => favoriteIds.has(petId),
-    [favoriteIds]
+    [favoriteIds],
   );
 
   const addFavorite = useCallback(async (petId: number): Promise<boolean> => {
     try {
-      const response = await client.pets.addFavoritePet({
-        params: { id: petId },
-        body: {},
-      });
+      // const response = await client.pets.addFavoritePet({
+      //   params: { id: petId },
+      //   body: {},
+      // });
 
-      if (response.status === 201) {
-        setFavoriteIds((prev) => new Set(prev).add(petId));
-        return true;
-      }
+      // if (response.status === 201) {
+      //   setFavoriteIds((prev) => new Set(prev).add(petId));
+      //   return true;
+      // }
       return false;
     } catch {
       return false;
     }
   }, []);
 
-  const removeFavorite = useCallback(async (petId: number): Promise<boolean> => {
-    try {
-      const response = await client.pets.removeFavoritePet({
-        params: { id: petId },
-        body: {},
-      });
+  const removeFavorite = useCallback(
+    async (petId: number): Promise<boolean> => {
+      try {
+        // const response = await client.pets.removeFavoritePet({
+        //   params: { id: petId },
+        //   body: {},
+        // });
 
-      if (response.status === 204) {
-        setFavoriteIds((prev) => {
-          const next = new Set(prev);
-          next.delete(petId);
-          return next;
-        });
-        return true;
+        // if (response.status === 204) {
+        //   setFavoriteIds((prev) => {
+        //     const next = new Set(prev);
+        //     next.delete(petId);
+        //     return next;
+        //   });
+        //   return true;
+        // }
+        return false;
+      } catch {
+        return false;
       }
-      return false;
-    } catch {
-      return false;
-    }
-  }, []);
+    },
+    [],
+  );
 
   return (
     <FavoritesContext.Provider

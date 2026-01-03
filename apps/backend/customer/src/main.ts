@@ -33,6 +33,7 @@ async function bootstrap() {
       "https://localhost:3000",
       "http://localhost:3000",
     ],
+    methods: ["GET", "PATCH", "POST", "DELETE"],
   });
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,

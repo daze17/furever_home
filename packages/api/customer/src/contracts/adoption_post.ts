@@ -70,7 +70,6 @@ export const adoptionPostContract = c.router({
     pathParams: z.object({
       id: z.coerce.number(),
     }),
-    body: z.object({}),
     responses: {
       204: z.object({}),
       404: CustomError,
