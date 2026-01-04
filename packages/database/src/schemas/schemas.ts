@@ -376,7 +376,7 @@ export const favorites = pgTable(
         table.adoption_post_id,
       ),
       customerIdx: index("favorite_customer_idx").on(table.customer_id),
-      adoptionPostIdx: index("favorite_pet_idx").on(table.adoption_post_id),
+      adoptionPostIdx: index("favorite_post_idx").on(table.adoption_post_id),
     };
   },
 );

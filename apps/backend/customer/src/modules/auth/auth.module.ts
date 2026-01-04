@@ -19,6 +19,7 @@ import { EmailQueueModule } from "@/modules/email_queue/email_queue.module";
 import { AuthController } from "./auth.controller";
 import { AuthRepository } from "./auth.repository";
 import { AuthService } from "./auth.service";
+import { OptionalStrategy } from "@/common/strategies/optional.strategy";
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { AuthService } from "./auth.service";
     LocalStrategy,
     PasswordResetJwtStrategy,
     RefreshTokenStrategy,
+    OptionalStrategy,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,

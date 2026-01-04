@@ -1,4 +1,4 @@
-import { Controller } from "@nestjs/common";
+import { Controller, UseGuards } from "@nestjs/common";
 import { TsRestHandler, tsRestHandler } from "@ts-rest/nest";
 import {
   AdoptionPostResponseBody,
@@ -7,6 +7,7 @@ import {
 } from "customer_api";
 
 import { Public } from "@/common/decorators/public";
+import { OptionalGuard } from "@/common/guards/optional.guard";
 
 import { AdoptionPostsService } from "./adoption_posts.service";
 
@@ -15,6 +16,7 @@ export class AdoptionPostsController {
   constructor(private readonly adoptionPostsService: AdoptionPostsService) {}
 
   @Public()
+  @UseGuards(OptionalGuard)
   @TsRestHandler(customerContract.adoptionPosts.getAdoptionPostsList)
   async getAdoptionPostsList() {
     return tsRestHandler(
@@ -37,6 +39,7 @@ export class AdoptionPostsController {
   }
 
   @Public()
+  @UseGuards(OptionalGuard)
   @TsRestHandler(customerContract.adoptionPosts.getAdoptionPost)
   async getAdoptionPost() {
     return tsRestHandler(

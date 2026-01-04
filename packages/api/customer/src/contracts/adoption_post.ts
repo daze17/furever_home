@@ -23,7 +23,6 @@ export const adoptionPostContract = c.router({
     },
     summary: "List all adoption posts with optional filters",
   },
-
   getAdoptionPost: {
     method: "GET",
     path: "/adoption_posts/:id",

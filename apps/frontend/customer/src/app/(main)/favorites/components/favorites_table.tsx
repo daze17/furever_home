@@ -18,10 +18,9 @@ import {
   toast,
 } from "ui";
 
+import { FavoriteRemoveButton } from "@/components/favorite_remove_button";
 import ImageWithFallback from "@/components/image_with_fallback";
 import { client } from "@/services/client";
-
-import { FavoriteRemoveButton } from "./favorite_remove_button";
 
 const speciesEmoji: Record<string, string> = {
   dog: "🐕",

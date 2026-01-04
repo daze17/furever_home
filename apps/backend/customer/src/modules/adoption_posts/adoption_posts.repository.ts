@@ -69,6 +69,7 @@ export class AdoptionPostsRepository {
 
   async getAdoptionPostsList(query: AdoptionPostsQuery = {}) {
     const condition = eq(adoption_posts.post_status, "active");
+
     return await this.getAdoptionPostsListByCondition(query, condition);
   }
 
@@ -88,6 +89,17 @@ export class AdoptionPostsRepository {
     });
 
     return post;
+  }
+
+  async isFavoriteAdoptionPost(customerId: string, postId: number) {
+    const favorite = await this.db.query.favorites.findFirst({
+      where: and(
+        eq(favorites.customer_id, customerId),
+        eq(favorites.adoption_post_id, postId),
+      ),
+    });
+
+    return !!favorite;
   }
 
   private async getAdoptionPostsListByCondition(

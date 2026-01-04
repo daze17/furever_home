@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-import { AdoptionPostModel, PetExtraInformationModel, PetModel } from "@/models";
+import {
+  AdoptionPostModel,
+  PetExtraInformationModel,
+  PetModel,
+} from "@/models";
 import { paginationQuery } from "@/models/pagination";
 import { PetSizeEnum, PetSpeciesEnum } from "common_api";
 
@@ -8,6 +12,7 @@ export const AdoptionPostResponseBody = AdoptionPostModel.extend({
   pet: PetModel.extend({
     pet_extra_information: PetExtraInformationModel.nullable(),
   }),
+  is_favorite: z.boolean().default(false),
 });
 export type AdoptionPostResponseBody = z.infer<typeof AdoptionPostResponseBody>;
 

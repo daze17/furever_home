@@ -19,7 +19,8 @@ import { useRouter } from "next/navigation";
 
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "ui";
 
-// import { FavoriteButton } from "@/components/favorite_button";
+import { FavoriteAddButton } from "@/components/favorite_add_button";
+import { FavoriteRemoveButton } from "@/components/favorite_remove_button";
 import ImageWithFallback from "@/components/image_with_fallback";
 import {
   energyLevelColors,
@@ -56,8 +57,11 @@ const AdoptionPostDetails: React.FC<{
 
         {/* Public action - Favorite and Adoption buttons */}
         <div className="flex gap-2">
-          {/*<FavoriteButton petId={pet.id} petName={pet.name} variant="button" />*/}
-          {/*{!isOwner && pet?.pet_status === "adopting" && (*/}
+          {post.is_favorite ? (
+            <FavoriteRemoveButton postId={post.id} />
+          ) : (
+            <FavoriteAddButton postId={post.id} />
+          )}
           <Button asChild size="lg">
             <Link href={`/pets/${pet.id}/adopt`}>
               <Heart className="mr-2 h-4 w-4" />

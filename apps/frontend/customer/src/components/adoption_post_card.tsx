@@ -1,5 +1,7 @@
 "use client";
 
+import { HeartIcon } from "lucide-react";
+
 import { AdoptionPostResponseBody } from "customer_api";
 import Link from "next/link";
 
@@ -13,8 +15,10 @@ import {
   CardTitle,
 } from "ui";
 
-import { FavoriteButton } from "@/components/favorite_button";
 import ImageWithFallback from "@/components/image_with_fallback";
+
+import { FavoriteAddButton } from "./favorite_add_button";
+import { FavoriteRemoveButton } from "./favorite_remove_button";
 
 export const AdoptionPostCard: React.FC<{
   post: AdoptionPostResponseBody;
@@ -72,12 +76,11 @@ export const AdoptionPostCard: React.FC<{
           <span className="truncate" title={pet.name}>
             {pet.name}
           </span>
-          {/*<FavoriteButton
-            petId={pet.id}
-            petName={pet.name}
-            variant="icon"
-            className="text-gray-400"
-          />*/}
+          {post.is_favorite ? (
+            <FavoriteRemoveButton postId={post.id} />
+          ) : (
+            <FavoriteAddButton postId={post.id} />
+          )}
         </CardTitle>
         <CardDescription className="text-gray-500">{`${petAge} настай`}</CardDescription>
       </CardHeader>

@@ -18,20 +18,54 @@ export class AdoptionPostsService {
   ) {}
 
   async getAdoptionPostsList(query: AdoptionPostsQuery = {}) {
-    const response =
+    const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);
+
+    const posts =
       await this.adoptionPostsRepository.getAdoptionPostsList(query);
 
-    return response;
+    const responseData = accountProfile
+      ? await Promise.all(
+          posts.data.map(async (post) => {
+            const isFavorite =
+              await this.adoptionPostsRepository.isFavoriteAdoptionPost(
+                accountProfile.id,
+                post.id,
+              );
+            console.log(isFavorite, "isFavoriteisFavorite");
+            return {
+              ...post,
+              is_favorite: isFavorite,
+            };
+          }),
+        )
+      : posts.data;
+
+    return {
+      data: responseData,
+      meta: posts.meta,
+    };
   }
 
   async getAdoptionPost(id: number) {
+    const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);
+    let isFavorite = false;
     const post = await this.adoptionPostsRepository.getAdoptionPost(id);
+
+    if (accountProfile) {
+      isFavorite = await this.adoptionPostsRepository.isFavoriteAdoptionPost(
+        accountProfile.id,
+        id,
+      );
+    }
 
     if (!post) {
       throw new NotFoundException(`Adoption post with ID ${id} not found`);
     }
 
-    return post;
+    return {
+      ...post,
+      is_favorite: isFavorite,
+    };
   }
 
   async addFavoriteAdoptionPost(id: number) {

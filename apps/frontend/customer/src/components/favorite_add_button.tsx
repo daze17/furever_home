@@ -1,6 +1,6 @@
 "use client";
 
-import { HeartOff } from "lucide-react";
+import { HeartIcon } from "lucide-react";
 import { startTransition, useState } from "react";
 
 import { useRouter } from "next/navigation";
@@ -9,20 +9,21 @@ import { Button, toast } from "ui";
 
 import { client } from "@/services/client";
 
-export const FavoriteRemoveButton = ({ postId }: { postId: number }) => {
+export const FavoriteAddButton = ({ postId }: { postId: number }) => {
   const [isPending, setIsPending] = useState(false);
   const router = useRouter();
 
-  const handleRemove = async () => {
+  const handleButton = async () => {
     try {
-      const response = await client.adoptionPosts.removeFavoriteAdoptionPost({
+      const response = await client.adoptionPosts.addFavoriteAdoptionPost({
         params: {
           id: postId,
         },
+        body: {},
       });
       switch (response.status) {
-        case 204:
-          toast.success("Амжилттай устгалаа");
+        case 201:
+          toast.success("Амжилттай");
           setIsPending(false);
           startTransition(() => {
             router.refresh();
@@ -47,14 +48,12 @@ export const FavoriteRemoveButton = ({ postId }: { postId: number }) => {
     <Button
       variant="ghost"
       size="sm"
-      onClick={(e) => {
-        handleRemove();
-      }}
+      onClick={handleButton}
       disabled={isPending}
       className="text-gray-500 hover:bg-red-50 hover:text-red-600"
-      title="Жагсаалтаас хасах"
+      title="Жагсаалтад нэмэх"
     >
-      <HeartOff className="h-4 w-4" />
+      <HeartIcon className="h-4 w-4 text-gray-400" />
     </Button>
   );
 };
