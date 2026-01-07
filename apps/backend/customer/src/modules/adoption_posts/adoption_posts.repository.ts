@@ -102,6 +102,27 @@ export class AdoptionPostsRepository {
     return !!favorite;
   }
 
+  async getFavoriteStatusBatch(
+    customerId: string,
+    postIds: number[],
+  ): Promise<Set<number>> {
+    if (postIds.length === 0) {
+      return new Set();
+    }
+
+    const results = await this.db
+      .select({ adoption_post_id: favorites.adoption_post_id })
+      .from(favorites)
+      .where(
+        and(
+          eq(favorites.customer_id, customerId),
+          inArray(favorites.adoption_post_id, postIds),
+        ),
+      );
+
+    return new Set(results.map((r) => r.adoption_post_id));
+  }
+
   private async getAdoptionPostsListByCondition(
     query: AdoptionPostsQuery = {},
     condition: SQL<unknown>,

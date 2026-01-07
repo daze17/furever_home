@@ -131,7 +131,7 @@ export const pets = pgTable(
     pet_status: pet_status("pet_status").notNull(),
     customer_id: uuid("customer_id")
       .references(() => customers.id, {
-        onDelete: "set null",
+        onDelete: "cascade",
       })
       .notNull(),
     pet_extra_information_id: uuid("pet_extra_information_id").references(
@@ -361,8 +361,8 @@ export const favorites = pgTable(
         onDelete: "cascade",
       })
       .notNull(),
-    adoption_post_id: integer("pet_id")
-      .references(() => pets.id, {
+    adoption_post_id: integer("adoption_post_id")
+      .references(() => adoption_posts.id, {
         onDelete: "cascade",
       })
       .notNull(),

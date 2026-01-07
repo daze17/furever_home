@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { AdoptionPostsQuery } from "customer_api";
 import { ClsService } from "nestjs-cls";
 
@@ -23,25 +19,25 @@ export class AdoptionPostsService {
     const posts =
       await this.adoptionPostsRepository.getAdoptionPostsList(query);
 
-    const responseData = accountProfile
-      ? await Promise.all(
-          posts.data.map(async (post) => {
-            const isFavorite =
-              await this.adoptionPostsRepository.isFavoriteAdoptionPost(
-                accountProfile.id,
-                post.id,
-              );
-            console.log(isFavorite, "isFavoriteisFavorite");
-            return {
-              ...post,
-              is_favorite: isFavorite,
-            };
-          }),
-        )
-      : posts.data;
+    if (!accountProfile) {
+      return {
+        data: posts.data,
+        meta: posts.meta,
+      };
+    }
+
+    const postIds = posts.data.map((p) => p.id);
+    const favoriteSet =
+      await this.adoptionPostsRepository.getFavoriteStatusBatch(
+        accountProfile.id,
+        postIds,
+      );
 
     return {
-      data: responseData,
+      data: posts.data.map((post) => ({
+        ...post,
+        is_favorite: favoriteSet.has(post.id),
+      })),
       meta: posts.meta,
     };
   }
