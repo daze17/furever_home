@@ -83,6 +83,7 @@ export class AdoptionPostsRepository {
         pet: {
           with: {
             pet_extra_information: true,
+            images: true,
           },
         },
       },
@@ -144,6 +145,7 @@ export class AdoptionPostsRepository {
         pet: {
           with: {
             pet_extra_information: true,
+            images: true,
           },
         },
       },

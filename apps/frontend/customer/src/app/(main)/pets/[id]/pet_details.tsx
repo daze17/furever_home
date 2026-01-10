@@ -34,6 +34,8 @@ import {
   trainingLevelLabels,
 } from "@/utils";
 
+import { PetImageCarousel } from "./pet_image_carousel";
+
 const AdoptionPostDetails: React.FC<{
   post: AdoptionPostResponseBody;
 }> = ({ post }) => {
@@ -62,13 +64,6 @@ const AdoptionPostDetails: React.FC<{
           ) : (
             <FavoriteAddButton postId={post.id} />
           )}
-          <Button asChild size="lg">
-            <Link href={`/pets/${pet.id}/adopt`}>
-              <Heart className="mr-2 h-4 w-4" />
-              Энэ тэжээвэр амьтныг үрчлэх
-            </Link>
-          </Button>
-          {/*)}*/}
         </div>
       </div>
 
@@ -76,16 +71,7 @@ const AdoptionPostDetails: React.FC<{
         <div className="space-y-4 lg:col-span-1">
           <Card>
             <CardContent className="p-6">
-              <ImageWithFallback
-                // TODO
-                // src={pet.pet_image_url}
-                src={"/furever-home-dog.jpg"}
-                alt={pet.name}
-                height={400}
-                width={400}
-                fallbackSrc="/furever-home-dog.jpg"
-                className="h-[400px] w-full rounded-lg object-cover"
-              />
+              <PetImageCarousel images={pet.images || []} petName={pet.name} />
             </CardContent>
           </Card>
 

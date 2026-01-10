@@ -13,6 +13,18 @@ export class AdoptionPostsService {
     private readonly adoptionPostsRepository: AdoptionPostsRepository,
   ) {}
 
+  private sortPetImages(images: any[]) {
+    return images
+      ? [...images].sort((a, b) => {
+          // Primary images first
+          if (a.is_primary && !b.is_primary) return -1;
+          if (!a.is_primary && b.is_primary) return 1;
+          // Then by display_order
+          return a.display_order - b.display_order;
+        })
+      : [];
+  }
+
   async getAdoptionPostsList(query: AdoptionPostsQuery = {}) {
     const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);
 
@@ -21,7 +33,13 @@ export class AdoptionPostsService {
 
     if (!accountProfile) {
       return {
-        data: posts.data,
+        data: posts.data.map((post) => ({
+          ...post,
+          pet: {
+            ...post.pet,
+            images: this.sortPetImages(post.pet.images),
+          },
+        })),
         meta: posts.meta,
       };
     }
@@ -36,6 +54,10 @@ export class AdoptionPostsService {
     return {
       data: posts.data.map((post) => ({
         ...post,
+        pet: {
+          ...post.pet,
+          images: this.sortPetImages(post.pet.images),
+        },
         is_favorite: favoriteSet.has(post.id),
       })),
       meta: posts.meta,
@@ -60,6 +82,10 @@ export class AdoptionPostsService {
 
     return {
       ...post,
+      pet: {
+        ...post.pet,
+        images: this.sortPetImages(post.pet.images),
+      },
       is_favorite: isFavorite,
     };
   }

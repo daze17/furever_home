@@ -1,4 +1,4 @@
-import { favorites, pet_extra_informations, pets } from "database";
+import { favorites, pet_extra_informations, pet_images, pets } from "database";
 import { createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -12,3 +12,6 @@ export type PetExtraInformationModel = z.infer<typeof PetExtraInformationModel>;
 
 export const FavoriteModel = createSelectSchema(favorites);
 export type FavoriteModel = z.infer<typeof FavoriteModel>;
+
+export const PetImageModel = createSelectSchema(pet_images);
+export type PetImageModel = z.infer<typeof PetImageModel>;

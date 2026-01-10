@@ -11,6 +11,10 @@ const nextConfig = {
         hostname: "lh3.googleusercontent.com",
         protocol: "https",
       },
+      {
+        hostname: "images.dog.ceo",
+        protocol: "https",
+      },
     ],
   },
   transpilePackages: ["@t3-oss/env-nextjs"],
