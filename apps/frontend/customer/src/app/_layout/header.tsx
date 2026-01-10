@@ -38,7 +38,7 @@ export const Header = () => {
           <Button variant="ghost" size="sm" asChild>
             <Link href="/favorites" className="flex items-center gap-2">
               <Heart size={20} strokeWidth={2} />
-              <span className="font-medium">Хадгалах</span>
+              <span className="font-medium">Таалагдсан</span>
             </Link>
           </Button>
 

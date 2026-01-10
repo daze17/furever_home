@@ -22,6 +22,7 @@ const FavoritesPage: React.Page = async (props) => {
   const _searchParams = {
     ...rest,
     ...order,
+    current_page: rest.page, // Map URL 'page' to API 'current_page'
   };
 
   const validQuery = filterValidFieldsFromObjectBySchema(

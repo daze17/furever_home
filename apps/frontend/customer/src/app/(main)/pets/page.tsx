@@ -3,7 +3,10 @@ import Link from "next/link";
 
 import { ErrorCard } from "@/components/error_card";
 import { client } from "@/services/client.server";
-import { filterValidFieldsFromObjectBySchema, removeNullFromObject } from "@/utils";
+import {
+  filterValidFieldsFromObjectBySchema,
+  removeNullFromObject,
+} from "@/utils";
 
 import PetsList from "./pets_list";
 import { PetListPagination } from "./pets_list_pagination";
@@ -22,6 +25,7 @@ const PetsListPage: React.Page = async (props) => {
   const _searchParams = {
     ...rest,
     ...order,
+    current_page: rest.page, // Map URL 'page' to API 'current_page'
   };
 
   const validQuery = filterValidFieldsFromObjectBySchema(
@@ -52,7 +56,7 @@ const PetsListPage: React.Page = async (props) => {
     <PetsList
       posts={response.body.data}
       meta={response.body.meta}
-      pagination={<PetListPagination meta={response.body.meta} />}
+      pagination={<PetListPagination key="pagination" meta={response.body.meta} />}
     />
   );
 };
