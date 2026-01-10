@@ -126,7 +126,6 @@ export const pets = pgTable(
     birth_date: date("birth_date"),
     species: species("species").notNull(),
     notes: text("notes"),
-    pet_image_url: text("pet_image_url"),
     size: size("size"),
     pet_status: pet_status("pet_status").notNull(),
     customer_id: uuid("customer_id")

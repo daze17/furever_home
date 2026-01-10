@@ -99,7 +99,7 @@ export const pet_extra_informationsRelations = relations(
  * - Belongs to one customer (owner) (many-to-one)
  * - Has one pet_extra_information (one-to-one)
  */
-export const petsRelations = relations(pets, ({ one }) => ({
+export const petsRelations = relations(pets, ({ one, many }) => ({
   customer: one(customers, {
     fields: [pets.customer_id],
     references: [customers.id],
@@ -108,6 +108,7 @@ export const petsRelations = relations(pets, ({ one }) => ({
     fields: [pets.pet_extra_information_id],
     references: [pet_extra_informations.id],
   }),
+  images: many(pet_images),
 }));
 
 /**

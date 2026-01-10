@@ -112,35 +112,35 @@ async function seed() {
           email: "john.smith@example.com",
           hash: HASHED_PASSWORD,
           status: "active",
-          customer_id: customersData[0].id,
+          customer_id: customersData[0]!.id,
         },
         {
           id: "email_sarah.johnson@example.com",
           email: "sarah.johnson@example.com",
           hash: HASHED_PASSWORD,
           status: "active",
-          customer_id: customersData[1].id,
+          customer_id: customersData[1]!.id,
         },
         {
           id: "email_michael.chen@example.com",
           email: "michael.chen@example.com",
           hash: HASHED_PASSWORD,
           status: "active",
-          customer_id: customersData[2].id,
+          customer_id: customersData[2]!.id,
         },
         {
           id: "email_emily.rodriguez@example.com",
           email: "emily.rodriguez@example.com",
           hash: HASHED_PASSWORD,
           status: "active",
-          customer_id: customersData[3].id,
+          customer_id: customersData[3]!.id,
         },
         {
           id: "email_david.williams@example.com",
           email: "david.williams@example.com",
           hash: HASHED_PASSWORD,
           status: "active",
-          customer_id: customersData[4].id,
+          customer_id: customersData[4]!.id,
         },
       ])
       .returning();
@@ -163,28 +163,28 @@ async function seed() {
     console.log("🐾 Creating pet preferences...");
     await db.insert(pet_preferences).values([
       {
-        customer_id: customersData[0].id,
+        customer_id: customersData[0]!.id,
         preferred_species: ["dog"],
         preferred_size: ["medium", "large"],
         has_children: true,
         has_other_pets: false,
       },
       {
-        customer_id: customersData[1].id,
+        customer_id: customersData[1]!.id,
         preferred_species: ["cat"],
         preferred_size: ["small", "medium"],
         has_children: false,
         has_other_pets: true,
       },
       {
-        customer_id: customersData[2].id,
+        customer_id: customersData[2]!.id,
         preferred_species: ["dog", "cat"],
         preferred_size: ["small"],
         has_children: true,
         has_other_pets: true,
       },
       {
-        customer_id: customersData[3].id,
+        customer_id: customersData[3]!.id,
         preferred_species: ["bird"],
         preferred_size: ["small"],
         has_children: false,
@@ -478,6 +478,41 @@ async function seed() {
       `✅ Created ${petExtraInfos.length} pet extra information records`,
     );
 
+    // Pet image URLs (stored separately since images are in pet_images table)
+    const petImageUrls = [
+      "https://images.dog.ceo/breeds/retriever-golden/n02099601_1003.jpg", // Max
+      "https://cdn2.thecatapi.com/images/0XYvRd7oD.jpg", // Luna
+      "https://images.dog.ceo/breeds/beagle/n02088364_11136.jpg", // Bella
+      "https://images.dog.ceo/breeds/husky/n02110185_10047.jpg", // Charlie
+      "https://cdn2.thecatapi.com/images/MTY3ODIyMQ.jpg", // Whiskers
+      "https://images.dog.ceo/breeds/labrador/n02099712_3503.jpg", // Buddy
+      "https://images.dog.ceo/breeds/germanshepherd/n02106662_1234.jpg", // Rocky
+      "https://images.dog.ceo/breeds/boxer/n02108089_1234.jpg", // Duke
+      "https://images.dog.ceo/breeds/dalmatian/cooper1.jpg", // Cooper
+      "https://images.dog.ceo/breeds/corgi-cardigan/n02113186_1234.jpg", // Tucker
+      "https://images.dog.ceo/breeds/chow/n02112137_1234.jpg", // Bear
+      "https://images.dog.ceo/breeds/poodle-standard/n02113799_1234.jpg", // Milo
+      "https://images.dog.ceo/breeds/bulldog-french/n02108915_1234.jpg", // Oscar
+      "https://images.dog.ceo/breeds/collie-border/n02106166_1234.jpg", // Finn
+      "https://images.dog.ceo/breeds/shiba/shiba-1.jpg", // Scout
+      "https://images.dog.ceo/breeds/dane-great/n02109047_1234.jpg", // Zeus
+      "https://cdn2.thecatapi.com/images/MTk1NTQ2OQ.jpg", // Shadow
+      "https://cdn2.thecatapi.com/images/7iu.jpg", // Oliver
+      "https://cdn2.thecatapi.com/images/OGTWqNNOt.jpg", // Simba
+      "https://cdn2.thecatapi.com/images/ai6Jps4sx.jpg", // Cleo
+      "https://cdn2.thecatapi.com/images/e3.jpg", // Mochi
+      "https://cdn2.thecatapi.com/images/MjA3ODA2Nw.jpg", // Ginger
+      "https://cdn2.thecatapi.com/images/j6oFGLpRG.jpg", // Smokey
+      "https://cdn2.thecatapi.com/images/O3F3_S1XN.jpg", // Tiger
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Ara_ararauna_Luc_Viatour.jpg/220px-Ara_ararauna_Luc_Viatour.jpg", // Rio
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Cockatiel_crest.jpg/220px-Cockatiel_crest.jpg", // Kiwi
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Melopsittacus_undulatus_-facing_left-8a.jpg/220px-Melopsittacus_undulatus_-facing_left-8a.jpg", // Sunny
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Siamese_fighting_fish_-_Betta_splendens.jpg/220px-Siamese_fighting_fish_-_Betta_splendens.jpg", // Bubbles
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Amphiprion_ocellaris_%28Clown_anemonefish%29_in_Heteractis_magnifica_%28Sea_anemone%29.jpg/220px-Amphiprion_ocellaris_%28Clown_anemonefish%29_in_Heteractis_magnifica_%28Sea_anemone%29.jpg", // Nemo
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Oryctolagus_cuniculus_Rcdo.jpg/220px-Oryctolagus_cuniculus_Rcdo.jpg", // Thumper
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Pearl_Winter_White_Russian_Dwarf_Hamster_-_Front.jpg/220px-Pearl_Winter_White_Russian_Dwarf_Hamster_-_Front.jpg", // Peanut
+    ];
+
     // 6. Create Pets
     console.log("🐕 Creating pets...");
     const petsData = await db
@@ -489,70 +524,60 @@ async function seed() {
           birth_date: "2020-03-15",
           species: "dog",
           notes: "Friendly golden retriever, loves to play fetch",
-          pet_image_url:
-            "https://images.dog.ceo/breeds/retriever-golden/n02099601_1003.jpg",
           size: "large",
           pet_status: "adopting",
-          customer_id: customersData[0].id,
-          pet_extra_information_id: petExtraInfos[0].id,
+          customer_id: customersData[0]!.id,
+          pet_extra_information_id: petExtraInfos[0]!.id,
         },
         {
           name: "Luna",
           birth_date: "2018-07-22",
           species: "cat",
           notes: "Calm and affectionate, perfect lap cat",
-          pet_image_url: "https://cdn2.thecatapi.com/images/0XYvRd7oD.jpg",
           size: "small",
           pet_status: "adopting",
-          customer_id: customersData[1].id,
-          pet_extra_information_id: petExtraInfos[1].id,
+          customer_id: customersData[1]!.id,
+          pet_extra_information_id: petExtraInfos[1]!.id,
         },
         {
           name: "Bella",
           birth_date: "2021-01-10",
           species: "dog",
           notes: "Well-trained beagle, great with kids",
-          pet_image_url:
-            "https://images.dog.ceo/breeds/beagle/n02088364_11136.jpg",
           size: "medium",
           pet_status: "adopting",
-          customer_id: customersData[0].id,
-          pet_extra_information_id: petExtraInfos[2].id,
+          customer_id: customersData[0]!.id,
+          pet_extra_information_id: petExtraInfos[2]!.id,
         },
         {
           name: "Charlie",
           birth_date: "2022-05-18",
           species: "dog",
           notes: "Energetic husky puppy, needs active family",
-          pet_image_url:
-            "https://images.dog.ceo/breeds/husky/n02110185_10047.jpg",
           size: "large",
           pet_status: "adopting",
-          customer_id: customersData[2].id,
-          pet_extra_information_id: petExtraInfos[3].id,
+          customer_id: customersData[2]!.id,
+          pet_extra_information_id: petExtraInfos[3]!.id,
         },
         {
           name: "Whiskers",
           birth_date: "2019-11-30",
           species: "cat",
           notes: "Playful tabby cat, loves toys",
-          pet_image_url: "https://cdn2.thecatapi.com/images/MTY3ODIyMQ.jpg",
           size: "medium",
           pet_status: "has_owner",
-          customer_id: customersData[3].id,
-          pet_extra_information_id: petExtraInfos[4].id,
+          customer_id: customersData[3]!.id,
+          pet_extra_information_id: petExtraInfos[4]!.id,
         },
         {
           name: "Buddy",
           birth_date: "2017-09-12",
           species: "dog",
           notes: "Senior dog looking for a quiet home",
-          pet_image_url:
-            "https://images.dog.ceo/breeds/labrador/n02099712_3503.jpg",
           size: "medium",
           pet_status: "adopting",
-          customer_id: customersData[1].id,
-          pet_extra_information_id: petExtraInfos[5].id,
+          customer_id: customersData[1]!.id,
+          pet_extra_information_id: petExtraInfos[5]!.id,
         },
         // New dogs (7-16)
         {
@@ -560,120 +585,100 @@ async function seed() {
           birth_date: "2021-06-20",
           species: "dog",
           notes: "Loyal German Shepherd, excellent guard dog",
-          pet_image_url:
-            "https://images.dog.ceo/breeds/germanshepherd/n02106662_1234.jpg",
           size: "large",
           pet_status: "adopting",
-          customer_id: customersData[0].id,
-          pet_extra_information_id: petExtraInfos[6].id,
+          customer_id: customersData[0]!.id,
+          pet_extra_information_id: petExtraInfos[6]!.id,
         },
         {
           name: "Duke",
           birth_date: "2019-02-14",
           species: "dog",
           notes: "Gentle boxer, loves cuddles and playtime",
-          pet_image_url:
-            "https://images.dog.ceo/breeds/boxer/n02108089_1234.jpg",
           size: "large",
           pet_status: "adopting",
-          customer_id: customersData[1].id,
-          pet_extra_information_id: petExtraInfos[7].id,
+          customer_id: customersData[1]!.id,
+          pet_extra_information_id: petExtraInfos[7]!.id,
         },
         {
           name: "Cooper",
           birth_date: "2016-08-05",
           species: "dog",
           notes: "Deaf dalmatian, trained with hand signals",
-          pet_image_url:
-            "https://images.dog.ceo/breeds/dalmatian/cooper1.jpg",
           size: "large",
           pet_status: "adopting",
-          customer_id: customersData[2].id,
-          pet_extra_information_id: petExtraInfos[8].id,
+          customer_id: customersData[2]!.id,
+          pet_extra_information_id: petExtraInfos[8]!.id,
         },
         {
           name: "Tucker",
           birth_date: "2020-11-03",
           species: "dog",
           notes: "Playful corgi with a big personality",
-          pet_image_url:
-            "https://images.dog.ceo/breeds/corgi-cardigan/n02113186_1234.jpg",
           size: "small",
           pet_status: "adopting",
-          customer_id: customersData[3].id,
-          pet_extra_information_id: petExtraInfos[9].id,
+          customer_id: customersData[3]!.id,
+          pet_extra_information_id: petExtraInfos[9]!.id,
         },
         {
           name: "Bear",
           birth_date: "2022-01-28",
           species: "dog",
           notes: "Fluffy chow chow, independent but loving",
-          pet_image_url:
-            "https://images.dog.ceo/breeds/chow/n02112137_1234.jpg",
           size: "large",
           pet_status: "adopting",
-          customer_id: customersData[4].id,
-          pet_extra_information_id: petExtraInfos[10].id,
+          customer_id: customersData[4]!.id,
+          pet_extra_information_id: petExtraInfos[10]!.id,
         },
         {
           name: "Milo",
           birth_date: "2015-04-17",
           species: "dog",
           notes: "Sweet senior poodle, calm and well-mannered",
-          pet_image_url:
-            "https://images.dog.ceo/breeds/poodle-standard/n02113799_1234.jpg",
           size: "medium",
           pet_status: "adopting",
-          customer_id: customersData[0].id,
-          pet_extra_information_id: petExtraInfos[11].id,
+          customer_id: customersData[0]!.id,
+          pet_extra_information_id: petExtraInfos[11]!.id,
         },
         {
           name: "Oscar",
           birth_date: "2023-09-10",
           species: "dog",
           notes: "Adorable french bulldog puppy, needs training",
-          pet_image_url:
-            "https://images.dog.ceo/breeds/bulldog-french/n02108915_1234.jpg",
           size: "small",
           pet_status: "adopting",
-          customer_id: customersData[1].id,
-          pet_extra_information_id: petExtraInfos[12].id,
+          customer_id: customersData[1]!.id,
+          pet_extra_information_id: petExtraInfos[12]!.id,
         },
         {
           name: "Finn",
           birth_date: "2020-07-22",
           species: "dog",
           notes: "Intelligent border collie, loves agility",
-          pet_image_url:
-            "https://images.dog.ceo/breeds/collie-border/n02106166_1234.jpg",
           size: "medium",
           pet_status: "adopting",
-          customer_id: customersData[2].id,
-          pet_extra_information_id: petExtraInfos[13].id,
+          customer_id: customersData[2]!.id,
+          pet_extra_information_id: petExtraInfos[13]!.id,
         },
         {
           name: "Scout",
           birth_date: "2018-12-01",
           species: "dog",
           notes: "Shy shiba inu, prefers to be the only pet",
-          pet_image_url:
-            "https://images.dog.ceo/breeds/shiba/shiba-1.jpg",
           size: "medium",
           pet_status: "adopting",
-          customer_id: customersData[3].id,
-          pet_extra_information_id: petExtraInfos[14].id,
+          customer_id: customersData[3]!.id,
+          pet_extra_information_id: petExtraInfos[14]!.id,
         },
         {
           name: "Zeus",
           birth_date: "2021-03-08",
           species: "dog",
           notes: "Majestic great dane, gentle giant",
-          pet_image_url:
-            "https://images.dog.ceo/breeds/dane-great/n02109047_1234.jpg",
           size: "large",
           pet_status: "adopting",
-          customer_id: customersData[4].id,
-          pet_extra_information_id: petExtraInfos[15].id,
+          customer_id: customersData[4]!.id,
+          pet_extra_information_id: petExtraInfos[15]!.id,
         },
         // New cats (17-24)
         {
@@ -681,88 +686,80 @@ async function seed() {
           birth_date: "2019-05-15",
           species: "cat",
           notes: "Mysterious black cat, very affectionate once comfortable",
-          pet_image_url: "https://cdn2.thecatapi.com/images/MTk1NTQ2OQ.jpg",
           size: "medium",
           pet_status: "adopting",
-          customer_id: customersData[0].id,
-          pet_extra_information_id: petExtraInfos[16].id,
+          customer_id: customersData[0]!.id,
+          pet_extra_information_id: petExtraInfos[16]!.id,
         },
         {
           name: "Oliver",
           birth_date: "2017-10-20",
           species: "cat",
           notes: "Senior orange tabby with arthritis, needs gentle care",
-          pet_image_url: "https://cdn2.thecatapi.com/images/7iu.jpg",
           size: "large",
           pet_status: "adopting",
-          customer_id: customersData[1].id,
-          pet_extra_information_id: petExtraInfos[17].id,
+          customer_id: customersData[1]!.id,
+          pet_extra_information_id: petExtraInfos[17]!.id,
         },
         {
           name: "Simba",
           birth_date: "2021-08-30",
           species: "cat",
           notes: "Playful maine coon, loves to climb",
-          pet_image_url: "https://cdn2.thecatapi.com/images/OGTWqNNOt.jpg",
           size: "large",
           pet_status: "adopting",
-          customer_id: customersData[2].id,
-          pet_extra_information_id: petExtraInfos[18].id,
+          customer_id: customersData[2]!.id,
+          pet_extra_information_id: petExtraInfos[18]!.id,
         },
         {
           name: "Cleo",
           birth_date: "2020-02-28",
           species: "cat",
           notes: "Elegant siamese, very vocal and social",
-          pet_image_url: "https://cdn2.thecatapi.com/images/ai6Jps4sx.jpg",
           size: "medium",
           pet_status: "adopting",
-          customer_id: customersData[3].id,
-          pet_extra_information_id: petExtraInfos[19].id,
+          customer_id: customersData[3]!.id,
+          pet_extra_information_id: petExtraInfos[19]!.id,
         },
         {
           name: "Mochi",
           birth_date: "2022-04-12",
           species: "cat",
           notes: "Fluffy persian, needs regular grooming",
-          pet_image_url: "https://cdn2.thecatapi.com/images/e3.jpg",
           size: "medium",
           pet_status: "has_owner",
-          customer_id: customersData[4].id,
-          pet_extra_information_id: petExtraInfos[20].id,
+          customer_id: customersData[4]!.id,
+          pet_extra_information_id: petExtraInfos[20]!.id,
         },
         {
           name: "Ginger",
           birth_date: "2023-06-15",
           species: "cat",
           notes: "Curious kitten, full of energy",
-          pet_image_url: "https://cdn2.thecatapi.com/images/MjA3ODA2Nw.jpg",
           size: "small",
           pet_status: "adopting",
-          customer_id: customersData[0].id,
-          pet_extra_information_id: petExtraInfos[21].id,
+          customer_id: customersData[0]!.id,
+          pet_extra_information_id: petExtraInfos[21]!.id,
         },
         {
           name: "Smokey",
           birth_date: "2018-09-08",
           species: "cat",
           notes: "Russian blue, hypoallergenic and quiet",
-          pet_image_url: "https://cdn2.thecatapi.com/images/j6oFGLpRG.jpg",
           size: "medium",
           pet_status: "adopting",
-          customer_id: customersData[1].id,
-          pet_extra_information_id: petExtraInfos[22].id,
+          customer_id: customersData[1]!.id,
+          pet_extra_information_id: petExtraInfos[22]!.id,
         },
         {
           name: "Tiger",
           birth_date: "2019-01-25",
           species: "cat",
           notes: "Beautiful bengal, shy but sweet",
-          pet_image_url: "https://cdn2.thecatapi.com/images/O3F3_S1XN.jpg",
           size: "medium",
           pet_status: "adopting",
-          customer_id: customersData[2].id,
-          pet_extra_information_id: petExtraInfos[23].id,
+          customer_id: customersData[2]!.id,
+          pet_extra_information_id: petExtraInfos[23]!.id,
         },
         // Birds (25-27)
         {
@@ -770,33 +767,30 @@ async function seed() {
           birth_date: "2020-05-10",
           species: "bird",
           notes: "Colorful macaw, can say a few words",
-          pet_image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Ara_ararauna_Luc_Viatour.jpg/220px-Ara_ararauna_Luc_Viatour.jpg",
           size: "medium",
           pet_status: "adopting",
-          customer_id: customersData[3].id,
-          pet_extra_information_id: petExtraInfos[24].id,
+          customer_id: customersData[3]!.id,
+          pet_extra_information_id: petExtraInfos[24]!.id,
         },
         {
           name: "Kiwi",
           birth_date: "2021-11-20",
           species: "bird",
           notes: "Friendly cockatiel, loves to whistle",
-          pet_image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Cockatiel_crest.jpg/220px-Cockatiel_crest.jpg",
           size: "small",
           pet_status: "adopting",
-          customer_id: customersData[4].id,
-          pet_extra_information_id: petExtraInfos[25].id,
+          customer_id: customersData[4]!.id,
+          pet_extra_information_id: petExtraInfos[25]!.id,
         },
         {
           name: "Sunny",
           birth_date: "2016-03-15",
           species: "bird",
           notes: "Senior budgie, calm and gentle",
-          pet_image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Melopsittacus_undulatus_-facing_left-8a.jpg/220px-Melopsittacus_undulatus_-facing_left-8a.jpg",
           size: "small",
           pet_status: "adopting",
-          customer_id: customersData[0].id,
-          pet_extra_information_id: petExtraInfos[26].id,
+          customer_id: customersData[0]!.id,
+          pet_extra_information_id: petExtraInfos[26]!.id,
         },
         // Fish (28-29)
         {
@@ -804,22 +798,20 @@ async function seed() {
           birth_date: "2023-01-05",
           species: "fish",
           notes: "Beautiful betta fish, needs own tank",
-          pet_image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Siamese_fighting_fish_-_Betta_splendens.jpg/220px-Siamese_fighting_fish_-_Betta_splendens.jpg",
           size: "small",
           pet_status: "adopting",
-          customer_id: customersData[1].id,
-          pet_extra_information_id: petExtraInfos[27].id,
+          customer_id: customersData[1]!.id,
+          pet_extra_information_id: petExtraInfos[27]!.id,
         },
         {
           name: "Nemo",
           birth_date: "2022-08-22",
           species: "fish",
           notes: "Clownfish, needs saltwater aquarium",
-          pet_image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Amphiprion_ocellaris_%28Clown_anemonefish%29_in_Heteractis_magnifica_%28Sea_anemone%29.jpg/220px-Amphiprion_ocellaris_%28Clown_anemonefish%29_in_Heteractis_magnifica_%28Sea_anemone%29.jpg",
           size: "small",
           pet_status: "adopting",
-          customer_id: customersData[2].id,
-          pet_extra_information_id: petExtraInfos[27].id,
+          customer_id: customersData[2]!.id,
+          pet_extra_information_id: petExtraInfos[27]!.id,
         },
         // Other (30-31)
         {
@@ -827,22 +819,20 @@ async function seed() {
           birth_date: "2022-03-18",
           species: "other",
           notes: "Friendly holland lop rabbit, litter trained",
-          pet_image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Oryctolagus_cuniculus_Rcdo.jpg/220px-Oryctolagus_cuniculus_Rcdo.jpg",
           size: "small",
           pet_status: "adopting",
-          customer_id: customersData[3].id,
-          pet_extra_information_id: petExtraInfos[28].id,
+          customer_id: customersData[3]!.id,
+          pet_extra_information_id: petExtraInfos[28]!.id,
         },
         {
           name: "Peanut",
           birth_date: "2023-05-01",
           species: "other",
           notes: "Cute syrian hamster, loves running on wheel",
-          pet_image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Pearl_Winter_White_Russian_Dwarf_Hamster_-_Front.jpg/220px-Pearl_Winter_White_Russian_Dwarf_Hamster_-_Front.jpg",
           size: "small",
           pet_status: "adopting",
-          customer_id: customersData[4].id,
-          pet_extra_information_id: petExtraInfos[29].id,
+          customer_id: customersData[4]!.id,
+          pet_extra_information_id: petExtraInfos[29]!.id,
         },
       ])
       .returning();
@@ -854,7 +844,7 @@ async function seed() {
     await db.insert(pet_medical_records).values([
       // Original 6
       {
-        pet_id: petsData[0].id,
+        pet_id: petsData[0]!.id,
         vaccination_name: "Rabies",
         vaccination_date: "2024-01-15",
         next_vaccination_date: "2025-01-15",
@@ -863,7 +853,7 @@ async function seed() {
         allergies: "None",
       },
       {
-        pet_id: petsData[1].id,
+        pet_id: petsData[1]!.id,
         vaccination_name: "FVRCP",
         vaccination_date: "2024-02-20",
         next_vaccination_date: "2025-02-20",
@@ -872,7 +862,7 @@ async function seed() {
         allergies: "Chicken",
       },
       {
-        pet_id: petsData[2].id,
+        pet_id: petsData[2]!.id,
         vaccination_name: "DHPP",
         vaccination_date: "2024-03-10",
         next_vaccination_date: "2025-03-10",
@@ -1143,15 +1133,15 @@ async function seed() {
 
     // 8. Create Pet Images
     console.log("📸 Creating pet images...");
-    const petImagesData = petsData.map((pet) => ({
+    const petImagesData = petsData.map((pet, index) => ({
       pet_id: pet.id,
-      image_url: pet.pet_image_url,
+      image_url: petImageUrls[index]!,
       is_primary: true,
       display_order: 1,
     }));
     // Add extra image for Max
     petImagesData.push({
-      pet_id: petsData[0].id,
+      pet_id: petsData[0]!.id,
       image_url:
         "https://images.dog.ceo/breeds/retriever-golden/n02099601_2209.jpg",
       is_primary: false,
@@ -1318,24 +1308,24 @@ async function seed() {
     console.log("❤️  Creating favorites...");
     await db.insert(favorites).values([
       {
-        customer_id: customersData[2].id,
-        pet_id: petsData[0].id,
+        customer_id: customersData[2]!.id,
+        adoption_post_id: adoptionPostsData[0]!.id,
       },
       {
-        customer_id: customersData[2].id,
-        pet_id: petsData[2].id,
+        customer_id: customersData[2]!.id,
+        adoption_post_id: adoptionPostsData[2]!.id,
       },
       {
-        customer_id: customersData[3].id,
-        pet_id: petsData[0].id,
+        customer_id: customersData[3]!.id,
+        adoption_post_id: adoptionPostsData[0]!.id,
       },
       {
-        customer_id: customersData[3].id,
-        pet_id: petsData[5].id,
+        customer_id: customersData[3]!.id,
+        adoption_post_id: adoptionPostsData[4]!.id,
       },
       {
-        customer_id: customersData[4].id,
-        pet_id: petsData[1].id,
+        customer_id: customersData[4]!.id,
+        adoption_post_id: adoptionPostsData[1]!.id,
       },
     ]);
 
