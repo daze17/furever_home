@@ -1,4 +1,4 @@
-import { FavoriteModel, PetExtraInformationModel, PetModel } from "@/models";
+import { PetExtraInformationModel, PetModel } from "@/models";
 import { paginationQuery } from "@/models/pagination";
 import { PetSizeEnum, PetSpeciesEnum } from "common_api";
 import { z } from "zod";
@@ -22,7 +22,6 @@ export const CreatePetRequestBody = PetModel.pick({
   birth_date: true,
   species: true,
   notes: true,
-  pet_image_url: true,
   size: true,
   pet_status: true,
 }).extend({
@@ -44,7 +43,6 @@ export const UpdatePetRequestBody = PetModel.pick({
   birth_date: true,
   species: true,
   notes: true,
-  pet_image_url: true,
   size: true,
   pet_status: true,
   pet_extra_information_id: true,
@@ -74,8 +72,3 @@ export const PetsQuery = z
   .partial()
   .optional();
 export type PetsQuery = z.infer<typeof PetsQuery>;
-
-// export const AddFavoritePetRequestBody = FavoriteModel.pick({
-//   pet_id: true,
-// });
-// export type AddFavoritePetRequestBody = z.infer<typeof AddFavoritePetRequestBody>;

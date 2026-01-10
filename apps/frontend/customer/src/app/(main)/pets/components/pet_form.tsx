@@ -34,11 +34,6 @@ const petFormSchema = z.object({
   birth_date: z.string().optional(),
   species: z.enum(["dog", "cat", "bird", "fish", "other"]),
   notes: z.string().optional(),
-  pet_image_url: z
-    .string()
-    .url("Зөв URL байх ёстой")
-    .optional()
-    .or(z.literal("")),
   size: z.enum(["small", "medium", "large"]).optional(),
   pet_status: z.enum(["adopting", "has_owner", "inactive"]),
   pet_extra_information_id: z.string().uuid().optional().or(z.literal("")),
@@ -62,7 +57,6 @@ export function PetForm({ pet, mode }: PetFormProps) {
       birth_date: pet?.birth_date || "",
       species: pet?.species || "dog",
       notes: pet?.notes || "",
-      pet_image_url: pet?.pet_image_url || "",
       size: pet?.size || undefined,
       pet_status: pet?.pet_status || "adopting",
       pet_extra_information_id: pet?.pet_extra_information_id || "",
@@ -80,7 +74,6 @@ export function PetForm({ pet, mode }: PetFormProps) {
             birth_date: data.birth_date || null,
             species: data.species,
             notes: data.notes || null,
-            pet_image_url: data.pet_image_url || null,
             size: data.size || null,
             pet_status: data.pet_status,
             pet_extra_information: {
@@ -113,7 +106,6 @@ export function PetForm({ pet, mode }: PetFormProps) {
             birth_date: data.birth_date || null,
             species: data.species,
             notes: data.notes || null,
-            pet_image_url: data.pet_image_url || null,
             size: data.size || null,
             pet_status: data.pet_status,
             pet_extra_information_id: data.pet_extra_information_id || null,
@@ -254,27 +246,6 @@ export function PetForm({ pet, mode }: PetFormProps) {
             )}
           />
         </div>
-
-        <FormField
-          control={form.control}
-          name="pet_image_url"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Зургийн URL</FormLabel>
-              <FormControl>
-                <Input
-                  type="url"
-                  placeholder="https://example.com/pet-image.jpg"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>
-                Тэжээвэр амьтны зургийн URL оруулна уу
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
 
         <FormField
           control={form.control}
