@@ -4,18 +4,11 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
-      "@/interceptors/*": [
-        "./src/common/interceptors/*"
-      ],
-      "@/interfaces/*": [
-        "./src/common/interfaces/*"
-      ],
-      "@/test/*": [
-        "./test/*"
-      ],
-      "@/*": [
-        "./src/*"
-      ]
-    }
-  }
+      "@/common/*": ["./src/common/*"],
+      "@/interceptors/*": ["./src/common/interceptors/*"],
+      "@/interfaces/*": ["./src/common/interfaces/*"],
+      "@/test/*": ["./test/*"],
+      "@/*": ["./src/*"],
+    },
+  },
 }
