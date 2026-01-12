@@ -7,6 +7,7 @@ export const configuration = (overrides?: Partial<ENV>) => {
     app: {
       env: env.APP_ENV,
       port: env.APP_PORT,
+      assetHost: env.ASSET_HOST,
     },
     aws: {
       accessKey: env.AWS_ACCESS_KEY,

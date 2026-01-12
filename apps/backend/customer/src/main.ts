@@ -1,4 +1,4 @@
-// import fastifyMultipart from "@fastify/multipart";
+import fastifyMultipart from "@fastify/multipart";
 import type { NestApplicationOptions } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
@@ -42,12 +42,13 @@ async function bootstrap() {
   );
 
   // Enable multipart/form-data support
-  // await app.register(fastifyMultipart, {
-  //   limits: {
-  //     fileSize: 10 * 1024 * 1024, // 10MB,
-  //     files: 5,
-  //   },
-  // });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await app.register(fastifyMultipart as any, {
+    limits: {
+      fileSize: 10 * 1024 * 1024, // 10MB
+      files: 5,
+    },
+  });
 
   // initSentry(app);
 

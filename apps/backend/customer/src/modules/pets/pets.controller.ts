@@ -1,6 +1,7 @@
-import { Controller } from "@nestjs/common";
+import { Controller, UploadedFiles, UseInterceptors } from "@nestjs/common";
 import { TsRestHandler, tsRestHandler } from "@ts-rest/nest";
 import { customerContract, PetsListResponseBody } from "customer_api";
+import { FilesFastifyInterceptor } from "fastify-file-interceptor";
 
 import { Public } from "@/common/decorators/public";
 
@@ -122,5 +123,19 @@ export class PetsController {
         };
       },
     );
+  }
+
+  @Public()
+  @TsRestHandler(customerContract.pets.uploadPetImages)
+  @UseInterceptors(FilesFastifyInterceptor("files", 18, {}))
+  async uploadPetImages(@UploadedFiles() files: Express.Multer.File[]) {
+    return tsRestHandler(customerContract.pets.uploadPetImages, async () => {
+      const uploadedFilesPaths = await this.petsService.uploadPetImages(files);
+
+      return {
+        status: 201,
+        body: uploadedFilesPaths,
+      };
+    });
   }
 }

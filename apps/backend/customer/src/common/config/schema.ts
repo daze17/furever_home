@@ -3,6 +3,7 @@ import { z } from "zod";
 const commonSchema = z.object({
   APP_ENV: z.enum(["development", "production", "staging"]),
   APP_PORT: z.coerce.number(),
+  ASSET_HOST: z.string(),
   DATABASE_URL: z.string(),
   EMAIL_FROM_ADDRESS: z.string().email(),
   EMAIL_FROM_NAME: z.string(),

@@ -112,4 +112,14 @@ export const petContract = c.router({
     },
     summary: "Delete a pet by ID",
   },
+  uploadPetImages: {
+    method: "POST",
+    path: "/pets/upload",
+    body: z.object({}),
+    contentType: "multipart/form-data",
+    responses: {
+      201: z.string().array(),
+    },
+    summary: "upload file and return aws s3 path",
+  },
 });
