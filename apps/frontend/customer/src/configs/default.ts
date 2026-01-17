@@ -20,12 +20,12 @@ export const publicRoutes: (string | RegExp)[] = [
   "/users",
   /^\/users.*$/,
   "/reset-password",
-  "/faq"
+  "/faq",
 ];
-const commonRoutes: (string | RegExp)[] = ["/profile", "/settings"];
 export const allowedRoutes: (string | RegExp)[] = [
-  ...commonRoutes,
   "/",
+  /^\/profile\/.*$/,
+  "/settings",
   "/my_pets",
   /^\/my_pets\/.*$/,
   "/pets",
