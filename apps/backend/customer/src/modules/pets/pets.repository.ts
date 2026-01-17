@@ -5,7 +5,7 @@ import {
   CreatePetRequestBody,
   PetsQuery,
 } from "customer_api";
-import { pet_extra_informations, pets } from "database";
+import { pet_extra_informations, pet_images, pets } from "database";
 import {
   and,
   asc,
@@ -83,7 +83,7 @@ export class PetsRepository {
     customerId: string,
     data: CreatePetRequestBody,
   ) {
-    await this.db.transaction(async (transaction) => {
+    return await this.db.transaction(async (transaction) => {
       const {
         name,
         birth_date,
@@ -92,6 +92,7 @@ export class PetsRepository {
         size,
         pet_status,
         pet_extra_information,
+        image_urls,
       } = data;
 
       const {
@@ -117,16 +118,33 @@ export class PetsRepository {
         })
         .returning();
 
-      await transaction.insert(pets).values({
-        name,
-        birth_date,
-        species,
-        notes,
-        size,
-        pet_status,
-        customer_id: customerId,
-        pet_extra_information_id: createdPetExtraInformation.find(Boolean)!.id,
-      });
+      const [createdPet] = await transaction
+        .insert(pets)
+        .values({
+          name,
+          birth_date,
+          species,
+          notes,
+          size,
+          pet_status,
+          customer_id: customerId,
+          pet_extra_information_id: createdPetExtraInformation.find(Boolean)!.id,
+        })
+        .returning({ id: pets.id });
+
+      // Create pet_images if URLs provided
+      if (image_urls && image_urls.length > 0) {
+        await transaction.insert(pet_images).values(
+          image_urls.map((url, index) => ({
+            pet_id: createdPet!.id,
+            image_url: url,
+            is_primary: index === 0,
+            display_order: index,
+          })),
+        );
+      }
+
+      return createdPet!.id;
     });
   }
 

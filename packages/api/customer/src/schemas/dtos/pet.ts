@@ -26,6 +26,7 @@ export const CreatePetRequestBody = PetModel.pick({
   pet_status: true,
 }).extend({
   pet_extra_information: CreatePetExtraInformationRequestBody,
+  image_urls: z.string().url().array().optional(),
 });
 export type CreatePetRequestBody = z.infer<typeof CreatePetRequestBody>;
 
