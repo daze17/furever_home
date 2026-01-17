@@ -24,4 +24,21 @@ export class CustomerController {
       },
     );
   }
+
+  @TsRestHandler(customerContract.customer.updateCustomerProfile)
+  async updateCustomerProfile() {
+    return tsRestHandler(
+      customerContract.customer.updateCustomerProfile,
+      async ({ body }) => {
+        const response = await this.customerService.updateCustomerProfile(body);
+
+        const parsedData = CustomerProfileResponseBody.parse(response);
+
+        return {
+          status: 200,
+          body: parsedData,
+        };
+      },
+    );
+  }
 }

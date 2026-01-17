@@ -33,3 +33,17 @@ export const CustomerProfileResponseBody = CustomerModel.pick({
 export type CustomerProfileResponseBody = z.infer<
   typeof CustomerProfileResponseBody
 >;
+
+export const UpdateCustomerProfileRequestBody = CustomerModel.pick({
+  first_name: true,
+  last_name: true,
+  nickname: true,
+  address: true,
+  phone: true,
+  profile_image_url: true,
+  gender: true,
+  zip_code: true,
+}).partial();
+export type UpdateCustomerProfileRequestBody = z.infer<
+  typeof UpdateCustomerProfileRequestBody
+>;

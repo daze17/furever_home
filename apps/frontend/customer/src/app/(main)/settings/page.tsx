@@ -1,5 +1,6 @@
 import { client } from "@/services/client.server";
-import { SettingsForm } from "./settings_form";
+
+import SettingsForm from "./settings_form";
 
 const SettingsPage = async () => {
   const response = await client.customerSettings.getCustomerSettings();
@@ -22,7 +23,9 @@ const SettingsPage = async () => {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
-          <h1 className="text-2xl font-bold">Тохиргоо ачааллахад алдаа гарлаа</h1>
+          <h1 className="text-2xl font-bold">
+            Тохиргоо ачааллахад алдаа гарлаа
+          </h1>
           <p className="text-muted-foreground">Дахин оролдоно уу.</p>
         </div>
       </div>

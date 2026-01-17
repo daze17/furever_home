@@ -1,5 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { CreateCustomerProfileRequestBody } from "customer_api";
+import {
+  CreateCustomerProfileRequestBody,
+  UpdateCustomerProfileRequestBody,
+} from "customer_api";
 import { customer_accounts, customers } from "database";
 import { and, eq, exists } from "drizzle-orm";
 
@@ -57,5 +60,21 @@ export class CustomerRepository {
       gender,
       zip_code,
     });
+  }
+
+  async updateCustomerProfileById(
+    id: string,
+    data: UpdateCustomerProfileRequestBody,
+  ) {
+    const [updated] = await this.db
+      .update(customers)
+      .set({
+        ...data,
+        updated_at: new Date(),
+      })
+      .where(eq(customers.id, id))
+      .returning();
+
+    return updated;
   }
 }
