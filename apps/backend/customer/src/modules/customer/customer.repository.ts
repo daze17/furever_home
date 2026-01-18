@@ -66,15 +66,12 @@ export class CustomerRepository {
     id: string,
     data: UpdateCustomerProfileRequestBody,
   ) {
-    const [updated] = await this.db
+    await this.db
       .update(customers)
       .set({
         ...data,
         updated_at: new Date(),
       })
-      .where(eq(customers.id, id))
-      .returning();
-
-    return updated;
+      .where(eq(customers.id, id));
   }
 }

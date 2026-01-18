@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 
@@ -35,12 +35,14 @@ import {
 
 import { client } from "@/services/client";
 
-type ProfileEditFormProps = {
-  initialProfile: CustomerProfileResponseBody;
-};
+import ImagePreview from "./image_preview";
 
-const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ initialProfile }) => {
+const ProfileEditForm: React.FC<{
+  initialProfile: CustomerProfileResponseBody;
+}> = ({ initialProfile }) => {
   const [isPending, setIsPending] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   const form = useForm<UpdateCustomerProfileRequestBody>({
@@ -56,6 +58,42 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ initialProfile }) => 
       profile_image_url: initialProfile.profile_image_url ?? "",
     },
   });
+
+  const profileImageUrl = form.watch("profile_image_url");
+
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setIsUploading(true);
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await client.customer.uploadProfileImage({
+        body: formData,
+      });
+
+      if (response.status === 201) {
+        form.setValue("profile_image_url", response.body);
+        toast.success("Зураг амжилттай оруулагдлаа");
+      } else {
+        toast.error("Зураг оруулахад алдаа гарлаа");
+      }
+    } catch (error) {
+      toast.error("Зураг оруулахад алдаа гарлаа", {
+        description: "Дахин оролдоно уу.",
+      });
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
 
   const onSubmit: SubmitHandler<UpdateCustomerProfileRequestBody> = async (
     data,
@@ -112,7 +150,36 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ initialProfile }) => 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <FormField
                   control={form.control}
-                  name="first_name"
+                  name="profile_image_url"
+                  render={() => (
+                    <FormItem className="col-span-2">
+                      <FormLabel>Профайл зураг</FormLabel>
+                      <div className="flex items-center gap-4">
+                        <ImagePreview
+                          imageUrl={profileImageUrl}
+                          size={80}
+                          onClick={() => fileInputRef.current?.click()}
+                          isUploading={isUploading}
+                        />
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/jpeg,image/jpg,image/png"
+                          className="hidden"
+                          onChange={handleImageUpload}
+                          disabled={isPending || isUploading}
+                        />
+                        <span className="text-sm text-muted-foreground">
+                          Зураг солихын тулд дээр дарна уу
+                        </span>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="last_name"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Овог</FormLabel>
@@ -126,7 +193,7 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ initialProfile }) => 
 
                 <FormField
                   control={form.control}
-                  name="last_name"
+                  name="first_name"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Нэр</FormLabel>
@@ -227,25 +294,7 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ initialProfile }) => 
                     <FormLabel>Шуудангийн код</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Шуудангийн код"
-                        {...field}
-                        value={field.value ?? ""}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="profile_image_url"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Профайл зургийн URL</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="https://example.com/image.jpg"
+                        placeholder="Зип код"
                         {...field}
                         value={field.value ?? ""}
                       />

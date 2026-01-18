@@ -22,10 +22,19 @@ export const customerProfileContract = c.router({
     path: "/profile",
     body: UpdateCustomerProfileRequestBody,
     responses: {
-      200: CustomerProfileResponseBody,
-      400: CustomError,
+      200: z.object({}),
       404: CustomError,
     },
     summary: "update profile",
+  },
+  uploadProfileImage: {
+    method: "POST",
+    path: "/profile/upload-image",
+    body: z.object({}),
+    contentType: "multipart/form-data",
+    responses: {
+      201: z.string(),
+    },
+    summary: "Upload profile image and return S3 URL",
   },
 });
