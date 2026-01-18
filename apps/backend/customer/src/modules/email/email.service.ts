@@ -73,7 +73,13 @@ export class EmailService {
     try {
       await this.mailerService.sendMail(params);
     } catch (error) {
-      this.logger.error(`Failed to send email to ${to}: ${title}`, error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorStack = error instanceof Error ? error.stack : undefined;
+      this.logger.error({
+        msg: `Failed to send email to ${to}: ${title}`,
+        error: errorMessage,
+        stack: errorStack,
+      });
       throw new Error("EMAIL_SENDING_FAILED");
     }
   }
