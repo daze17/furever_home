@@ -19,7 +19,7 @@ export const Header = () => {
 
   return (
     <header className="fixed top-0 z-50 w-full border-b bg-white/95">
-      <div className="container mx-auto flex h-[80px] items-center justify-between px-5">
+      <div className="container mx-auto flex h-[80px] w-full items-center justify-between px-5">
         <Link
           href="/"
           className="flex items-center gap-2 transition-transform hover:scale-105"
@@ -34,27 +34,35 @@ export const Header = () => {
 
         <Navigation />
 
-        <div className="hidden items-center gap-2 md:flex">
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/favorites" className="flex items-center gap-2">
-              <Heart size={20} strokeWidth={2} />
-              <span className="font-medium">Таалагдсан</span>
-            </Link>
-          </Button>
-
-          {session ? (
-            <ProfileSection profile={session} />
-          ) : (
-            <Button asChild>
-              <Link href="/login" className="flex items-center gap-2">
-                <CircleUserRound size={20} strokeWidth={2} />
-                <span className="font-medium">Нэвтрэх</span>
-              </Link>
-            </Button>
-          )}
+        <div className="flex items-center gap-2">
+          <div className="hidden items-center gap-2 md:flex">
+            {session ? (
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href="/favorites" className="flex items-center gap-2">
+                    <Heart size={20} strokeWidth={2} />
+                    <span className="font-medium">Таалагдсан</span>
+                  </Link>
+                </Button>
+                <ProfileSection profile={session} />
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Button asChild variant={"ghost"}>
+                  <Link href="/login" className="flex items-center gap-2">
+                    <span className="font-medium">Нэвтрэх</span>
+                  </Link>
+                </Button>
+                <Button asChild>
+                  <Link href="/register" className="flex items-center gap-2">
+                    <span className="font-medium">Бүртгүүлэх</span>
+                  </Link>
+                </Button>
+              </div>
+            )}
+          </div>
+          <MobileNav profile={session} />
         </div>
-
-        <MobileNav />
       </div>
     </header>
   );

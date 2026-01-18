@@ -132,14 +132,14 @@ export const RegisterForm: React.FC<Props> = ({ redirectTo }) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <>
+                      <div>
                         <Input
                           {...field}
                           value={field.value ?? ""}
                           disabled={form.formState.isSubmitting}
                           placeholder={"Имэйл"}
                         />
-                      </>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

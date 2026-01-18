@@ -1,10 +1,10 @@
 "use client";
 
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Loader2 } from "lucide-react";
 import { z } from "zod";
 
 import {
@@ -141,17 +141,14 @@ export function PetDetailsForm({
               </h3>
               <div className="flex gap-2 overflow-x-auto pb-2">
                 {uploadedImages.map((img, index) => (
-                  <div
-                    key={index}
-                    className="relative h-16 w-16 flex-shrink-0"
-                  >
+                  <div key={index} className="relative h-16 w-16 flex-shrink-0">
                     <img
                       src={img.preview}
                       alt={`Uploaded ${index + 1}`}
                       className="h-full w-full rounded object-cover"
                     />
                     {index === 0 && (
-                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-500 text-[10px] text-white">
+                      <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-500 text-[10px] text-white">
                         1
                       </span>
                     )}
@@ -322,12 +319,8 @@ export function PetDetailsForm({
                         <SelectContent>
                           <SelectItem value="none">Байхгүй</SelectItem>
                           <SelectItem value="basic">Анхан шат</SelectItem>
-                          <SelectItem value="intermediate">
-                            Дунд шат
-                          </SelectItem>
-                          <SelectItem value="advanced">
-                            Ахисан шат
-                          </SelectItem>
+                          <SelectItem value="intermediate">Дунд шат</SelectItem>
+                          <SelectItem value="advanced">Ахисан шат</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -427,10 +420,10 @@ export function PetDetailsForm({
             className="bg-[#11D0BC] hover:bg-[#0fb8a6]"
           >
             {isSubmitting ? (
-              <>
+              <div>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Үүсгэж байна...
-              </>
+              </div>
             ) : (
               "Тэжээвэр амьтан үүсгэх"
             )}

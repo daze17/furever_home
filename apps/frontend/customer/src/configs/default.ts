@@ -10,6 +10,7 @@ export const authRoutes: (string | RegExp)[] = [
   "/email_sent",
   "/forgot-password",
   /^\/forgot-password\/.*$/,
+  /^\/reset-password\/.*$/,
   "/verify",
   /^\/verify\/.*$/,
 ];

@@ -12,7 +12,7 @@ export const GoogleRegister: React.FC = () => {
   // }
 
   return (
-    <>
+    <div>
       {/* FIXME: rerun after logout */}
       <Script src="https://accounts.google.com/gsi/client" async />
       <div
@@ -33,6 +33,6 @@ export const GoogleRegister: React.FC = () => {
         data-logo_alignment="left"
         style={{ colorScheme: "auto", height: "44px" }}
       />
-    </>
+    </div>
   );
 };

@@ -1,24 +1,25 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { CloudinaryUploadWidgetInfo } from "next-cloudinary";
 import { useState } from "react";
+
+import { CloudinaryUploadWidgetInfo } from "next-cloudinary";
+import dynamic from "next/dynamic";
 
 const CldUploadWidget = dynamic(
   () => import("next-cloudinary").then((mod) => mod.CldUploadWidget),
-  { ssr: false }
+  { ssr: false },
 );
 
 const CldImage = dynamic(
   () => import("@/components/cld_image").then((mod) => mod.CldImage),
-  { ssr: false }
+  { ssr: false },
 );
 
 const ImageUploadPage = () => {
   const [resource, setResource] = useState<CloudinaryUploadWidgetInfo>();
 
   return (
-    <>
+    <div>
       <CldUploadWidget
         options={{ sources: ["local"] }}
         signatureEndpoint="/api/sign-cloudinary-params"
@@ -45,7 +46,7 @@ const ImageUploadPage = () => {
           height={200}
         />
       )}
-    </>
+    </div>
   );
 };
 export default ImageUploadPage;

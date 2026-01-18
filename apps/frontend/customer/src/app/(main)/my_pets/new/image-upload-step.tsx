@@ -227,15 +227,15 @@ export function ImageUploadStep({
             className="bg-[#11D0BC] hover:bg-[#0fb8a6]"
           >
             {isUploading ? (
-              <>
+              <div>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Байршуулж байна...
-              </>
+              </div>
             ) : (
-              <>
+              <div>
                 Үргэлжлүүлэх
                 <ArrowRight className="ml-2 h-4 w-4" />
-              </>
+              </div>
             )}
           </Button>
         </div>
