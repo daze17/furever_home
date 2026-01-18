@@ -43,23 +43,23 @@ export const ForgotPasswordForm: React.FC = () => {
 
       switch (response.status) {
         case 201:
-          toast.success("Password reset email sent", {
-            description: "Check your email for reset instructions",
+          toast.success("Нууц үг сэргээх имэйл илгээгдлээ", {
+            description: "Имэйлээ шалгана уу",
           });
           await setResetEmailCookie(data.email);
           router.push("/forgot-password/email-sent");
           break;
         case 400:
-          toast.error("Invalid email address");
+          toast.error("Имэйл хаяг буруу байна");
           break;
         default:
-          toast.error("Something went wrong", {
-            description: "Please try again later",
+          toast.error("Алдаа гарлаа", {
+            description: "Дараа дахин оролдоно уу",
           });
       }
     } catch (error) {
-      toast.error("Error", {
-        description: "Unable to send password reset email",
+      toast.error("Алдаа", {
+        description: "Нууц үг сэргээх имэйл илгээх боломжгүй",
       });
     } finally {
       setIsPending(false);
@@ -72,10 +72,10 @@ export const ForgotPasswordForm: React.FC = () => {
         <Card className="shadow-xl">
           <CardContent className="flex flex-col items-center gap-y-5 p-10">
             <div className="flex w-full flex-col items-center gap-y-2.5">
-              <h1 className="text-2xl font-semibold">Forgot Password</h1>
+              <h1 className="text-2xl font-semibold">Нууц үг сэргээх</h1>
               <p className="text-center text-sm text-muted-foreground">
-                Enter your email address and we&apos;ll send you a link to
-                reset your password
+                Имэйл хаягаа оруулна уу, бид танд нууц үг сэргээх холбоос илгээх
+                болно
               </p>
             </div>
 
@@ -93,7 +93,7 @@ export const ForgotPasswordForm: React.FC = () => {
                         {...field}
                         value={field.value ?? ""}
                         type="email"
-                        placeholder="Email address"
+                        placeholder="Имэйл хаяг"
                       />
                     </FormControl>
                     <FormMessage />
@@ -103,19 +103,19 @@ export const ForgotPasswordForm: React.FC = () => {
             </fieldset>
 
             <Button disabled={isPending} className="w-full">
-              {isPending ? "Sending..." : "Send Reset Link"}
+              {isPending ? "Илгээж байна..." : "Холбоос илгээх"}
             </Button>
 
             <div className="flex w-full items-center justify-center gap-x-1 text-xs">
               <span className="text-muted-foreground">
-                Remember your password?
+                Нууц үгээ санаж байна уу?
               </span>
               <button
                 type="button"
                 onClick={() => router.push("/login")}
                 className="text-blue-500 underline"
               >
-                Back to login
+                Нэвтрэх хуудас руу буцах
               </button>
             </div>
           </CardContent>

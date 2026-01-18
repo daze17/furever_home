@@ -118,7 +118,7 @@ export const LoginForm: React.FC<Props> = ({ redirectTo }) => {
               </div>
               <div className="relative flex justify-center text-xs uppercase">
                 <span className="bg-background px-2 text-muted-foreground">
-                  {`Or continue with`}
+                  {`Эсвэл`}
                 </span>
               </div>
             </div>
@@ -136,7 +136,7 @@ export const LoginForm: React.FC<Props> = ({ redirectTo }) => {
                         {...field}
                         value={field.value ?? ""}
                         disabled={form.formState.isSubmitting}
-                        placeholder={"email"}
+                        placeholder={"Имэйл хаяг"}
                       />
                     </FormControl>
                     <FormMessage />
@@ -155,7 +155,7 @@ export const LoginForm: React.FC<Props> = ({ redirectTo }) => {
                         value={field.value ?? ""}
                         disabled={form.formState.isSubmitting}
                         type="password"
-                        placeholder={"password"}
+                        placeholder={"Нууц үг"}
                       />
                     </FormControl>
                     <FormMessage />
@@ -170,22 +170,22 @@ export const LoginForm: React.FC<Props> = ({ redirectTo }) => {
               className="w-full"
               tabIndex={isPending ? -1 : undefined}
             >
-              {`Login`}
+              {`Нэвтрэх`}
             </Button>
             <div className="flex w-full items-center justify-center">
               <Link
                 href="/forgot-password"
                 className="text-sm text-blue-500 underline"
               >
-                Forgot password?
+                Нууц үгээ мартсан уу?
               </Link>
             </div>
             <p>
-              Don&#39;t have an account?{" "}
+              Бүртгэл байхгүй юу?{" "}
               <Link href="/register" className="text-blue-500 underline">
-                Sign up
+                Бүртгүүлэх
               </Link>{" "}
-              for Furever Home
+              Furever Home-д
             </p>
           </CardContent>
         </Card>
