@@ -32,7 +32,6 @@ export class CustomerController {
       customerContract.customer.updateCustomerProfile,
       async ({ body }) => {
         await this.customerService.updateCustomerProfile(body);
-        console.log(body, "body");
 
         return {
           status: 200,

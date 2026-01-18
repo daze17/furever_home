@@ -159,6 +159,7 @@ export class AuthController {
     );
   }
 
+  @Public()
   @TsRestHandler(customerContract.auth.forgotPassword)
   async forgotPassword() {
     return tsRestHandler(
