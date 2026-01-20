@@ -174,7 +174,7 @@ export const LoginForm: React.FC<Props> = ({ redirectTo }) => {
             </Button>
             <div className="flex w-full items-center justify-center">
               <Link
-                href="/forgot-password"
+                href="/forgot_password"
                 className="text-sm text-blue-500 underline"
               >
                 Нууц үгээ мартсан уу?

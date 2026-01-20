@@ -90,7 +90,7 @@ export const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
           toast.error("Хүчингүй эсвэл хугацаа дууссан токен", {
             description: "Шинэ нууц үг сэргээх холбоос авна уу",
           });
-          setTimeout(() => router.push("/forgot-password"), 2000);
+          setTimeout(() => router.push("/forgot_password"), 2000);
           break;
         default:
           toast.error("Алдаа гарлаа", {

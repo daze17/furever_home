@@ -22,7 +22,7 @@ const ImageUploadPage = () => {
     <div>
       <CldUploadWidget
         options={{ sources: ["local"] }}
-        signatureEndpoint="/api/sign-cloudinary-params"
+        signatureEndpoint="/api/sign_cloudinary_params"
         onSuccess={(result, { widget }) => {
           setResource(result?.info as CloudinaryUploadWidgetInfo); // { public_id, secure_url, etc }
         }}

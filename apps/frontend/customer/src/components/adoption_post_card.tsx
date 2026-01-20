@@ -22,7 +22,8 @@ import { FavoriteRemoveButton } from "./favorite_remove_button";
 
 export const AdoptionPostCard: React.FC<{
   post: AdoptionPostResponseBody;
-}> = ({ post }) => {
+  linkPrefix?: string;
+}> = ({ post, linkPrefix = "/pets" }) => {
   const pet = post.pet;
   const petAge = pet.birth_date
     ? new Date().getFullYear() - new Date(pet.birth_date).getFullYear()
@@ -106,7 +107,7 @@ export const AdoptionPostCard: React.FC<{
           className="w-full rounded-full bg-[#11D0BC] py-2 transition-colors hover:bg-[#0fb8a6]"
           asChild
         >
-          <Link href={`/pets/${post.id}`}>Дэлгэрэнгүй</Link>
+          <Link href={`${linkPrefix}/${post.id}`}>Дэлгэрэнгүй</Link>
         </Button>
       </CardFooter>
     </Card>

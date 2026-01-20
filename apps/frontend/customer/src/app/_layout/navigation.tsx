@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
 import { cn } from "utils";
 
 export const navLinks = [
@@ -11,7 +12,7 @@ export const navLinks = [
   },
   {
     label: "Тэжээвэр амьтад",
-    href: "/pets",
+    href: "/adoption_posts",
   },
   {
     label: "Асуулт хариулт",

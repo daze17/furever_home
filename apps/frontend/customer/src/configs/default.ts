@@ -8,19 +8,20 @@ export const authRoutes: (string | RegExp)[] = [
   "/register/google/callback",
   "/register/create-profile",
   "/email_sent",
-  "/forgot-password",
-  /^\/forgot-password\/.*$/,
-  /^\/reset-password\/.*$/,
+  "/forgot_password",
+  /^\/forgot_password\/.*$/,
+  /^\/reset_password\/.*$/,
   "/verify",
   /^\/verify\/.*$/,
 ];
 export const publicRoutes: (string | RegExp)[] = [
   "/",
   "/pets",
+  /^\/adoption_posts.*$/,
   /^\/pets.*$/,
   "/users",
   /^\/users.*$/,
-  "/reset-password",
+  "/reset_password",
   "/faq",
 ];
 export const allowedRoutes: (string | RegExp)[] = [

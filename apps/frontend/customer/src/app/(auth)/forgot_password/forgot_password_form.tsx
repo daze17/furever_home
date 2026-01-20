@@ -47,7 +47,7 @@ export const ForgotPasswordForm: React.FC = () => {
             description: "Имэйлээ шалгана уу",
           });
           await setResetEmailCookie(data.email);
-          router.push("/forgot-password/email-sent");
+          router.push("/forgot_password/email_sent");
           break;
         case 400:
           toast.error("Имэйл хаяг буруу байна");
