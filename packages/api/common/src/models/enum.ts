@@ -22,6 +22,10 @@ export type PetSpeciesEnum = z.infer<typeof PetSpeciesEnum>;
 export const PetStatusEnum = createSelectSchema(pets).shape.pet_status;
 export type PetStatusEnum = z.infer<typeof PetStatusEnum>;
 
+// Status enum for adoption_posts post_status
+export const StatusEnum = z.enum(["active", "inactive", "pending"]);
+export type StatusEnum = z.infer<typeof StatusEnum>;
+
 const MimeTypes = {
   "application/pdf": "application/pdf",
   "image/jpg": "image/jpg",

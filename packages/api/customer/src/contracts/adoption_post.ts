@@ -7,6 +7,11 @@ import {
   AdoptionPostResponseBody,
   AdoptionPostsListResponseBody,
   AdoptionPostsQuery,
+  CreateAdoptionPostRequestBody,
+  OwnAdoptionPostResponseBody,
+  OwnAdoptionPostsListResponseBody,
+  OwnAdoptionPostsQuery,
+  UpdateAdoptionPostRequestBody,
 } from "@/schemas/dtos";
 
 export const adoptionPostContract = c.router({
@@ -74,5 +79,72 @@ export const adoptionPostContract = c.router({
       404: CustomError,
     },
     summary: "Remove a adoption post from favorite adoption post list by ID",
+  },
+
+  // Own adoption posts CRUD endpoints (protected)
+  createAdoptionPost: {
+    method: "POST",
+    path: "/adoption_posts",
+    body: CreateAdoptionPostRequestBody,
+    responses: {
+      201: OwnAdoptionPostResponseBody,
+      400: CustomError,
+      404: CustomError,
+      409: CustomError,
+    },
+    summary: "Create a new adoption post",
+  },
+  getOwnAdoptionPostsList: {
+    method: "GET",
+    path: "/own_adoption_posts",
+    query: OwnAdoptionPostsQuery,
+    responses: {
+      200: z.object({
+        data: OwnAdoptionPostsListResponseBody,
+        meta: PaginationMeta,
+      }),
+      400: CustomError,
+    },
+    summary: "List user's own adoption posts",
+  },
+  getOwnAdoptionPost: {
+    method: "GET",
+    path: "/own_adoption_posts/:id",
+    pathParams: z.object({
+      id: z.coerce.number(),
+    }),
+    responses: {
+      200: OwnAdoptionPostResponseBody,
+      404: CustomError,
+    },
+    summary: "Get a single own adoption post by ID",
+  },
+  updateAdoptionPost: {
+    method: "PATCH",
+    path: "/adoption_posts/:id",
+    pathParams: z.object({
+      id: z.coerce.number(),
+    }),
+    body: UpdateAdoptionPostRequestBody,
+    responses: {
+      200: OwnAdoptionPostResponseBody,
+      400: CustomError,
+      403: CustomError,
+      404: CustomError,
+    },
+    summary: "Update an adoption post",
+  },
+  deleteAdoptionPost: {
+    method: "DELETE",
+    path: "/adoption_posts/:id",
+    pathParams: z.object({
+      id: z.coerce.number(),
+    }),
+    responses: {
+      204: z.object({}),
+      403: CustomError,
+      404: CustomError,
+    },
+    summary: "Delete an adoption post",
   },
 });

@@ -4,6 +4,8 @@ import {
   AdoptionPostResponseBody,
   AdoptionPostsListResponseBody,
   customerContract,
+  OwnAdoptionPostResponseBody,
+  OwnAdoptionPostsListResponseBody,
 } from "customer_api";
 
 import { Public } from "@/common/decorators/public";
@@ -99,6 +101,99 @@ export class AdoptionPostsController {
       customerContract.adoptionPosts.removeFavoriteAdoptionPost,
       async ({ params }) => {
         await this.adoptionPostsService.removeFavoriteAdoptionPost(params.id);
+
+        return {
+          status: 204,
+          body: {},
+        };
+      },
+    );
+  }
+
+
+  @TsRestHandler(customerContract.adoptionPosts.createAdoptionPost)
+  async createAdoptionPost() {
+    return tsRestHandler(
+      customerContract.adoptionPosts.createAdoptionPost,
+      async ({ body }) => {
+        const post = await this.adoptionPostsService.createAdoptionPost(body);
+
+        const parsedData = OwnAdoptionPostResponseBody.parse(post);
+
+        return {
+          status: 201,
+          body: parsedData,
+        };
+      },
+    );
+  }
+
+  @TsRestHandler(customerContract.adoptionPosts.getOwnAdoptionPostsList)
+  async getOwnAdoptionPostsList() {
+    return tsRestHandler(
+      customerContract.adoptionPosts.getOwnAdoptionPostsList,
+      async ({ query }) => {
+        const result =
+          await this.adoptionPostsService.getOwnAdoptionPostsList(query);
+
+        const parsedData = OwnAdoptionPostsListResponseBody.parse(result.data);
+
+        return {
+          status: 200,
+          body: {
+            data: parsedData,
+            meta: result.meta,
+          },
+        };
+      },
+    );
+  }
+
+  @TsRestHandler(customerContract.adoptionPosts.getOwnAdoptionPost)
+  async getOwnAdoptionPost() {
+    return tsRestHandler(
+      customerContract.adoptionPosts.getOwnAdoptionPost,
+      async ({ params }) => {
+        const post = await this.adoptionPostsService.getOwnAdoptionPost(
+          params.id,
+        );
+
+        const parsedData = OwnAdoptionPostResponseBody.parse(post);
+
+        return {
+          status: 200,
+          body: parsedData,
+        };
+      },
+    );
+  }
+
+  @TsRestHandler(customerContract.adoptionPosts.updateAdoptionPost)
+  async updateAdoptionPost() {
+    return tsRestHandler(
+      customerContract.adoptionPosts.updateAdoptionPost,
+      async ({ params, body }) => {
+        const post = await this.adoptionPostsService.updateAdoptionPost(
+          params.id,
+          body,
+        );
+
+        const parsedData = OwnAdoptionPostResponseBody.parse(post);
+
+        return {
+          status: 200,
+          body: parsedData,
+        };
+      },
+    );
+  }
+
+  @TsRestHandler(customerContract.adoptionPosts.deleteAdoptionPost)
+  async deleteAdoptionPost() {
+    return tsRestHandler(
+      customerContract.adoptionPosts.deleteAdoptionPost,
+      async ({ params }) => {
+        await this.adoptionPostsService.deleteAdoptionPost(params.id);
 
         return {
           status: 204,

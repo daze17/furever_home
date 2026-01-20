@@ -1,5 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { AdoptionPostsQuery } from "customer_api";
+import {
+  AdoptionPostsQuery,
+  CreateAdoptionPostRequestBody,
+  OwnAdoptionPostsQuery,
+  UpdateAdoptionPostRequestBody,
+} from "customer_api";
 import {
   adoption_posts,
   favorites,
@@ -300,6 +305,180 @@ export class AdoptionPostsRepository {
     switch (field) {
       case "name":
         return pets.name;
+      case "price":
+        return adoption_posts.price;
+      case "created_at":
+      default:
+        return adoption_posts.created_at;
+    }
+  }
+
+  // ============================================================
+  // Own Adoption Posts CRUD Methods
+  // ============================================================
+
+  async createAdoptionPost(
+    ownerId: string,
+    data: CreateAdoptionPostRequestBody,
+  ) {
+    const { pet_id, price, address, contact, notes } = data;
+
+    const [createdPost] = await this.db
+      .insert(adoption_posts)
+      .values({
+        pet_id,
+        owner: ownerId,
+        price,
+        address,
+        contact,
+        notes,
+        post_status: "active",
+      })
+      .returning();
+
+    // Fetch the created post with pet details
+    return this.getOwnAdoptionPost(ownerId, createdPost!.id);
+  }
+
+  async hasActiveAdoptionPost(petId: number): Promise<boolean> {
+    const existingPost = await this.db.query.adoption_posts.findFirst({
+      where: and(
+        eq(adoption_posts.pet_id, petId),
+        eq(adoption_posts.post_status, "active"),
+      ),
+    });
+
+    return !!existingPost;
+  }
+
+  async getOwnAdoptionPostsList(
+    ownerId: string,
+    query: OwnAdoptionPostsQuery = {},
+  ) {
+    const currentPage = query?.current_page ?? 1;
+    const perPage = query?.per_page ?? 10;
+
+    const conditions: SQL<unknown | undefined>[] = [
+      eq(adoption_posts.owner, ownerId),
+    ];
+
+    // Filter by post_status if provided
+    if (query?.post_status && query.post_status.length > 0) {
+      conditions.push(inArray(adoption_posts.post_status, query.post_status));
+    }
+
+    const where = and(...conditions);
+
+    const posts = await this.db.query.adoption_posts.findMany({
+      where,
+      with: {
+        pet: {
+          with: {
+            pet_extra_information: true,
+            images: true,
+          },
+        },
+      },
+      orderBy: (query?.sorting_order === "ascending" ? asc : desc)(
+        this.mapOwnPostsSortingField(query?.sorting_field),
+      ),
+      offset: currentPage === 0 ? undefined : (currentPage - 1) * perPage,
+      limit: perPage === 0 ? undefined : perPage,
+    });
+
+    // Count total
+    const _count = await this.db
+      .select({ total: count() })
+      .from(adoption_posts)
+      .where(where);
+
+    const total = _count.find(Boolean)?.total ?? 0;
+
+    return {
+      data: posts,
+      meta: {
+        total,
+        per_page: perPage,
+        current_page: currentPage,
+      },
+    };
+  }
+
+  async getOwnAdoptionPost(ownerId: string, postId: number) {
+    const post = await this.db.query.adoption_posts.findFirst({
+      where: and(
+        eq(adoption_posts.id, postId),
+        eq(adoption_posts.owner, ownerId),
+      ),
+      with: {
+        pet: {
+          with: {
+            pet_extra_information: true,
+            images: true,
+          },
+        },
+      },
+    });
+
+    return post;
+  }
+
+  async updateAdoptionPost(postId: number, data: UpdateAdoptionPostRequestBody) {
+    const { price, address, contact, notes, post_status } = data;
+
+    await this.db
+      .update(adoption_posts)
+      .set({
+        price,
+        address,
+        contact,
+        notes,
+        post_status,
+        updated_at: new Date(),
+      })
+      .where(eq(adoption_posts.id, postId));
+
+    // Fetch the updated post
+    const updatedPost = await this.db.query.adoption_posts.findFirst({
+      where: eq(adoption_posts.id, postId),
+      with: {
+        pet: {
+          with: {
+            pet_extra_information: true,
+            images: true,
+          },
+        },
+      },
+    });
+
+    return updatedPost;
+  }
+
+  async deleteAdoptionPost(postId: number) {
+    await this.db.delete(adoption_posts).where(eq(adoption_posts.id, postId));
+  }
+
+  async isPostOwner(ownerId: string, postId: number): Promise<boolean> {
+    const post = await this.db.query.adoption_posts.findFirst({
+      where: and(
+        eq(adoption_posts.id, postId),
+        eq(adoption_posts.owner, ownerId),
+      ),
+    });
+
+    return !!post;
+  }
+
+  async getAdoptionPostById(postId: number) {
+    return await this.db.query.adoption_posts.findFirst({
+      where: eq(adoption_posts.id, postId),
+    });
+  }
+
+  private mapOwnPostsSortingField(
+    field: NonNullable<OwnAdoptionPostsQuery>["sorting_field"],
+  ) {
+    switch (field) {
       case "price":
         return adoption_posts.price;
       case "created_at":
