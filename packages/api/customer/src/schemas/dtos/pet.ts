@@ -1,4 +1,8 @@
-import { PetExtraInformationModel, PetModel } from "@/models";
+import {
+  PetExtraInformationModel,
+  PetMedicalRecordModel,
+  PetModel,
+} from "@/models";
 import { paginationQuery } from "@/models/pagination";
 import { PetSizeEnum, PetSpeciesEnum } from "common_api";
 import { z } from "zod";
@@ -32,6 +36,7 @@ export type CreatePetRequestBody = z.infer<typeof CreatePetRequestBody>;
 
 export const PetResponseBody = PetModel.extend({
   pet_extra_information: PetExtraInformationModel.nullable(),
+  // pet_medical_records: PetMedicalRecordModel.nullable(),
   owner_phone: z.string().nullable().optional(),
 });
 export type PetResponseBody = z.infer<typeof PetResponseBody>;

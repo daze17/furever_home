@@ -15,6 +15,7 @@ import {
   adoption_reviews,
   messages,
   favorites,
+  vaccinations,
 } from "./schemas";
 
 // ============================================================
@@ -251,5 +252,17 @@ export const favoritesRelations = relations(favorites, ({ one }) => ({
   adoption_posts: one(pets, {
     fields: [favorites.adoption_post_id],
     references: [pets.id],
+  }),
+}));
+
+/**
+ * vaccinations Relations:
+ * - Belongs to one medical record (many-to-one)
+ * - References one pet (many-to-one)
+ */
+export const vaccinationsRelations = relations(vaccinations, ({ one }) => ({
+  medical_record: one(pet_medical_records, {
+    fields: [vaccinations.medical_record_id],
+    references: [pet_medical_records.id],
   }),
 }));
