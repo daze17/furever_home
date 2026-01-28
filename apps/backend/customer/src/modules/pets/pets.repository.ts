@@ -5,6 +5,7 @@ import {
   CreatePetMedicalRecordRequestBody,
   CreatePetRequestBody,
   PetsQuery,
+  UpdatePetMedicalRecordRequestBody,
 } from "customer_api";
 import {
   pet_extra_informations,
@@ -18,6 +19,7 @@ import {
   count,
   desc,
   eq,
+  exists,
   gte,
   ilike,
   inArray,
@@ -26,7 +28,10 @@ import {
   SQL,
 } from "drizzle-orm";
 
-import type { Database } from "@/modules/database/database.providers";
+import type {
+  Database,
+  Transaction,
+} from "@/modules/database/database.providers";
 
 @Injectable()
 export class PetsRepository {
@@ -61,11 +66,26 @@ export class PetsRepository {
   async createPetMedicalRecord(
     id: number,
     data: CreatePetMedicalRecordRequestBody,
+    tx?: Transaction,
   ) {
-    await this.db.insert(pet_medical_records).values({
+    const executor = tx ?? this.db;
+
+    await executor.insert(pet_medical_records).values({
       pet_id: id,
       ...data,
     });
+  }
+
+  async deletePetMedicalRecord(id: number, tx?: Transaction) {
+    const executor = tx ?? this.db;
+    await executor.delete(pet_medical_records).where(
+      exists(
+        this.db
+          .select()
+          .from(pets)
+          .where(and(eq(pets.id, pet_medical_records.id), eq(pets.id, id))),
+      ),
+    );
   }
 
   async createPetExtraInformation(data: CreatePetExtraInformationRequestBody) {

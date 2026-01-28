@@ -42,6 +42,21 @@ export class PetsController {
     );
   }
 
+  @TsRestHandler(customerContract.pets.updatePetMedicalRecord)
+  async updatePetMedicalRecord() {
+    return tsRestHandler(
+      customerContract.pets.updatePetMedicalRecord,
+      async ({ params, body }) => {
+        await this.petsService.updatePetMedicalRecord(params.id, body);
+
+        return {
+          body: {},
+          status: 200,
+        };
+      },
+    );
+  }
+
   @TsRestHandler(customerContract.pets.getOwnPetsList)
   async getOwnPetsList() {
     return tsRestHandler(

@@ -9,6 +9,7 @@ import {
   PetResponseBody,
   PetsListResponseBody,
   PetsQuery,
+  UpdatePetMedicalRecordRequestBody,
   UpdatePetRequestBody,
 } from "@/schemas/dtos";
 import { PaginationMeta } from "@/models/pagination";
@@ -35,6 +36,20 @@ export const petContract = c.router({
     body: CreatePetMedicalRecordRequestBody,
     responses: {
       201: z.object({}),
+      400: CustomError,
+    },
+    summary: "Add a new medical record to a pet",
+  },
+
+  updatePetMedicalRecord: {
+    method: "PATCH",
+    path: "/pets/:id/medical_records",
+    pathParams: z.object({
+      id: z.coerce.number(),
+    }),
+    body: UpdatePetMedicalRecordRequestBody,
+    responses: {
+      200: z.object({}),
       400: CustomError,
     },
     summary: "Add a new medical record to a pet",

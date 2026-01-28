@@ -11,12 +11,14 @@ import {
   CreatePetMedicalRecordRequestBody,
   CreatePetRequestBody,
   PetsQuery,
+  UpdatePetMedicalRecordRequestBody,
 } from "customer_api";
 import { ClsService } from "nestjs-cls";
 
 import { CLS_KEYS } from "@/common/constants/cls.constants";
 import { AwsService } from "@/modules/aws/aws.service";
 import { AwsS3Service } from "@/modules/aws_s3/aws_s3.service";
+import { TransactionWorkService } from "@/modules/database/transaction_work.service";
 
 import { PetsRepository } from "./pets.repository";
 
@@ -28,6 +30,7 @@ export class PetsService {
     private readonly config: ConfigService,
     private readonly cls: ClsService,
     private readonly petsRepository: PetsRepository,
+    private readonly transactionWorkService: TransactionWorkService,
   ) {}
 
   async createPet(data: CreatePetRequestBody) {
@@ -48,7 +51,24 @@ export class PetsService {
     if (!pet) {
       throw new NotFoundException(`Pet with ID ${id} not found`);
     }
+
     await this.petsRepository.createPetMedicalRecord(id, data);
+  }
+
+  async updatePetMedicalRecord(
+    id: number,
+    data: UpdatePetMedicalRecordRequestBody,
+  ) {
+    const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);
+    const pet = await this.petsRepository.getOwnPet(accountProfile.id, id);
+    if (!pet) {
+      throw new NotFoundException(`Pet with ID ${id} not found`);
+    }
+
+    await this.transactionWorkService.run(async (tx) => {
+      await this.petsRepository.deletePetMedicalRecord(id, tx);
+      await this.petsRepository.createPetMedicalRecord(id, data, tx);
+    });
   }
 
   async getOwnPetsList(query: PetsQuery = {}) {

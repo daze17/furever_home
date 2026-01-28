@@ -52,6 +52,12 @@ export type CreatePetMedicalRecordRequestBody = z.infer<
   typeof CreatePetMedicalRecordRequestBody
 >;
 
+export const UpdatePetMedicalRecordRequestBody =
+  CreatePetMedicalRecordRequestBody;
+export type UpdatePetMedicalRecordRequestBody = z.infer<
+  typeof UpdatePetMedicalRecordRequestBody
+>;
+
 export const PetResponseBody = PetModel.extend({
   pet_extra_information: PetExtraInformationModel.nullable(),
   // pet_medical_records: PetMedicalRecordModel.nullable(),
