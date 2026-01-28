@@ -7,16 +7,33 @@ import {
   Edit,
   Heart,
   Home,
+  Plus,
+  Shield,
+  Stethoscope,
+  Syringe,
   Trash2,
   Users,
   Utensils,
   Zap,
 } from "lucide-react";
 
-import { PetResponseBody } from "customer_api";
+import { OwnPetResponseBody } from "customer_api";
 import Link from "next/link";
 
-import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "ui";
+import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "ui";
 
 import ImageWithFallback from "@/components/image_with_fallback";
 import {
@@ -30,7 +47,7 @@ import {
 } from "@/utils";
 
 export const MyPetDetails: React.FC<{
-  petDetail: PetResponseBody;
+  petDetail: OwnPetResponseBody;
 }> = ({ petDetail }) => {
   const pet = petDetail;
 
@@ -345,6 +362,140 @@ export const MyPetDetails: React.FC<{
                 </CardContent>
               </Card>
             )}
+
+          {/* Medical Records Card */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <Stethoscope className="h-5 w-5" />
+                  Эмнэлгийн бүртгэл
+                </CardTitle>
+                <Button variant="outline" size="sm" asChild>
+                  <Link href={`/my_pets/${pet.id}/medical_records`}>
+                    {pet.pet_medical_records ? (
+                      <>
+                        <Edit className="mr-2 h-4 w-4" />
+                        Засах
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="mr-2 h-4 w-4" />
+                        Нэмэх
+                      </>
+                    )}
+                  </Link>
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {pet.pet_medical_records ? (
+                <div className="space-y-4">
+                  {/* Spayed/Neutered Status */}
+                  <div className="flex items-start gap-3">
+                    <div className="rounded-full bg-primary/10 p-2">
+                      <Shield className="h-5 w-5 text-primary" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-muted-foreground">
+                        Үржил хязгаарласан эсэх
+                      </p>
+                      <Badge
+                        className={`mt-1 ${
+                          pet.pet_medical_records.is_spayed_neutered
+                            ? "bg-green-100 text-green-800"
+                            : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        {pet.pet_medical_records.is_spayed_neutered
+                          ? "Тийм"
+                          : "Үгүй"}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  {/* Medical Notes */}
+                  {pet.pet_medical_records.medical_notes && (
+                    <div className="flex items-start gap-3">
+                      <div className="rounded-full bg-primary/10 p-2">
+                        <Stethoscope className="h-5 w-5 text-primary" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-muted-foreground">
+                          Эмнэлгийн тэмдэглэл
+                        </p>
+                        <p className="mt-1 text-gray-700">
+                          {pet.pet_medical_records.medical_notes}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Allergies */}
+                  {pet.pet_medical_records.allergies && (
+                    <div className="flex items-start gap-3">
+                      <div className="rounded-full bg-primary/10 p-2">
+                        <Heart className="h-5 w-5 text-primary" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-muted-foreground">
+                          Харшил
+                        </p>
+                        <p className="mt-1 text-gray-700">
+                          {pet.pet_medical_records.allergies}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Vaccinations Table */}
+                  {pet.pet_medical_records.vaccinations.length > 0 && (
+                    <div>
+                      <div className="mb-2 flex items-center gap-2">
+                        <Syringe className="h-4 w-4 text-muted-foreground" />
+                        <p className="text-sm font-medium text-muted-foreground">
+                          Вакцинжуулалт
+                        </p>
+                      </div>
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Нэр</TableHead>
+                            <TableHead>Огноо</TableHead>
+                            <TableHead>Тэмдэглэл</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {pet.pet_medical_records.vaccinations.map(
+                            (vaccination) => (
+                              <TableRow key={vaccination.id}>
+                                <TableCell className="font-medium">
+                                  {vaccination.name}
+                                </TableCell>
+                                <TableCell>
+                                  {new Date(
+                                    vaccination.date,
+                                  ).toLocaleDateString()}
+                                </TableCell>
+                                <TableCell>
+                                  {vaccination.notes || "-"}
+                                </TableCell>
+                              </TableRow>
+                            ),
+                          )}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Эмнэлгийн бүртгэл байхгүй байна. Нэмэх товч дээр дарж
+                  бүртгэл үүсгэнэ үү.
+                </p>
+              )}
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
