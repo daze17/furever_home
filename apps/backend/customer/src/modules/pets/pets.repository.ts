@@ -12,6 +12,7 @@ import {
   pet_images,
   pet_medical_records,
   pets,
+  vaccinations,
 } from "database";
 import {
   and,
@@ -19,7 +20,6 @@ import {
   count,
   desc,
   eq,
-  exists,
   gte,
   ilike,
   inArray,
@@ -70,22 +70,34 @@ export class PetsRepository {
   ) {
     const executor = tx ?? this.db;
 
-    await executor.insert(pet_medical_records).values({
-      pet_id: id,
-      ...data,
-    });
+    return await executor
+      .insert(pet_medical_records)
+      .values({
+        pet_id: id,
+        is_spayed_neutered: data?.is_spayed_neutered,
+        medical_notes: data?.medical_notes,
+        allergies: data?.allergies,
+      })
+      .returning({ id: pet_medical_records.id });
   }
 
-  async deletePetMedicalRecord(id: number, tx?: Transaction) {
+  async createVaccinations(
+    medicalRecordId: string,
+    data: CreatePetMedicalRecordRequestBody["vaccinations"],
+    tx?: Transaction,
+  ) {
     const executor = tx ?? this.db;
-    await executor.delete(pet_medical_records).where(
-      exists(
-        this.db
-          .select()
-          .from(pets)
-          .where(and(eq(pets.id, pet_medical_records.id), eq(pets.id, id))),
-      ),
+    if (!data?.length) return;
+    await executor.insert(vaccinations).values(
+      data.map((v) => ({ ...v, medical_record_id: medicalRecordId })),
     );
+  }
+
+  async deletePetMedicalRecord(petId: number, tx?: Transaction) {
+    const executor = tx ?? this.db;
+    await executor
+      .delete(pet_medical_records)
+      .where(eq(pet_medical_records.pet_id, petId));
   }
 
   async createPetExtraInformation(data: CreatePetExtraInformationRequestBody) {
@@ -246,6 +258,11 @@ export class PetsRepository {
     const _pets = await this.db.query.pets.findMany({
       with: {
         pet_extra_information: true,
+        pet_medical_records: {
+          with: {
+            vaccinations: true,
+          },
+        },
       },
       where,
       orderBy: (query.sorting_order === "ascending" ? asc : desc)(
@@ -404,6 +421,11 @@ export class PetsRepository {
       ),
       with: {
         pet_extra_information: true,
+        pet_medical_records: {
+          with: {
+            vaccinations: true,
+          },
+        },
         customer: true,
       },
     });
@@ -441,11 +463,16 @@ export class PetsRepository {
       })
       .where(eq(pets.id, id));
 
-    // Fetch the updated pet with pet_extra_information
+    // Fetch the updated pet with relations
     const updatedPet = await this.db.query.pets.findFirst({
       where: eq(pets.id, id),
       with: {
         pet_extra_information: true,
+        pet_medical_records: {
+          with: {
+            vaccinations: true,
+          },
+        },
       },
     });
 

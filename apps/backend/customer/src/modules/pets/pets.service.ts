@@ -52,7 +52,10 @@ export class PetsService {
       throw new NotFoundException(`Pet with ID ${id} not found`);
     }
 
-    await this.petsRepository.createPetMedicalRecord(id, data);
+    const [record] = await this.petsRepository.createPetMedicalRecord(id, data);
+    if (data.vaccinations?.length) {
+      await this.petsRepository.createVaccinations(record!.id, data.vaccinations);
+    }
   }
 
   async updatePetMedicalRecord(
@@ -67,7 +70,10 @@ export class PetsService {
 
     await this.transactionWorkService.run(async (tx) => {
       await this.petsRepository.deletePetMedicalRecord(id, tx);
-      await this.petsRepository.createPetMedicalRecord(id, data, tx);
+      const [record] = await this.petsRepository.createPetMedicalRecord(id, data, tx);
+      if (data.vaccinations?.length) {
+        await this.petsRepository.createVaccinations(record!.id, data.vaccinations, tx);
+      }
     });
   }
 

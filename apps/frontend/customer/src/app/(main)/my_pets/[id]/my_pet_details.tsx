@@ -11,6 +11,7 @@ import {
   Shield,
   Stethoscope,
   Syringe,
+  AlertTriangle,
   Trash2,
   Users,
   Utensils,
@@ -21,6 +22,9 @@ import { OwnPetResponseBody } from "customer_api";
 import Link from "next/link";
 
 import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
   Badge,
   Button,
   Card,
@@ -36,6 +40,7 @@ import {
 } from "ui";
 
 import ImageWithFallback from "@/components/image_with_fallback";
+import { getUpcomingVaccinations } from "@/utils/vaccination";
 import {
   energyLevelColors,
   energyLevelLabels,
@@ -54,6 +59,10 @@ export const MyPetDetails: React.FC<{
   const petAge = pet.birth_date
     ? new Date().getFullYear() - new Date(pet.birth_date).getFullYear()
     : null;
+
+  const upcomingVaccinations = pet.pet_medical_records?.vaccinations
+    ? getUpcomingVaccinations(pet.pet_medical_records.vaccinations)
+    : [];
 
   const statusLabel = {
     adopting: "Үрчлүүлэх",
@@ -92,6 +101,30 @@ export const MyPetDetails: React.FC<{
           </Button>
         </div>
       </div>
+
+      {upcomingVaccinations.length > 0 && (
+        <Alert className="mb-6 border-amber-400 bg-amber-50">
+          <AlertTriangle className="h-4 w-4 text-amber-600" />
+          <AlertTitle className="text-amber-800">
+            Вакцины сануулга
+          </AlertTitle>
+          <AlertDescription className="text-amber-700">
+            <ul className="mt-1 list-disc pl-4">
+              {upcomingVaccinations.map((v) => (
+                <li key={v.name}>
+                  <span className="font-medium">{v.name}</span>
+                  {" — "}
+                  {v.daysUntil < 0
+                    ? `${Math.abs(v.daysUntil)} хоногийн өмнө хугацаа дууссан`
+                    : v.daysUntil === 0
+                      ? "Өнөөдөр хугацаа дуусна"
+                      : `${v.daysUntil} хоногийн дараа хугацаа дуусна`}
+                </li>
+              ))}
+            </ul>
+          </AlertDescription>
+        </Alert>
+      )}
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="lg:col-span-1">

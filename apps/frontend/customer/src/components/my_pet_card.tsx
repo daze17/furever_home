@@ -1,9 +1,11 @@
 "use client";
 
-import { Settings } from "lucide-react";
+import { AlertTriangle, Settings } from "lucide-react";
 
 import { PetResponseBody } from "customer_api";
 import Link from "next/link";
+
+import { hasUpcomingVaccinations } from "@/utils/vaccination";
 
 import {
   Button,
@@ -20,6 +22,10 @@ import ImageWithFallback from "@/components/image_with_fallback";
 export const MyPetCard: React.FC<{
   pet: PetResponseBody;
 }> = ({ pet }) => {
+  const vaccinationWarning = pet.pet_medical_records?.vaccinations
+    ? hasUpcomingVaccinations(pet.pet_medical_records.vaccinations)
+    : false;
+
   const petAge = pet.birth_date
     ? new Date().getFullYear() - new Date(pet.birth_date).getFullYear()
     : 0;
@@ -53,7 +59,7 @@ export const MyPetCard: React.FC<{
   };
 
   return (
-    <Card className="group flex h-full flex-col overflow-hidden border bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[#11D0BC] hover:shadow-lg">
+    <Card className={`group flex h-full flex-col overflow-hidden border bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[#11D0BC] hover:shadow-lg ${vaccinationWarning ? "border-amber-400 bg-amber-50" : ""}`}>
       <CardHeader className="overflow-hidden p-0">
         <ImageWithFallback
           src={"/furever-home-dog.jpg"}
@@ -81,7 +87,15 @@ export const MyPetCard: React.FC<{
             {statusLabel[pet.pet_status]}
           </span>
         </CardTitle>
-        <CardDescription className="text-gray-500">{`${petAge} настай`}</CardDescription>
+        <CardDescription className="text-gray-500">
+          {`${petAge} настай`}
+          {vaccinationWarning && (
+            <span className="ml-2 inline-flex items-center gap-1 text-amber-600">
+              <AlertTriangle className="h-3.5 w-3.5" />
+              Вакцины сануулга
+            </span>
+          )}
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-3">
         <div className="flex flex-wrap gap-1.5">
