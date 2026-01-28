@@ -3,7 +3,9 @@ import { z } from "zod";
 import { c } from "@/contract";
 import { CustomError } from "@/models/custom_error";
 import {
+  CreatePetMedicalRecordRequestBody,
   CreatePetRequestBody,
+  OwnPetResponseBody,
   PetResponseBody,
   PetsListResponseBody,
   PetsQuery,
@@ -22,6 +24,20 @@ export const petContract = c.router({
       400: CustomError,
     },
     summary: "Create a new pet",
+  },
+  // Create a new pet
+  createPetMedicalRecord: {
+    method: "POST",
+    path: "/pets/:id/medical_records",
+    pathParams: z.object({
+      id: z.coerce.number(),
+    }),
+    body: CreatePetMedicalRecordRequestBody,
+    responses: {
+      201: z.object({}),
+      400: CustomError,
+    },
+    summary: "Add a new medical record to a pet",
   },
 
   // Get all own pets (with optional filters)
@@ -47,7 +63,7 @@ export const petContract = c.router({
       id: z.coerce.number(),
     }),
     responses: {
-      200: PetResponseBody,
+      200: OwnPetResponseBody,
       404: CustomError,
     },
     summary: "Get own pet by ID",

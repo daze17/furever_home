@@ -7,7 +7,11 @@ import {
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { MimeTypeEnum } from "common_api";
-import { CreatePetRequestBody, PetsQuery } from "customer_api";
+import {
+  CreatePetMedicalRecordRequestBody,
+  CreatePetRequestBody,
+  PetsQuery,
+} from "customer_api";
 import { ClsService } from "nestjs-cls";
 
 import { CLS_KEYS } from "@/common/constants/cls.constants";
@@ -33,6 +37,18 @@ export class PetsService {
       accountProfile.id,
       data,
     );
+  }
+
+  async createPetMedicalRecord(
+    id: number,
+    data: CreatePetMedicalRecordRequestBody,
+  ) {
+    const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);
+    const pet = await this.petsRepository.getOwnPet(accountProfile.id, id);
+    if (!pet) {
+      throw new NotFoundException(`Pet with ID ${id} not found`);
+    }
+    await this.petsRepository.createPetMedicalRecord(id, data);
   }
 
   async getOwnPetsList(query: PetsQuery = {}) {

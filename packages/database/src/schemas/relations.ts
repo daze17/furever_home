@@ -109,6 +109,10 @@ export const petsRelations = relations(pets, ({ one, many }) => ({
     fields: [pets.pet_extra_information_id],
     references: [pet_extra_informations.id],
   }),
+  pet_medical_records: one(pet_medical_records, {
+    fields: [pets.id],
+    references: [pet_medical_records.pet_id],
+  }),
   images: many(pet_images),
 }));
 
@@ -118,11 +122,12 @@ export const petsRelations = relations(pets, ({ one, many }) => ({
  */
 export const pet_medical_recordsRelations = relations(
   pet_medical_records,
-  ({ one }) => ({
+  ({ one, many }) => ({
     pet: one(pets, {
       fields: [pet_medical_records.pet_id],
       references: [pets.id],
     }),
+    vaccinations: many(vaccinations),
   }),
 );
 

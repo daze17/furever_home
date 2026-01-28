@@ -2,10 +2,16 @@ import { Inject, Injectable } from "@nestjs/common";
 import { PetStatusEnum } from "common_api";
 import {
   CreatePetExtraInformationRequestBody,
+  CreatePetMedicalRecordRequestBody,
   CreatePetRequestBody,
   PetsQuery,
 } from "customer_api";
-import { pet_extra_informations, pet_images, pets } from "database";
+import {
+  pet_extra_informations,
+  pet_images,
+  pet_medical_records,
+  pets,
+} from "database";
 import {
   and,
   asc,
@@ -50,6 +56,15 @@ export class PetsRepository {
       pet_status,
       customer_id: customerId,
       pet_extra_information_id: petExtraInformationId,
+    });
+  }
+  async createPetMedicalRecord(
+    id: number,
+    data: CreatePetMedicalRecordRequestBody,
+  ) {
+    await this.db.insert(pet_medical_records).values({
+      pet_id: id,
+      ...data,
     });
   }
 
@@ -128,7 +143,8 @@ export class PetsRepository {
           size,
           pet_status,
           customer_id: customerId,
-          pet_extra_information_id: createdPetExtraInformation.find(Boolean)!.id,
+          pet_extra_information_id:
+            createdPetExtraInformation.find(Boolean)!.id,
         })
         .returning({ id: pets.id });
 
@@ -164,6 +180,11 @@ export class PetsRepository {
       where,
       with: {
         pet_extra_information: true,
+        pet_medical_records: {
+          with: {
+            vaccinations: true,
+          },
+        },
       },
       orderBy: (query.sorting_order === "ascending" ? asc : desc)(
         this.mapPetsSortingField(query.sorting_field),
@@ -380,6 +401,11 @@ export class PetsRepository {
       where: and(eq(pets.id, id), eq(pets.customer_id, customerId)),
       with: {
         pet_extra_information: true,
+        pet_medical_records: {
+          with: {
+            vaccinations: true,
+          },
+        },
       },
     });
 
