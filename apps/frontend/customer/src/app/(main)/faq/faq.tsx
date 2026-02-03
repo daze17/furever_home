@@ -12,7 +12,7 @@ export const Faq: React.FC = async () => {
   const data = [
     {
       title: "Амьтан үрчилж авах талаар",
-      title_icon: <Cat className="h-8 w-8" />,
+      title_icon: <Cat className="h-8 w-8" strokeWidth={1.5} />,
       content_img_src: "/faq4.png",
       contents: [
         {
@@ -63,7 +63,7 @@ export const Faq: React.FC = async () => {
     },
     {
       title: "Амьтан үрчлүүлэх талаар",
-      title_icon: <Dog className="h-8 w-8" />,
+      title_icon: <Dog className="h-8 w-8" strokeWidth={1.5} />,
       content_img_src: "/faq5.png",
       contents: [
         {
@@ -81,7 +81,7 @@ export const Faq: React.FC = async () => {
     },
     {
       title: "Байгууллагын үйл ажиллагааны талаар",
-      title_icon: <PawPrint className="h-8 w-8" />,
+      title_icon: <PawPrint className="h-8 w-8" strokeWidth={1.5} />,
       content_img_src: "/faq2.png",
       contents: [
         {
@@ -101,7 +101,7 @@ export const Faq: React.FC = async () => {
     },
     {
       title: "Бусад",
-      title_icon: <Squirrel className="h-8 w-8" />,
+      title_icon: <Squirrel className="h-8 w-8" strokeWidth={1.5} />,
       content_img_src: "/faq3.png",
       contents: [
         {

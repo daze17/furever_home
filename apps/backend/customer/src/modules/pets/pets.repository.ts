@@ -2,10 +2,18 @@ import { Inject, Injectable } from "@nestjs/common";
 import { PetStatusEnum } from "common_api";
 import {
   CreatePetExtraInformationRequestBody,
+  CreatePetMedicalRecordRequestBody,
   CreatePetRequestBody,
   PetsQuery,
+  UpdatePetMedicalRecordRequestBody,
 } from "customer_api";
-import { pet_extra_informations, pet_images, pets } from "database";
+import {
+  pet_extra_informations,
+  pet_images,
+  pet_medical_records,
+  pets,
+  vaccinations,
+} from "database";
 import {
   and,
   asc,
@@ -20,7 +28,10 @@ import {
   SQL,
 } from "drizzle-orm";
 
-import type { Database } from "@/modules/database/database.providers";
+import type {
+  Database,
+  Transaction,
+} from "@/modules/database/database.providers";
 
 @Injectable()
 export class PetsRepository {
@@ -51,6 +62,42 @@ export class PetsRepository {
       customer_id: customerId,
       pet_extra_information_id: petExtraInformationId,
     });
+  }
+  async createPetMedicalRecord(
+    id: number,
+    data: CreatePetMedicalRecordRequestBody,
+    tx?: Transaction,
+  ) {
+    const executor = tx ?? this.db;
+
+    return await executor
+      .insert(pet_medical_records)
+      .values({
+        pet_id: id,
+        is_spayed_neutered: data?.is_spayed_neutered,
+        medical_notes: data?.medical_notes,
+        allergies: data?.allergies,
+      })
+      .returning({ id: pet_medical_records.id });
+  }
+
+  async createVaccinations(
+    medicalRecordId: string,
+    data: CreatePetMedicalRecordRequestBody["vaccinations"],
+    tx?: Transaction,
+  ) {
+    const executor = tx ?? this.db;
+    if (!data?.length) return;
+    await executor.insert(vaccinations).values(
+      data.map((v) => ({ ...v, medical_record_id: medicalRecordId })),
+    );
+  }
+
+  async deletePetMedicalRecord(petId: number, tx?: Transaction) {
+    const executor = tx ?? this.db;
+    await executor
+      .delete(pet_medical_records)
+      .where(eq(pet_medical_records.pet_id, petId));
   }
 
   async createPetExtraInformation(data: CreatePetExtraInformationRequestBody) {
@@ -128,7 +175,8 @@ export class PetsRepository {
           size,
           pet_status,
           customer_id: customerId,
-          pet_extra_information_id: createdPetExtraInformation.find(Boolean)!.id,
+          pet_extra_information_id:
+            createdPetExtraInformation.find(Boolean)!.id,
         })
         .returning({ id: pets.id });
 
@@ -164,6 +212,11 @@ export class PetsRepository {
       where,
       with: {
         pet_extra_information: true,
+        pet_medical_records: {
+          with: {
+            vaccinations: true,
+          },
+        },
       },
       orderBy: (query.sorting_order === "ascending" ? asc : desc)(
         this.mapPetsSortingField(query.sorting_field),
@@ -205,6 +258,11 @@ export class PetsRepository {
     const _pets = await this.db.query.pets.findMany({
       with: {
         pet_extra_information: true,
+        pet_medical_records: {
+          with: {
+            vaccinations: true,
+          },
+        },
       },
       where,
       orderBy: (query.sorting_order === "ascending" ? asc : desc)(
@@ -363,6 +421,11 @@ export class PetsRepository {
       ),
       with: {
         pet_extra_information: true,
+        pet_medical_records: {
+          with: {
+            vaccinations: true,
+          },
+        },
         customer: true,
       },
     });
@@ -380,6 +443,11 @@ export class PetsRepository {
       where: and(eq(pets.id, id), eq(pets.customer_id, customerId)),
       with: {
         pet_extra_information: true,
+        pet_medical_records: {
+          with: {
+            vaccinations: true,
+          },
+        },
       },
     });
 
@@ -395,11 +463,16 @@ export class PetsRepository {
       })
       .where(eq(pets.id, id));
 
-    // Fetch the updated pet with pet_extra_information
+    // Fetch the updated pet with relations
     const updatedPet = await this.db.query.pets.findFirst({
       where: eq(pets.id, id),
       with: {
         pet_extra_information: true,
+        pet_medical_records: {
+          with: {
+            vaccinations: true,
+          },
+        },
       },
     });
 

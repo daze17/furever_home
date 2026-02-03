@@ -161,12 +161,22 @@ export const pet_medical_records = pgTable("pet_medical_records", {
       onDelete: "cascade",
     })
     .notNull(),
-  vaccination_name: text("vaccination_name"),
-  vaccination_date: date("vaccination_date"),
-  next_vaccination_date: date("next_vaccination_date"),
   is_spayed_neutered: boolean("is_spayed_neutered").default(false).notNull(),
   medical_notes: text("medical_notes"),
   allergies: text("allergies"),
+  ...timestamps,
+});
+
+export const vaccinations = pgTable("vaccinations", {
+  id: serial("id").primaryKey(),
+  medical_record_id: uuid("medical_record_id")
+    .references(() => pet_medical_records.id, {
+      onDelete: "cascade",
+    })
+    .notNull(),
+  name: text("name").notNull(),
+  date: date("date").notNull(),
+  notes: text("notes"),
   ...timestamps,
 });
 

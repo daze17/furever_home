@@ -1,6 +1,10 @@
 import { Controller, UploadedFiles, UseInterceptors } from "@nestjs/common";
 import { TsRestHandler, tsRestHandler } from "@ts-rest/nest";
-import { customerContract, PetsListResponseBody } from "customer_api";
+import {
+  customerContract,
+  OwnPetResponseBody,
+  PetsListResponseBody,
+} from "customer_api";
 import { FilesFastifyInterceptor } from "fastify-file-interceptor";
 
 import { Public } from "@/common/decorators/public";
@@ -21,6 +25,36 @@ export class PetsController {
         status: 201,
       };
     });
+  }
+
+  @TsRestHandler(customerContract.pets.createPetMedicalRecord)
+  async createPetMedicalRecord() {
+    return tsRestHandler(
+      customerContract.pets.createPetMedicalRecord,
+      async ({ params, body }) => {
+        await this.petsService.createPetMedicalRecord(params.id, body);
+
+        return {
+          body: {},
+          status: 201,
+        };
+      },
+    );
+  }
+
+  @TsRestHandler(customerContract.pets.updatePetMedicalRecord)
+  async updatePetMedicalRecord() {
+    return tsRestHandler(
+      customerContract.pets.updatePetMedicalRecord,
+      async ({ params, body }) => {
+        await this.petsService.updatePetMedicalRecord(params.id, body);
+
+        return {
+          body: {},
+          status: 200,
+        };
+      },
+    );
   }
 
   @TsRestHandler(customerContract.pets.getOwnPetsList)
@@ -86,10 +120,12 @@ export class PetsController {
       customerContract.pets.getOwnPet,
       async ({ params }) => {
         const pet = await this.petsService.getOwnPet(params.id);
+        console.log(pet, "pet plesae");
+        const parsedData = OwnPetResponseBody.parse(pet);
 
         return {
           status: 200,
-          body: pet,
+          body: parsedData,
         };
       },
     );

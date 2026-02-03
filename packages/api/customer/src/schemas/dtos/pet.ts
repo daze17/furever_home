@@ -1,4 +1,9 @@
-import { PetExtraInformationModel, PetModel } from "@/models";
+import {
+  PetExtraInformationModel,
+  PetMedicalRecordModel,
+  PetModel,
+  VaccinationModel,
+} from "@/models";
 import { paginationQuery } from "@/models/pagination";
 import { PetSizeEnum, PetSpeciesEnum } from "common_api";
 import { z } from "zod";
@@ -30,11 +35,46 @@ export const CreatePetRequestBody = PetModel.pick({
 });
 export type CreatePetRequestBody = z.infer<typeof CreatePetRequestBody>;
 
+export const CreatePetMedicalRecordRequestBody = PetMedicalRecordModel.pick({
+  is_spayed_neutered: true,
+  medical_notes: true,
+  allergies: true,
+})
+  .extend({
+    vaccinations: VaccinationModel.pick({
+      name: true,
+      date: true,
+      notes: true,
+    }).array(),
+  })
+  .partial();
+export type CreatePetMedicalRecordRequestBody = z.infer<
+  typeof CreatePetMedicalRecordRequestBody
+>;
+
+export const UpdatePetMedicalRecordRequestBody =
+  CreatePetMedicalRecordRequestBody;
+export type UpdatePetMedicalRecordRequestBody = z.infer<
+  typeof UpdatePetMedicalRecordRequestBody
+>;
+
 export const PetResponseBody = PetModel.extend({
   pet_extra_information: PetExtraInformationModel.nullable(),
+  pet_medical_records: PetMedicalRecordModel.extend({
+    vaccinations: VaccinationModel.array(),
+  }).nullable(),
   owner_phone: z.string().nullable().optional(),
 });
 export type PetResponseBody = z.infer<typeof PetResponseBody>;
+
+export const OwnPetResponseBody = PetModel.extend({
+  pet_extra_information: PetExtraInformationModel.nullable(),
+  pet_medical_records: PetMedicalRecordModel.extend({
+    vaccinations: VaccinationModel.array(),
+  }).nullable(),
+  owner_phone: z.string().nullable().optional(),
+});
+export type OwnPetResponseBody = z.infer<typeof OwnPetResponseBody>;
 
 export const PetsListResponseBody = PetResponseBody.array();
 export type PetsListResponseBody = z.infer<typeof PetsListResponseBody>;
