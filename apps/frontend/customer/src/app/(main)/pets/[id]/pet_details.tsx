@@ -6,17 +6,21 @@ import {
   Dog,
   Heart,
   Home,
+  MapPin,
+  Phone,
   Users,
   Utensils,
   Zap,
 } from "lucide-react";
 
-import { PetResponseBody } from "customer_api";
+import { AdoptionPostResponseBody } from "customer_api";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "ui";
 
+import { FavoriteAddButton } from "@/components/favorite_add_button";
+import { FavoriteRemoveButton } from "@/components/favorite_remove_button";
 import ImageWithFallback from "@/components/image_with_fallback";
 import {
   energyLevelColors,
@@ -30,11 +34,13 @@ import {
   trainingLevelLabels,
 } from "@/utils";
 
-const PetDetails: React.FC<{
-  petDetail: PetResponseBody;
-}> = ({ petDetail }) => {
+import { PetImageCarousel } from "./pet_image_carousel";
+
+const AdoptionPostDetails: React.FC<{
+  post: AdoptionPostResponseBody;
+}> = ({ post }) => {
   const router = useRouter();
-  const pet = petDetail;
+  const pet = post.pet;
 
   const petAge = pet.birth_date
     ? new Date().getFullYear() - new Date(pet.birth_date).getFullYear()
@@ -51,31 +57,65 @@ const PetDetails: React.FC<{
           </Link>
         </Button>
 
-        {/* Public action - Adoption button for non-owners */}
-        {/*{!isOwner && pet?.pet_status === "adopting" && (*/}
-        <Button asChild size="lg">
-          <Link href={`/pets/${pet.id}/adopt`}>
-            <Heart className="mr-2 h-4 w-4" />
-            Энэ тэжээвэр амьтныг үрчлэх
-          </Link>
-        </Button>
-        {/*)}*/}
+        {/* Public action - Favorite and Adoption buttons */}
+        <div className="flex gap-2">
+          {post.is_favorite ? (
+            <FavoriteRemoveButton postId={post.id} />
+          ) : (
+            <FavoriteAddButton postId={post.id} />
+          )}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-1">
+        <div className="space-y-4 lg:col-span-1">
           <Card>
             <CardContent className="p-6">
-              <ImageWithFallback
-                // TODO
-                // src={pet.pet_image_url}
-                src={"/furever-home-dog.jpg"}
-                alt={pet.name}
-                height={400}
-                width={400}
-                fallbackSrc="/furever-home-dog.jpg"
-                className="h-[400px] w-full rounded-lg object-cover"
-              />
+              <PetImageCarousel images={pet.images || []} petName={pet.name} />
+            </CardContent>
+          </Card>
+
+          {/* Price Card */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg">Үнэ</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold text-[#11D0BC]">
+                {post.price === null || post.price === 0
+                  ? "Үнэгүй"
+                  : `${post.price.toLocaleString()}₮`}
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Contact Information */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg">Холбоо барих</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {post.contact ? (
+                <Button
+                  className="w-full bg-[#11D0BC] hover:bg-[#0fb8a6]"
+                  asChild
+                >
+                  <a href={`tel:${post.contact}`}>
+                    <Phone className="mr-2 h-4 w-4" />
+                    Залгах
+                  </a>
+                </Button>
+              ) : (
+                <p className="text-center text-sm text-muted-foreground">
+                  Утасны дугаар бүртгэгдээгүй
+                </p>
+              )}
+              {post.address && (
+                <div className="flex items-start gap-2 text-sm text-muted-foreground">
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
+                  <span>{post.address}</span>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
@@ -364,4 +404,4 @@ const PetDetails: React.FC<{
   );
 };
 
-export default PetDetails;
+export default AdoptionPostDetails;

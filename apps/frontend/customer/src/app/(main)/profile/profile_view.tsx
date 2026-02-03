@@ -32,13 +32,13 @@ const ProfileView: React.FC<{
         <Button variant="ghost" asChild>
           <Link href="/">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Home
+            Нүүр хуудас
           </Link>
         </Button>
         <Button asChild>
           <Link href="/profile/edit">
             <Edit className="mr-2 h-4 w-4" />
-            Edit Profile
+            Засах
           </Link>
         </Button>
       </div>
@@ -56,7 +56,7 @@ const ProfileView: React.FC<{
             {[profile.first_name, profile.last_name].join(" ")}
           </h1>
           <p className="text-sm text-gray-500">
-            {profile.nickname ? `"${profile.nickname}"` : "Not provided"}
+            {profile.nickname ? `"${profile.nickname}"` : "Мэдээлэл байхгүй"}
           </p>
           {profile.gender && (
             <span className="mt-2 rounded-full bg-gray-100 px-3 py-1 text-sm capitalize text-gray-700">
@@ -71,25 +71,25 @@ const ProfileView: React.FC<{
         {/* Personal Information Card */}
         <Card>
           <CardHeader>
-            <CardTitle>Personal Information</CardTitle>
+            <CardTitle>Хувийн мэдээлэл</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <p className="text-sm font-medium text-gray-500">First Name</p>
-              <p className="mt-1">{profile.first_name || "Not provided"}</p>
+              <p className="text-sm font-medium text-gray-500">Нэр</p>
+              <p className="mt-1">{profile.first_name || "Мэдээлэл байхгүй"}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-500">Last Name</p>
-              <p className="mt-1">{profile.last_name || "Not provided"}</p>
+              <p className="text-sm font-medium text-gray-500">Овог</p>
+              <p className="mt-1">{profile.last_name || "Мэдээлэл байхгүй"}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-500">Nickname</p>
-              <p className="mt-1">{profile.nickname || "Not provided"}</p>
+              <p className="text-sm font-medium text-gray-500">Хоч</p>
+              <p className="mt-1">{profile.nickname || "Мэдээлэл байхгүй"}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-500">Gender</p>
+              <p className="text-sm font-medium text-gray-500">Хүйс</p>
               <p className="mt-1 capitalize">
-                {profile.gender || "Not provided"}
+                {profile.gender || "Мэдээлэл байхгүй"}
               </p>
             </div>
           </CardContent>
@@ -98,20 +98,20 @@ const ProfileView: React.FC<{
         {/* Contact Information Card */}
         <Card>
           <CardHeader>
-            <CardTitle>Contact Information</CardTitle>
+            <CardTitle>Холбоо барих</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <p className="text-sm font-medium text-gray-500">Phone</p>
-              <p className="mt-1">{profile.phone || "Not provided"}</p>
+              <p className="text-sm font-medium text-gray-500">Утас</p>
+              <p className="mt-1">{profile.phone || "Мэдээлэл байхгүй"}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-500">Address</p>
-              <p className="mt-1">{profile.address || "Not provided"}</p>
+              <p className="text-sm font-medium text-gray-500">Хаяг</p>
+              <p className="mt-1">{profile.address || "Мэдээлэл байхгүй"}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-500">Zip Code</p>
-              <p className="mt-1">{profile.zip_code || "Not provided"}</p>
+              <p className="text-sm font-medium text-gray-500">Шуудангийн код</p>
+              <p className="mt-1">{profile.zip_code || "Мэдээлэл байхгүй"}</p>
             </div>
           </CardContent>
         </Card>
@@ -120,23 +120,23 @@ const ProfileView: React.FC<{
       {/* Account Details Card */}
       <Card className="mt-6">
         <CardHeader>
-          <CardTitle>Account Details</CardTitle>
+          <CardTitle>Бүртгэлийн мэдээлэл</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           <div className="flex justify-between">
-            <span className="text-sm text-gray-500">Account ID:</span>
+            <span className="text-sm text-gray-500">Бүртгэлийн ID:</span>
             <span className="font-mono text-sm font-medium">
               {profile.id.slice(0, 8)}...
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-sm text-gray-500">Member Since:</span>
+            <span className="text-sm text-gray-500">Бүртгүүлсэн:</span>
             <span className="text-sm font-medium">
               {new Date(profile.created_at).toLocaleDateString()}
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-sm text-gray-500">Last Updated:</span>
+            <span className="text-sm text-gray-500">Сүүлд шинэчилсэн:</span>
             <span className="text-sm font-medium">
               {new Date(profile.updated_at).toLocaleDateString()}
             </span>

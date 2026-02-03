@@ -10,6 +10,7 @@ import { JwtAuthGuard } from "@/common/guards/jwt_auth.guard";
 // import { GoogleStrategy } from '@/common/strategies/google_oauth.strategy';
 import { JwtStrategy } from "@/common/strategies/jwt.strategy";
 import { LocalStrategy } from "@/common/strategies/local.strategy";
+import { OptionalStrategy } from "@/common/strategies/optional.strategy";
 import { PartialJwtStrategy } from "@/common/strategies/partial_jwt.strategy";
 import { PasswordResetJwtStrategy } from "@/common/strategies/password_reset_jwt_auth.strategy";
 import { RefreshTokenStrategy } from "@/common/strategies/refresh_token.strategy";
@@ -50,6 +51,7 @@ import { AuthService } from "./auth.service";
     LocalStrategy,
     PasswordResetJwtStrategy,
     RefreshTokenStrategy,
+    OptionalStrategy,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,

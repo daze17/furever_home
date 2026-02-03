@@ -3,48 +3,32 @@
 import { CircleUserRound, Heart, Menu, X } from "lucide-react";
 import { useState } from "react";
 
+import { CustomerProfileResponseBody } from "customer_api";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Button } from "ui";
 import { cn } from "utils";
 
-export const MobileNav: React.FC = () => {
+import { navLinks } from "./navigation";
+import { ProfileSection } from "./profile_section";
+
+export const MobileNav: React.FC<{
+  profile: CustomerProfileResponseBody | null;
+}> = ({ profile }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const pathname = usePathname();
 
-  const navItems = [
-    {
-      label: "Нүүр",
-      href: "/",
-    },
-    {
-      label: "Амьтдын төрөл",
-      href: "/pets",
-    },
-    {
-      label: "Үрчлүүлэх",
-      href: "/adoption",
-    },
-    {
-      label: "Хандив",
-      href: "/donation",
-    },
-    {
-      label: "Асуулт хариулт",
-      href: "/faq",
-    },
-  ];
-
   return (
-    <>
-      <button
+    <div className="bg-white">
+      <Button
         className="relative z-30 rounded-lg p-2 text-gray-700 transition-colors hover:bg-orange-50 hover:text-orange-600 md:hidden"
         onClick={() => setIsOpen((cur) => !cur)}
         aria-label="Toggle menu"
+        variant={"outline"}
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
+      </Button>
 
       <nav
         className={cn(
@@ -52,8 +36,8 @@ export const MobileNav: React.FC = () => {
           isOpen && "h-[calc(100vh-80px)]",
         )}
       >
-        <ul className="flex w-full flex-col gap-2 px-6">
-          {navItems.map((item, index) => {
+        <ul className="flex w-full flex-col gap-2 bg-white px-6">
+          {navLinks.map((item, index) => {
             const isActive = pathname === item.href;
             return (
               <li key={index} className="w-full">
@@ -74,27 +58,35 @@ export const MobileNav: React.FC = () => {
           })}
         </ul>
 
-        <div className="mt-8 flex w-full flex-col gap-3 px-6">
-          <Button asChild className="w-full">
-            <Link
-              className="flex items-center justify-center gap-2"
-              href="/login"
-              onClick={() => setIsOpen(false)}
-            >
-              <CircleUserRound className="size-5" />
-              Нэвтрэх
-            </Link>
-          </Button>
-          <Button variant="outline" asChild className="w-full">
-            <Link
-              className="flex items-center justify-center gap-2"
-              href="/favorites"
-              onClick={() => setIsOpen(false)}
-            >
-              <Heart className="size-5" />
-              Таалагдсан
-            </Link>
-          </Button>
+        <div className="flex h-36 w-full items-center justify-center bg-white">
+          {profile ? (
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/favorites" className="flex items-center gap-2">
+                  <Heart size={20} strokeWidth={2} />
+                  <span className="font-medium">Таалагдсан</span>
+                </Link>
+              </Button>
+              <ProfileSection profile={profile} />
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Button
+                asChild
+                variant={"ghost"}
+                onClick={() => setIsOpen(false)}
+              >
+                <Link href="/login" className="flex items-center gap-2">
+                  <span className="font-medium">Нэвтрэх</span>
+                </Link>
+              </Button>
+              <Button asChild onClick={() => setIsOpen(false)}>
+                <Link href="/register" className="flex items-center gap-2">
+                  <span className="font-medium">Бүртгүүлэх</span>
+                </Link>
+              </Button>
+            </div>
+          )}
         </div>
       </nav>
 
@@ -104,6 +96,6 @@ export const MobileNav: React.FC = () => {
           onClick={() => setIsOpen(false)}
         />
       )}
-    </>
+    </div>
   );
 };

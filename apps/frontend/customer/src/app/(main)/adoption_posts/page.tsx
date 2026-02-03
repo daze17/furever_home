@@ -1,0 +1,64 @@
+import { AdoptionPostsQuery } from "customer_api";
+import Link from "next/link";
+
+import { ErrorCard } from "@/components/error_card";
+import { client } from "@/services/client.server";
+import {
+  filterValidFieldsFromObjectBySchema,
+  removeNullFromObject,
+} from "@/utils";
+
+import AdoptionPostsList from "./adoption_posts_list";
+import { AdoptionPostsListPagination } from "./adoption_posts_list_pagination";
+import { adoptionPostsListSPCache, searchParamsCache } from "./search_params";
+
+const AdoptionPostsListPage: React.Page = async (props) => {
+  const searchParams = await props.searchParams;
+  searchParamsCache.parse(searchParams);
+  adoptionPostsListSPCache.parse(searchParams);
+
+  const { order, ...rest } = removeNullFromObject(searchParamsCache.all());
+
+  // Get only filter params (excluding pagination) to detect filter changes
+  const filterParams = adoptionPostsListSPCache.all();
+
+  const _searchParams = {
+    ...rest,
+    ...order,
+    current_page: rest.page, // Map URL 'page' to API 'current_page'
+  };
+
+  const validQuery = filterValidFieldsFromObjectBySchema(
+    AdoptionPostsQuery.unwrap(),
+    _searchParams,
+  );
+
+  const response = await client.adoptionPosts.getAdoptionPostsList({
+    query: validQuery,
+  });
+
+  const filterKey = JSON.stringify(filterParams);
+
+  if (response.status !== 200) {
+    return (
+      <ErrorCard title={"Алдаа"} text={"Алдаа гарлаа"} className="mb-18">
+        <Link
+          href="/"
+          className="rounded-sm border border-secondary px-6 py-3 text-secondary"
+        >
+          {"Нүүр хуудас руу буцах"}
+        </Link>
+      </ErrorCard>
+    );
+  }
+
+  return (
+    <AdoptionPostsList
+      posts={response.body.data}
+      meta={response.body.meta}
+      pagination={<AdoptionPostsListPagination key="pagination" meta={response.body.meta} />}
+    />
+  );
+};
+
+export default AdoptionPostsListPage;

@@ -78,7 +78,6 @@ describe("PetsService", () => {
         birth_date: "2020-01-01",
         size: "medium",
         notes: "Very friendly",
-        pet_image_url: null,
         pet_extra_information_id: null,
         created_at: new Date(),
         updated_at: new Date(),
@@ -113,7 +112,6 @@ describe("PetsService", () => {
         birth_date: null,
         size: null,
         notes: null,
-        pet_image_url: null,
         pet_extra_information_id: null,
         created_at: new Date(),
         updated_at: new Date(),
@@ -163,8 +161,7 @@ describe("PetsService", () => {
             birth_date: "2020-01-01",
             size: "medium",
             notes: null,
-            pet_image_url: null,
-            pet_extra_information_id: null,
+                pet_extra_information_id: null,
             created_at: new Date(),
             updated_at: new Date(),
           },
@@ -177,8 +174,7 @@ describe("PetsService", () => {
             birth_date: "2019-05-15",
             size: "small",
             notes: null,
-            pet_image_url: null,
-            pet_extra_information_id: null,
+                pet_extra_information_id: null,
             created_at: new Date(),
             updated_at: new Date(),
           },
@@ -213,8 +209,7 @@ describe("PetsService", () => {
             birth_date: "2020-01-01",
             size: "medium",
             notes: null,
-            pet_image_url: null,
-            pet_extra_information_id: null,
+                pet_extra_information_id: null,
             created_at: new Date(),
             updated_at: new Date(),
           },
@@ -248,8 +243,7 @@ describe("PetsService", () => {
             birth_date: "2020-01-01",
             size: "medium",
             notes: null,
-            pet_image_url: null,
-            pet_extra_information_id: null,
+                pet_extra_information_id: null,
             created_at: new Date(),
             updated_at: new Date(),
           },
@@ -323,8 +317,7 @@ describe("PetsService", () => {
             birth_date: "2020-01-01",
             size: "medium",
             notes: null,
-            pet_image_url: null,
-            pet_extra_information_id: null,
+                pet_extra_information_id: null,
             created_at: new Date(),
             updated_at: new Date(),
           },
@@ -356,7 +349,6 @@ describe("PetsService", () => {
         birth_date: "2020-01-01",
         size: "medium",
         notes: null,
-        pet_image_url: null,
         pet_extra_information_id: null,
         created_at: new Date(),
         updated_at: new Date(),
@@ -417,7 +409,6 @@ describe("PetsService", () => {
         birth_date: "2020-01-01",
         size: "medium",
         notes: null,
-        pet_image_url: null,
         pet_extra_information_id: null,
         created_at: new Date(),
         updated_at: new Date(),
@@ -477,7 +468,6 @@ describe("PetsService", () => {
         birth_date: "2020-01-01",
         size: "medium",
         notes: null,
-        pet_image_url: null,
         pet_extra_information_id: null,
         created_at: new Date(),
         updated_at: new Date(),
@@ -510,7 +500,6 @@ describe("PetsService", () => {
         birth_date: "2020-01-01",
         size: "medium",
         notes: null,
-        pet_image_url: null,
         pet_extra_information_id: null,
         created_at: new Date(),
         updated_at: new Date(),
@@ -537,7 +526,7 @@ describe("PetsService", () => {
       // Arrange
       const petId = "pet-123";
       const updateData: UpdatePetRequestBody = {
-        pet_image_url: "https://example.com/new-image.jpg",
+        name: "Buddy Renamed",
       };
 
       const existingPet = {
@@ -549,7 +538,6 @@ describe("PetsService", () => {
         birth_date: "2020-01-01",
         size: "medium",
         notes: null,
-        pet_image_url: null,
         pet_extra_information_id: null,
         created_at: new Date(),
         updated_at: new Date(),
@@ -557,7 +545,7 @@ describe("PetsService", () => {
 
       const updatedPet = {
         ...existingPet,
-        pet_image_url: "https://example.com/new-image.jpg",
+        name: "Buddy Renamed",
         updated_at: new Date(),
       };
 
@@ -569,8 +557,8 @@ describe("PetsService", () => {
 
       // Assert
       expect(repository.updatePet).toHaveBeenCalledWith(petId, updateData);
-      expect(result.pet_image_url).toBe("https://example.com/new-image.jpg");
-      expect(result.name).toBe("Buddy"); // Other fields unchanged
+      expect(result.name).toBe("Buddy Renamed");
+      expect(result.species).toBe("dog"); // Other fields unchanged
     });
   });
 
@@ -587,7 +575,6 @@ describe("PetsService", () => {
         birth_date: "2020-01-01",
         size: "medium",
         notes: null,
-        pet_image_url: null,
         pet_extra_information_id: null,
         created_at: new Date(),
         updated_at: new Date(),
@@ -631,7 +618,6 @@ describe("PetsService", () => {
         birth_date: "2020-01-01",
         size: "medium",
         notes: null,
-        pet_image_url: null,
         pet_extra_information_id: null,
         created_at: new Date(),
         updated_at: new Date(),
@@ -660,7 +646,6 @@ describe("PetsService", () => {
         birth_date: "2020-01-01",
         size: "medium",
         notes: null,
-        pet_image_url: null,
         pet_extra_information_id: null,
         created_at: new Date(),
         updated_at: new Date(),
@@ -691,7 +676,6 @@ describe("PetsService", () => {
         birth_date: "2020-01-01",
         size: "medium",
         notes: null,
-        pet_image_url: null,
         pet_extra_information_id: null,
         created_at: new Date(),
         updated_at: new Date(),
@@ -724,7 +708,6 @@ describe("PetsService", () => {
         birth_date: "2020-01-01",
         size: "medium",
         notes: null,
-        pet_image_url: null,
         pet_extra_information_id: null,
         created_at: new Date(),
         updated_at: new Date(),

@@ -5,18 +5,24 @@ import { ClsModule } from "nestjs-cls";
 import { LoggerModule } from "nestjs-pino";
 
 import { configuration, validate } from "@/common/config/configuration";
+import { AdoptionPostsModule } from "@/modules/adoption_posts/adoption_posts.module";
 import { AuthModule } from "@/modules/auth/auth.module";
+import { AwsModule } from "@/modules/aws/aws.module";
+import { AwsS3Module } from "@/modules/aws_s3/aws_s3.module";
 import { CustomerSettingsModule } from "@/modules/customer_settings/customer_settings.module";
+import { DatabaseModule } from "@/modules/database/database.module";
 import { EmailQueueModule } from "@/modules/email_queue/email_queue.module";
+import { FileModule } from "@/modules/file/file.module";
 import { PetsModule } from "@/modules/pets/pets.module";
 
-import { DatabaseModule } from "../database/database.module";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { HealthModule } from "./health.module";
 
 @Module({
   imports: [
+    AwsModule,
+    AwsS3Module,
     LoggerModule.forRoot({
       exclude: [
         {
@@ -55,9 +61,11 @@ import { HealthModule } from "./health.module";
       }),
       inject: [ConfigService],
     }),
+    AdoptionPostsModule,
     AuthModule,
     CustomerSettingsModule,
     EmailQueueModule,
+    FileModule,
     PetsModule,
     DatabaseModule,
     HealthModule,

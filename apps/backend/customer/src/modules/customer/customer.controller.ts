@@ -1,6 +1,7 @@
-import { Controller } from "@nestjs/common";
+import { Controller, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { TsRestHandler, tsRestHandler } from "@ts-rest/nest";
 import { customerContract, CustomerProfileResponseBody } from "customer_api";
+import { FileFastifyInterceptor } from "fastify-file-interceptor";
 
 import { CustomerService } from "./customer.service";
 
@@ -20,6 +21,37 @@ export class CustomerController {
         return {
           status: 200,
           body: parsedData,
+        };
+      },
+    );
+  }
+
+  @TsRestHandler(customerContract.customer.updateCustomerProfile)
+  async updateCustomerProfile() {
+    return tsRestHandler(
+      customerContract.customer.updateCustomerProfile,
+      async ({ body }) => {
+        await this.customerService.updateCustomerProfile(body);
+
+        return {
+          status: 200,
+          body: {},
+        };
+      },
+    );
+  }
+
+  @TsRestHandler(customerContract.customer.uploadProfileImage)
+  @UseInterceptors(FileFastifyInterceptor("file", {}))
+  async uploadProfileImage(@UploadedFile() file: Express.Multer.File) {
+    return tsRestHandler(
+      customerContract.customer.uploadProfileImage,
+      async () => {
+        const uploadedUrl = await this.customerService.uploadProfileImage(file);
+
+        return {
+          status: 201,
+          body: uploadedUrl,
         };
       },
     );

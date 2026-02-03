@@ -34,9 +34,7 @@ type SettingsFormProps = {
   initialSettings: CustomerSettingsResponseBody;
 };
 
-export const SettingsForm: React.FC<SettingsFormProps> = ({
-  initialSettings,
-}) => {
+const SettingsForm: React.FC<SettingsFormProps> = ({ initialSettings }) => {
   const [isPending, setIsPending] = useState(false);
   const router = useRouter();
 
@@ -80,7 +78,8 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
       }
     } catch (error) {
       toast.error("Сүлжээний алдаа", {
-        description: "Тохиргоо хадгалах боломжгүй. Интернэт холболтоо шалгана уу.",
+        description:
+          "Тохиргоо хадгалах боломжгүй. Интернэт холболтоо шалгана уу.",
       });
     } finally {
       setIsPending(false);
@@ -94,7 +93,8 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
           <CardHeader>
             <CardTitle>Мэдэгдлийн тохиргоо</CardTitle>
             <CardDescription>
-              Furever Home-оос ирэх мэдэгдлийг хэрхэн хүлээн авахаа тохируулна уу
+              Furever Home-оос ирэх мэдэгдлийг хэрхэн хүлээн авахаа тохируулна
+              уу
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -109,7 +109,8 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                         Имэйл мэдэгдэл
                       </FormLabel>
                       <FormDescription>
-                        Үрчлэлт, өргөдөл болон чухал мэдээллийг имэйлээр хүлээн авах
+                        Үрчлэлт, өргөдөл болон чухал мэдээллийг имэйлээр хүлээн
+                        авах
                       </FormDescription>
                     </div>
                     <FormControl>
@@ -128,9 +129,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                     <div className="space-y-0.5">
-                      <FormLabel className="text-base">
-                        SMS мэдэгдэл
-                      </FormLabel>
+                      <FormLabel className="text-base">SMS мэдэгдэл</FormLabel>
                       <FormDescription>
                         Яаралтай мэдээлэл болон сануулгыг мессежээр хүлээн авах
                       </FormDescription>
@@ -170,3 +169,5 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
     </Form>
   );
 };
+
+export default SettingsForm;

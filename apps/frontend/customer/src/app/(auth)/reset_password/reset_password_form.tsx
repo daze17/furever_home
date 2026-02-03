@@ -24,20 +24,20 @@ import { client } from "@/services/client";
 // Password validation schema with confirmation
 const passwordSchema = z
   .string()
-  .min(1, "Password is required")
-  .regex(/^[!-~]+$/, "Invalid characters")
-  .min(8, "Password must be at least 8 characters")
-  .regex(/.*[A-Z].*/, "Password must contain at least one uppercase letter")
-  .regex(/.*[a-z].*/, "Password must contain at least one lowercase letter")
-  .regex(/.*[0-9].*/, "Password must contain at least one number");
+  .min(1, "Нууц үг шаардлагатай")
+  .regex(/^[!-~]+$/, "Буруу тэмдэгт")
+  .min(8, "Нууц үг хамгийн багадаа 8 тэмдэгт байх ёстой")
+  .regex(/.*[A-Z].*/, "Нууц үг дор хаяж нэг том үсэг агуулсан байх ёстой")
+  .regex(/.*[a-z].*/, "Нууц үг дор хаяж нэг жижиг үсэг агуулсан байх ёстой")
+  .regex(/.*[0-9].*/, "Нууц үг дор хаяж нэг тоо агуулсан байх ёстой");
 
 const schema = z
   .object({
     newPassword: passwordSchema,
-    confirmPassword: z.string().min(1, "Please confirm your password"),
+    confirmPassword: z.string().min(1, "Нууц үгээ баталгаажуулна уу"),
   })
   .refine(({ newPassword, confirmPassword }) => newPassword === confirmPassword, {
-    message: "Passwords don't match",
+    message: "Нууц үг таарахгүй байна",
     path: ["confirmPassword"],
   });
 
@@ -76,30 +76,30 @@ export const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
 
       switch (response.status) {
         case 201:
-          toast.success("Password reset successful", {
-            description: "You can now login with your new password",
+          toast.success("Нууц үг амжилттай сэргээгдлээ", {
+            description: "Та шинэ нууц үгээрээ нэвтэрч болно",
           });
           router.push("/login");
           break;
         case 400:
-          toast.error("Invalid request", {
-            description: "Please check your password requirements",
+          toast.error("Буруу хүсэлт", {
+            description: "Нууц үгийн шаардлагыг шалгана уу",
           });
           break;
         case 401:
-          toast.error("Invalid or expired token", {
-            description: "Please request a new password reset link",
+          toast.error("Хүчингүй эсвэл хугацаа дууссан токен", {
+            description: "Шинэ нууц үг сэргээх холбоос авна уу",
           });
-          setTimeout(() => router.push("/forgot-password"), 2000);
+          setTimeout(() => router.push("/forgot_password"), 2000);
           break;
         default:
-          toast.error("Something went wrong", {
-            description: "Please try again later",
+          toast.error("Алдаа гарлаа", {
+            description: "Дараа дахин оролдоно уу",
           });
       }
     } catch (error) {
-      toast.error("Error", {
-        description: "Unable to reset password",
+      toast.error("Алдаа", {
+        description: "Нууц үг сэргээх боломжгүй",
       });
     } finally {
       setIsPending(false);
@@ -112,9 +112,9 @@ export const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
         <Card className="shadow-xl">
           <CardContent className="flex flex-col items-center gap-y-5 p-10">
             <div className="flex w-full flex-col items-center gap-y-2.5">
-              <h1 className="text-2xl font-semibold">Reset Password</h1>
+              <h1 className="text-2xl font-semibold">Нууц үг сэргээх</h1>
               <p className="text-center text-sm text-muted-foreground">
-                Enter your new password below
+                Шинэ нууц үгээ оруулна уу
               </p>
             </div>
 
@@ -132,7 +132,7 @@ export const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
                         {...field}
                         value={field.value ?? ""}
                         type="password"
-                        placeholder="New password"
+                        placeholder="Шинэ нууц үг"
                       />
                     </FormControl>
                     <FormMessage />
@@ -150,7 +150,7 @@ export const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
                         {...field}
                         value={field.value ?? ""}
                         type="password"
-                        placeholder="Confirm password"
+                        placeholder="Нууц үг баталгаажуулах"
                       />
                     </FormControl>
                     <FormMessage />
@@ -160,17 +160,17 @@ export const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             </fieldset>
 
             <div className="w-full text-xs text-muted-foreground">
-              <p className="font-medium">Password requirements:</p>
+              <p className="font-medium">Нууц үгийн шаардлага:</p>
               <ul className="ml-4 mt-1 list-disc space-y-1">
-                <li>At least 8 characters long</li>
-                <li>Contains at least one uppercase letter</li>
-                <li>Contains at least one lowercase letter</li>
-                <li>Contains at least one number</li>
+                <li>Хамгийн багадаа 8 тэмдэгт</li>
+                <li>Дор хаяж нэг том үсэг</li>
+                <li>Дор хаяж нэг жижиг үсэг</li>
+                <li>Дор хаяж нэг тоо</li>
               </ul>
             </div>
 
             <Button disabled={isPending} className="w-full">
-              {isPending ? "Resetting..." : "Reset Password"}
+              {isPending ? "Сэргээж байна..." : "Нууц үг сэргээх"}
             </Button>
           </CardContent>
         </Card>

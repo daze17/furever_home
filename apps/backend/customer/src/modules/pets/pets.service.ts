@@ -1,20 +1,36 @@
 import {
   ForbiddenException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
+  UnprocessableEntityException,
 } from "@nestjs/common";
-import { CreatePetRequestBody, PetsQuery } from "customer_api";
+import { ConfigService } from "@nestjs/config";
+import { MimeTypeEnum } from "common_api";
+import {
+  CreatePetMedicalRecordRequestBody,
+  CreatePetRequestBody,
+  PetsQuery,
+  UpdatePetMedicalRecordRequestBody,
+} from "customer_api";
 import { ClsService } from "nestjs-cls";
 
 import { CLS_KEYS } from "@/common/constants/cls.constants";
+import { AwsService } from "@/modules/aws/aws.service";
+import { AwsS3Service } from "@/modules/aws_s3/aws_s3.service";
+import { TransactionWorkService } from "@/modules/database/transaction_work.service";
 
 import { PetsRepository } from "./pets.repository";
 
 @Injectable()
 export class PetsService {
   constructor(
+    private readonly awsService: AwsService,
+    private readonly awsS3Service: AwsS3Service,
+    private readonly config: ConfigService,
     private readonly cls: ClsService,
     private readonly petsRepository: PetsRepository,
+    private readonly transactionWorkService: TransactionWorkService,
   ) {}
 
   async createPet(data: CreatePetRequestBody) {
@@ -26,9 +42,47 @@ export class PetsService {
     );
   }
 
+  async createPetMedicalRecord(
+    id: number,
+    data: CreatePetMedicalRecordRequestBody,
+  ) {
+    const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);
+    const pet = await this.petsRepository.getOwnPet(accountProfile.id, id);
+    if (!pet) {
+      throw new NotFoundException(`Pet with ID ${id} not found`);
+    }
+
+    const [record] = await this.petsRepository.createPetMedicalRecord(id, data);
+    if (data.vaccinations?.length) {
+      await this.petsRepository.createVaccinations(record!.id, data.vaccinations);
+    }
+  }
+
+  async updatePetMedicalRecord(
+    id: number,
+    data: UpdatePetMedicalRecordRequestBody,
+  ) {
+    const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);
+    const pet = await this.petsRepository.getOwnPet(accountProfile.id, id);
+    if (!pet) {
+      throw new NotFoundException(`Pet with ID ${id} not found`);
+    }
+
+    await this.transactionWorkService.run(async (tx) => {
+      await this.petsRepository.deletePetMedicalRecord(id, tx);
+      const [record] = await this.petsRepository.createPetMedicalRecord(id, data, tx);
+      if (data.vaccinations?.length) {
+        await this.petsRepository.createVaccinations(record!.id, data.vaccinations, tx);
+      }
+    });
+  }
+
   async getOwnPetsList(query: PetsQuery = {}) {
     const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);
-    const response = await this.petsRepository.getOwnPetsList(accountProfile.id, query);
+    const response = await this.petsRepository.getOwnPetsList(
+      accountProfile.id,
+      query,
+    );
 
     return response;
   }
@@ -41,6 +95,17 @@ export class PetsService {
 
   async getAdoptablePet(id: number) {
     const pet = await this.petsRepository.getAdoptablePet(id);
+
+    if (!pet) {
+      throw new NotFoundException(`Pet with ID ${id} not found`);
+    }
+
+    return pet;
+  }
+
+  async getOwnPet(id: number) {
+    const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);
+    const pet = await this.petsRepository.getOwnPet(accountProfile.id, id);
 
     if (!pet) {
       throw new NotFoundException(`Pet with ID ${id} not found`);
@@ -89,5 +154,30 @@ export class PetsService {
 
     // Delete pet
     await this.petsRepository.deletePet(id);
+  }
+
+  async uploadPetImages(files: Express.Multer.File[]) {
+    if (!files) {
+      throw new UnprocessableEntityException("FILES_NOT_INCLUDED");
+    }
+
+    const isValid = files.every((file) =>
+      Object.values(MimeTypeEnum.enum).includes(file.mimetype as MimeTypeEnum),
+    );
+
+    if (!isValid) {
+      throw new UnprocessableEntityException("INVALID_FILE_TYPE");
+    }
+
+    const uploadedFiles = await this.awsS3Service.uploadMultiplePublicFiles(
+      files,
+      "pet_images",
+    );
+
+    const urls = uploadedFiles.map((file) =>
+      new URL(file.key, this.config.get("app.assetHost")).toString(),
+    );
+
+    return urls;
   }
 }

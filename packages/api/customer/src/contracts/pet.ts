@@ -3,10 +3,13 @@ import { z } from "zod";
 import { c } from "@/contract";
 import { CustomError } from "@/models/custom_error";
 import {
+  CreatePetMedicalRecordRequestBody,
   CreatePetRequestBody,
+  OwnPetResponseBody,
   PetResponseBody,
   PetsListResponseBody,
   PetsQuery,
+  UpdatePetMedicalRecordRequestBody,
   UpdatePetRequestBody,
 } from "@/schemas/dtos";
 import { PaginationMeta } from "@/models/pagination";
@@ -23,6 +26,34 @@ export const petContract = c.router({
     },
     summary: "Create a new pet",
   },
+  // Create a new pet
+  createPetMedicalRecord: {
+    method: "POST",
+    path: "/pets/:id/medical_records",
+    pathParams: z.object({
+      id: z.coerce.number(),
+    }),
+    body: CreatePetMedicalRecordRequestBody,
+    responses: {
+      201: z.object({}),
+      400: CustomError,
+    },
+    summary: "Add a new medical record to a pet",
+  },
+
+  updatePetMedicalRecord: {
+    method: "PATCH",
+    path: "/pets/:id/medical_records",
+    pathParams: z.object({
+      id: z.coerce.number(),
+    }),
+    body: UpdatePetMedicalRecordRequestBody,
+    responses: {
+      200: z.object({}),
+      400: CustomError,
+    },
+    summary: "Add a new medical record to a pet",
+  },
 
   // Get all own pets (with optional filters)
   getOwnPetsList: {
@@ -37,6 +68,20 @@ export const petContract = c.router({
       400: CustomError,
     },
     summary: "List all adoptable pets with optional filters",
+  },
+
+  // Get a single owned pet by ID
+  getOwnPet: {
+    method: "GET",
+    path: "/own_pets/:id",
+    pathParams: z.object({
+      id: z.coerce.number(),
+    }),
+    responses: {
+      200: OwnPetResponseBody,
+      404: CustomError,
+    },
+    summary: "Get own pet by ID",
   },
 
   // Get all adoptable pets (with optional filters)
@@ -97,5 +142,15 @@ export const petContract = c.router({
       404: CustomError,
     },
     summary: "Delete a pet by ID",
+  },
+  uploadPetImages: {
+    method: "POST",
+    path: "/pets/upload",
+    body: z.object({}),
+    contentType: "multipart/form-data",
+    responses: {
+      201: z.string().array(),
+    },
+    summary: "upload file and return aws s3 path",
   },
 });

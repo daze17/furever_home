@@ -3,25 +3,26 @@ import Link from "next/link";
 
 import { ErrorCard } from "@/components/error_card";
 import { client } from "@/services/client.server";
-import { filterValidFieldsFromObjectBySchema, removeNullFromObject } from "@/utils";
+import {
+  filterValidFieldsFromObjectBySchema,
+  removeNullFromObject,
+} from "@/utils";
 
-// import PetsList from "./pets_list";
-import { PetListPagination } from "../pets_list_pagination";
-import { petsListSPCache, searchParamsCache } from "../search_params";
+import FavoritesList from "./components/favorites_list";
+import { FavoritesListPagination } from "./components/favorites_list_pagination";
+import { favoritesListSPCache, searchParamsCache } from "./search_params";
 
-const MyPetsListPage: React.Page = async (props) => {
+const FavoritesPage: React.Page = async (props) => {
   const searchParams = await props.searchParams;
-  // searchParamsCache.parse(searchParams);
-  // petsListSPCache.parse(searchParams);
+  searchParamsCache.parse(searchParams);
+  favoritesListSPCache.parse(searchParams);
 
   const { order, ...rest } = removeNullFromObject(searchParamsCache.all());
-
-  // Get only filter params (excluding pagination) to detect filter changes
-  const filterParams = petsListSPCache.all();
 
   const _searchParams = {
     ...rest,
     ...order,
+    current_page: rest.page, // Map URL 'page' to API 'current_page'
   };
 
   const validQuery = filterValidFieldsFromObjectBySchema(
@@ -29,11 +30,9 @@ const MyPetsListPage: React.Page = async (props) => {
     _searchParams,
   );
 
-  const response = await client.pets.getAdoptablePetsList({
+  const response = await client.adoptionPosts.getFavoriteAdoptionPostsList({
     query: validQuery,
   });
-
-  const filterKey = JSON.stringify(filterParams);
 
   if (response.status !== 200) {
     return (
@@ -49,13 +48,12 @@ const MyPetsListPage: React.Page = async (props) => {
   }
 
   return (
-    <div>pets</div>
-    // <PetsList
-    //   pets={response.body.data}
-    //   meta={response.body.meta}
-    //   pagination={<PetListPagination meta={response.body.meta} />}
-    // />
+    <FavoritesList
+      adoptionPosts={response.body.data}
+      meta={response.body.meta}
+      pagination={<FavoritesListPagination meta={response.body.meta} />}
+    />
   );
 };
 
-export default MyPetsListPage;
+export default FavoritesPage;

@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { MailerService } from "@nestjs-modules/mailer";
 import path from "path";
@@ -18,6 +18,8 @@ interface EmailProps {
 
 @Injectable()
 export class EmailService {
+  private readonly logger = new Logger(EmailService.name);
+
   constructor(
     private mailerService: MailerService,
     private readonly configService: ConfigService,
@@ -71,8 +73,14 @@ export class EmailService {
     try {
       await this.mailerService.sendMail(params);
     } catch (error) {
-      console.error(error);
-      // throw new Error("EMAIL_SENDING_FAILED");
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorStack = error instanceof Error ? error.stack : undefined;
+      this.logger.error({
+        msg: `Failed to send email to ${to}: ${title}`,
+        error: errorMessage,
+        stack: errorStack,
+      });
+      throw new Error("EMAIL_SENDING_FAILED");
     }
   }
 }

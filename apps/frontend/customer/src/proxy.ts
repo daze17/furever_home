@@ -1,6 +1,6 @@
 import type { NextMiddleware, NextRequest } from "next/server";
 
-import { allowedRoutes, authRoutes, publicRoutes } from "@/configs/default";
+import { authRoutes, publicRoutes } from "@/configs/default";
 import { getSession } from "@/utils/server";
 
 export const config = {
@@ -21,6 +21,7 @@ type Session = {
   id: string;
   // role: UserRoleEnum;
 };
+
 export const proxy: NextMiddleware = async (request) => {
   const payload = await getSession();
   const session: Session | null = payload
@@ -53,7 +54,9 @@ const authRoutesGuard = (request: NextRequest, session: Session | null) => {
   }
 
   if (session) {
-    return Response.redirect(new URL("/", request.nextUrl), 307);
+    // Redirect authenticated users to callback URL or home
+    const callbackUrl = request.nextUrl.searchParams.get("callbackUrl") || "/";
+    return Response.redirect(new URL(callbackUrl, request.nextUrl), 307);
   }
 };
 
@@ -61,7 +64,7 @@ const protectedRoutesGuard = (
   request: NextRequest,
   session: Session | null,
 ) => {
-  const { origin, pathname } = request.nextUrl;
+  const { pathname } = request.nextUrl;
 
   const isProtectedRoute = ![...authRoutes, ...publicRoutes].some((route) => {
     if (typeof route === "string") {
@@ -74,16 +77,8 @@ const protectedRoutesGuard = (
     return;
   }
   if (!session) {
-    return Response.redirect(new URL("/login", request.nextUrl), 307);
-  }
-
-  const isAllowedRoute = allowedRoutes.some((route) => {
-    if (typeof route === "string") {
-      return route === pathname;
-    }
-    return route.test(pathname);
-  });
-  if (!isAllowedRoute) {
-    return Response.redirect(new URL("/login", request.nextUrl), 307);
+    const loginUrl = new URL("/login", request.nextUrl);
+    loginUrl.searchParams.set("callbackUrl", pathname);
+    return Response.redirect(loginUrl, 307);
   }
 };

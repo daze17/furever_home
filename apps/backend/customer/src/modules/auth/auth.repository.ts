@@ -42,7 +42,6 @@ export class AuthRepository {
   }
 
   async createCustomerWithGoogle(body: RegisterGoogleRequestBody) {
-    console.log(body, "body");
     const response = await this.db.transaction(async (transaction) => {
       const customer = (
         await transaction

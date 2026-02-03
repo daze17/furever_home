@@ -8,24 +8,30 @@ export const authRoutes: (string | RegExp)[] = [
   "/register/google/callback",
   "/register/create-profile",
   "/email_sent",
-  "/forgot-password",
-  /^\/forgot-password\/.*$/,
+  "/forgot_password",
+  /^\/forgot_password\/.*$/,
+  /^\/reset_password\/.*$/,
   "/verify",
   /^\/verify\/.*$/,
 ];
 export const publicRoutes: (string | RegExp)[] = [
   "/",
   "/pets",
+  /^\/adoption_posts.*$/,
   /^\/pets.*$/,
   "/users",
   /^\/users.*$/,
-  "/reset-password",
+  "/reset_password",
+  "/faq",
 ];
-const commonRoutes: (string | RegExp)[] = ["/profile", "/settings"];
 export const allowedRoutes: (string | RegExp)[] = [
-  ...commonRoutes,
   "/",
+  /^\/profile\/.*$/,
+  "/settings",
+  "/my_pets",
+  /^\/my_pets\/.*$/,
   "/pets",
+  "/favorites",
   "/users",
   /^\/users.*$/,
 ];

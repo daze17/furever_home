@@ -126,12 +126,11 @@ export const pets = pgTable(
     birth_date: date("birth_date"),
     species: species("species").notNull(),
     notes: text("notes"),
-    pet_image_url: text("pet_image_url"),
     size: size("size"),
     pet_status: pet_status("pet_status").notNull(),
     customer_id: uuid("customer_id")
       .references(() => customers.id, {
-        onDelete: "set null",
+        onDelete: "cascade",
       })
       .notNull(),
     pet_extra_information_id: uuid("pet_extra_information_id").references(
@@ -162,12 +161,22 @@ export const pet_medical_records = pgTable("pet_medical_records", {
       onDelete: "cascade",
     })
     .notNull(),
-  vaccination_name: text("vaccination_name"),
-  vaccination_date: date("vaccination_date"),
-  next_vaccination_date: date("next_vaccination_date"),
   is_spayed_neutered: boolean("is_spayed_neutered").default(false).notNull(),
   medical_notes: text("medical_notes"),
   allergies: text("allergies"),
+  ...timestamps,
+});
+
+export const vaccinations = pgTable("vaccinations", {
+  id: serial("id").primaryKey(),
+  medical_record_id: uuid("medical_record_id")
+    .references(() => pet_medical_records.id, {
+      onDelete: "cascade",
+    })
+    .notNull(),
+  name: text("name").notNull(),
+  date: date("date").notNull(),
+  notes: text("notes"),
   ...timestamps,
 });
 
@@ -356,14 +365,13 @@ export const messages = pgTable(
 export const favorites = pgTable(
   "favorites",
   {
-    id: serial("id").primaryKey(),
     customer_id: uuid("customer_id")
       .references(() => customers.id, {
         onDelete: "cascade",
       })
       .notNull(),
-    pet_id: integer("pet_id")
-      .references(() => pets.id, {
+    adoption_post_id: integer("adoption_post_id")
+      .references(() => adoption_posts.id, {
         onDelete: "cascade",
       })
       .notNull(),
@@ -374,10 +382,10 @@ export const favorites = pgTable(
       // Prevent duplicate favorites
       uniqueFavorite: unique("unique_favorite").on(
         table.customer_id,
-        table.pet_id,
+        table.adoption_post_id,
       ),
       customerIdx: index("favorite_customer_idx").on(table.customer_id),
-      petIdx: index("favorite_pet_idx").on(table.pet_id),
+      adoptionPostIdx: index("favorite_post_idx").on(table.adoption_post_id),
     };
   },
 );

@@ -25,19 +25,19 @@ import { client } from "@/services/client";
 // Password validation schema with confirmation
 const passwordSchema = z
   .string()
-  .min(1, "Password is required")
-  .regex(/^[!-~]+$/, "Invalid characters")
-  .min(8, "Password must be at least 8 characters")
-  .regex(/.*[A-Z].*/, "Password must contain at least one uppercase letter")
-  .regex(/.*[a-z].*/, "Password must contain at least one lowercase letter")
-  .regex(/.*[0-9].*/, "Password must contain at least one number");
+  .min(1, "Нууц үг шаардлагатай")
+  .regex(/^[!-~]+$/, "Буруу тэмдэгт")
+  .min(8, "Нууц үг хамгийн багадаа 8 тэмдэгт байх ёстой")
+  .regex(/.*[A-Z].*/, "Нууц үг дор хаяж нэг том үсэг агуулсан байх ёстой")
+  .regex(/.*[a-z].*/, "Нууц үг дор хаяж нэг жижиг үсэг агуулсан байх ёстой")
+  .regex(/.*[0-9].*/, "Нууц үг дор хаяж нэг тоо агуулсан байх ёстой");
 
 const schema = ChangePasswordRequestBody.extend({
-  confirmPassword: z.string().min(1, "Please confirm your password"),
+  confirmPassword: z.string().min(1, "Нууц үгээ баталгаажуулна уу"),
 }).refine(
   ({ newPassword, confirmPassword }) => newPassword === confirmPassword,
   {
-    message: "Passwords don't match",
+    message: "Нууц үг таарахгүй байна",
     path: ["confirmPassword"],
   },
 );
@@ -69,32 +69,32 @@ export const ChangePasswordForm: React.FC = () => {
 
       switch (response.status) {
         case 200:
-          toast.success("Password changed successfully", {
-            description: "Please login with your new password",
+          toast.success("Нууц үг амжилттай солигдлоо", {
+            description: "Шинэ нууц үгээрээ нэвтэрнэ үү",
           });
           // Clear session and redirect to login
           await fetch("/api/session", { method: "DELETE" });
           router.push("/login");
           break;
         case 400:
-          toast.error("Invalid current password", {
-            description: "Please check your current password and try again",
+          toast.error("Одоогийн нууц үг буруу байна", {
+            description: "Одоогийн нууц үгээ шалгаад дахин оролдоно уу",
           });
           break;
         case 401:
-          toast.error("Unauthorized", {
-            description: "Please login again",
+          toast.error("Зөвшөөрөлгүй", {
+            description: "Дахин нэвтэрнэ үү",
           });
           router.push("/login");
           break;
         default:
-          toast.error("Something went wrong", {
-            description: "Please try again later",
+          toast.error("Алдаа гарлаа", {
+            description: "Дараа дахин оролдоно уу",
           });
       }
     } catch (error) {
-      toast.error("Error", {
-        description: "Unable to change password",
+      toast.error("Алдаа", {
+        description: "Нууц үг солих боломжгүй",
       });
     } finally {
       setIsPending(false);
@@ -107,9 +107,9 @@ export const ChangePasswordForm: React.FC = () => {
         <Card className="shadow-xl">
           <CardContent className="flex flex-col items-center gap-y-5 p-10">
             <div className="flex w-full flex-col items-center gap-y-2.5">
-              <h1 className="text-2xl font-semibold">Change Password</h1>
+              <h1 className="text-2xl font-semibold">Нууц үг солих</h1>
               <p className="text-center text-sm text-muted-foreground">
-                Update your account password
+                Бүртгэлийн нууц үгээ шинэчлэх
               </p>
             </div>
 
@@ -122,13 +122,13 @@ export const ChangePasswordForm: React.FC = () => {
                 name="currentPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Current Password</FormLabel>
+                    <FormLabel>Одоогийн нууц үг</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         value={field.value ?? ""}
                         type="password"
-                        placeholder="Enter current password"
+                        placeholder="Одоогийн нууц үг"
                       />
                     </FormControl>
                     <FormMessage />
@@ -142,13 +142,13 @@ export const ChangePasswordForm: React.FC = () => {
                   name="newPassword"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>New Password</FormLabel>
+                      <FormLabel>Шинэ нууц үг</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           value={field.value ?? ""}
                           type="password"
-                          placeholder="Enter new password"
+                          placeholder="Шинэ нууц үг"
                         />
                       </FormControl>
                       <FormMessage />
@@ -162,13 +162,13 @@ export const ChangePasswordForm: React.FC = () => {
                     name="confirmPassword"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Confirm New Password</FormLabel>
+                        <FormLabel>Шинэ нууц үг баталгаажуулах</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             value={field.value ?? ""}
                             type="password"
-                            placeholder="Confirm new password"
+                            placeholder="Шинэ нууц үг баталгаажуулах"
                           />
                         </FormControl>
                         <FormMessage />
@@ -180,12 +180,12 @@ export const ChangePasswordForm: React.FC = () => {
             </fieldset>
 
             <div className="w-full text-xs text-muted-foreground">
-              <p className="font-medium">Password requirements:</p>
+              <p className="font-medium">Нууц үгийн шаардлага:</p>
               <ul className="ml-4 mt-1 list-disc space-y-1">
-                <li>At least 8 characters long</li>
-                <li>Contains at least one uppercase letter</li>
-                <li>Contains at least one lowercase letter</li>
-                <li>Contains at least one number</li>
+                <li>Хамгийн багадаа 8 тэмдэгт</li>
+                <li>Дор хаяж нэг том үсэг</li>
+                <li>Дор хаяж нэг жижиг үсэг</li>
+                <li>Дор хаяж нэг тоо</li>
               </ul>
             </div>
 
@@ -196,10 +196,10 @@ export const ChangePasswordForm: React.FC = () => {
                 onClick={() => router.back()}
                 className="w-full"
               >
-                Cancel
+                Цуцлах
               </Button>
               <Button disabled={isPending} className="w-full">
-                {isPending ? "Changing..." : "Change Password"}
+                {isPending ? "Солиж байна..." : "Нууц үг солих"}
               </Button>
             </div>
           </CardContent>

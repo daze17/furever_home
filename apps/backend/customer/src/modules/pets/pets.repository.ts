@@ -1,10 +1,19 @@
 import { Inject, Injectable } from "@nestjs/common";
+import { PetStatusEnum } from "common_api";
 import {
   CreatePetExtraInformationRequestBody,
+  CreatePetMedicalRecordRequestBody,
   CreatePetRequestBody,
   PetsQuery,
+  UpdatePetMedicalRecordRequestBody,
 } from "customer_api";
-import { pet_extra_informations, pets } from "database";
+import {
+  pet_extra_informations,
+  pet_images,
+  pet_medical_records,
+  pets,
+  vaccinations,
+} from "database";
 import {
   and,
   asc,
@@ -15,13 +24,14 @@ import {
   ilike,
   inArray,
   isNotNull,
-  isNull,
   lte,
   SQL,
 } from "drizzle-orm";
 
-import type { Database } from "@/modules/database/database.providers";
-import { PetStatusEnum } from "common_api";
+import type {
+  Database,
+  Transaction,
+} from "@/modules/database/database.providers";
 
 @Injectable()
 export class PetsRepository {
@@ -37,7 +47,6 @@ export class PetsRepository {
       birth_date,
       species,
       notes,
-      pet_image_url,
       size,
       pet_status,
       pet_extra_information,
@@ -48,12 +57,47 @@ export class PetsRepository {
       birth_date,
       species,
       notes,
-      pet_image_url,
       size,
       pet_status,
       customer_id: customerId,
       pet_extra_information_id: petExtraInformationId,
     });
+  }
+  async createPetMedicalRecord(
+    id: number,
+    data: CreatePetMedicalRecordRequestBody,
+    tx?: Transaction,
+  ) {
+    const executor = tx ?? this.db;
+
+    return await executor
+      .insert(pet_medical_records)
+      .values({
+        pet_id: id,
+        is_spayed_neutered: data?.is_spayed_neutered,
+        medical_notes: data?.medical_notes,
+        allergies: data?.allergies,
+      })
+      .returning({ id: pet_medical_records.id });
+  }
+
+  async createVaccinations(
+    medicalRecordId: string,
+    data: CreatePetMedicalRecordRequestBody["vaccinations"],
+    tx?: Transaction,
+  ) {
+    const executor = tx ?? this.db;
+    if (!data?.length) return;
+    await executor.insert(vaccinations).values(
+      data.map((v) => ({ ...v, medical_record_id: medicalRecordId })),
+    );
+  }
+
+  async deletePetMedicalRecord(petId: number, tx?: Transaction) {
+    const executor = tx ?? this.db;
+    await executor
+      .delete(pet_medical_records)
+      .where(eq(pet_medical_records.pet_id, petId));
   }
 
   async createPetExtraInformation(data: CreatePetExtraInformationRequestBody) {
@@ -86,16 +130,16 @@ export class PetsRepository {
     customerId: string,
     data: CreatePetRequestBody,
   ) {
-    await this.db.transaction(async (transaction) => {
+    return await this.db.transaction(async (transaction) => {
       const {
         name,
         birth_date,
         species,
         notes,
-        pet_image_url,
         size,
         pet_status,
         pet_extra_information,
+        image_urls,
       } = data;
 
       const {
@@ -121,17 +165,34 @@ export class PetsRepository {
         })
         .returning();
 
-      await transaction.insert(pets).values({
-        name,
-        birth_date,
-        species,
-        notes,
-        pet_image_url,
-        size,
-        pet_status,
-        customer_id: customerId,
-        pet_extra_information_id: createdPetExtraInformation.find(Boolean)!.id,
-      });
+      const [createdPet] = await transaction
+        .insert(pets)
+        .values({
+          name,
+          birth_date,
+          species,
+          notes,
+          size,
+          pet_status,
+          customer_id: customerId,
+          pet_extra_information_id:
+            createdPetExtraInformation.find(Boolean)!.id,
+        })
+        .returning({ id: pets.id });
+
+      // Create pet_images if URLs provided
+      if (image_urls && image_urls.length > 0) {
+        await transaction.insert(pet_images).values(
+          image_urls.map((url, index) => ({
+            pet_id: createdPet!.id,
+            image_url: url,
+            is_primary: index === 0,
+            display_order: index,
+          })),
+        );
+      }
+
+      return createdPet!.id;
     });
   }
 
@@ -149,6 +210,14 @@ export class PetsRepository {
 
     const _pets = await this.db.query.pets.findMany({
       where,
+      with: {
+        pet_extra_information: true,
+        pet_medical_records: {
+          with: {
+            vaccinations: true,
+          },
+        },
+      },
       orderBy: (query.sorting_order === "ascending" ? asc : desc)(
         this.mapPetsSortingField(query.sorting_field),
       ),
@@ -189,6 +258,11 @@ export class PetsRepository {
     const _pets = await this.db.query.pets.findMany({
       with: {
         pet_extra_information: true,
+        pet_medical_records: {
+          with: {
+            vaccinations: true,
+          },
+        },
       },
       where,
       orderBy: (query.sorting_order === "ascending" ? asc : desc)(
@@ -347,6 +421,33 @@ export class PetsRepository {
       ),
       with: {
         pet_extra_information: true,
+        pet_medical_records: {
+          with: {
+            vaccinations: true,
+          },
+        },
+        customer: true,
+      },
+    });
+
+    if (!pet) return null;
+
+    return {
+      ...pet,
+      owner_phone: pet.customer?.phone ?? null,
+    };
+  }
+
+  async getOwnPet(customerId: string, id: number) {
+    const pet = await this.db.query.pets.findFirst({
+      where: and(eq(pets.id, id), eq(pets.customer_id, customerId)),
+      with: {
+        pet_extra_information: true,
+        pet_medical_records: {
+          with: {
+            vaccinations: true,
+          },
+        },
       },
     });
 
@@ -362,11 +463,16 @@ export class PetsRepository {
       })
       .where(eq(pets.id, id));
 
-    // Fetch the updated pet with pet_extra_information
+    // Fetch the updated pet with relations
     const updatedPet = await this.db.query.pets.findFirst({
       where: eq(pets.id, id),
       with: {
         pet_extra_information: true,
+        pet_medical_records: {
+          with: {
+            vaccinations: true,
+          },
+        },
       },
     });
 

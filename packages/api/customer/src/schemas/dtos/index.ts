@@ -1,3 +1,4 @@
+export * from "./adoption_post";
 export * from "./auth";
 export * from "./common";
 export * from "./customer";

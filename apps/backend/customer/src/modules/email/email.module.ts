@@ -1,11 +1,11 @@
-import { SendRawEmailCommand, SESClient } from '@aws-sdk/client-ses';
-import { forwardRef, Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MailerModule } from '@nestjs-modules/mailer';
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import path from 'path';
+import { SendRawEmailCommand, SESClient } from "@aws-sdk/client-ses";
+import { forwardRef, Module } from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { MailerModule } from "@nestjs-modules/mailer";
+import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
+import path from "path";
 
-import { EmailService } from './email.service';
+import { EmailService } from "./email.service";
 
 @Module({
   imports: [
@@ -16,11 +16,11 @@ import { EmailService } from './email.service';
         const commonConfigs = {
           defaults: {
             from: `${configService.get<string>(
-              'email.fromName',
-            )} <${configService.get<string>('email.fromAddress')}>`,
+              "email.fromName",
+            )} <${configService.get<string>("email.fromAddress")}>`,
           },
           template: {
-            dir: path.join(__dirname, 'templates'),
+            dir: path.join(__dirname, "templates"),
             adapter: new HandlebarsAdapter(),
             options: {
               strict: true,
@@ -28,7 +28,7 @@ import { EmailService } from './email.service';
           },
           options: {
             partials: {
-              dir: path.join(__dirname, 'templates/partials'),
+              dir: path.join(__dirname, "templates/partials"),
               options: {
                 strict: true,
               },
@@ -36,16 +36,17 @@ import { EmailService } from './email.service';
           },
         };
 
+        console.log(configService.get<string>("app.env"), "blyat");
         if (
-          ['staging', 'production'].includes(
-            configService.get<string>('app.env') || '',
+          ["staging", "production"].includes(
+            configService.get<string>("app.env") || "",
           )
         ) {
           const client = new SESClient({
-            region: configService.get<string>('ses.region'),
+            region: configService.get<string>("aws.region"),
             credentials: {
-              accessKeyId: configService.get<string>('ses.accessKey')!,
-              secretAccessKey: configService.get<string>('ses.secretKey')!,
+              accessKeyId: configService.get<string>("aws.accessKey")!,
+              secretAccessKey: configService.get<string>("aws.secretKey")!,
             },
           });
 
@@ -60,12 +61,12 @@ import { EmailService } from './email.service';
         return {
           ...commonConfigs,
           transport: {
-            host: configService.get<string>('email.host'),
-            port: configService.get<number>('email.port'),
+            host: configService.get<string>("email.host"),
+            port: configService.get<number>("email.port"),
             secure: false,
             auth: {
-              user: configService.get<string>('email.user'),
-              pass: configService.get<string>('email.password'),
+              user: configService.get<string>("email.user"),
+              pass: configService.get<string>("email.password"),
             },
           },
         };

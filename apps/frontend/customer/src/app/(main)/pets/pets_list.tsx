@@ -1,6 +1,6 @@
 "use client";
 
-import { PetsListResponseBody } from "customer_api";
+import { AdoptionPostsListResponseBody } from "customer_api";
 
 import {
   Select,
@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "ui";
 
-import { PetCard } from "@/components/pet_card";
+import { AdoptionPostCard } from "@/components/adoption_post_card";
 
 import { PetListFilters } from "./components/pet_list_filters";
 
@@ -21,10 +21,10 @@ type PaginationMeta = {
 };
 
 const PetsList: React.FC<{
-  pets: PetsListResponseBody;
+  posts: AdoptionPostsListResponseBody;
   meta: PaginationMeta;
   pagination: React.ReactNode;
-}> = ({ pets, meta, pagination }) => {
+}> = ({ posts, meta, pagination }) => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="flex">
@@ -40,9 +40,9 @@ const PetsList: React.FC<{
                 <span className="font-semibold text-gray-900">
                   {meta.total}
                 </span>{" "}
-                тэжээвэр амьтнаас{" "}
+                зараас{" "}
                 <span className="font-semibold text-gray-900">
-                  {pets.length}
+                  {posts.length}
                 </span>{" "}
                 харуулж байна
               </p>
@@ -64,10 +64,10 @@ const PetsList: React.FC<{
           </div>
 
           <div className="p-6">
-            {pets.length > 0 ? (
+            {posts.length > 0 ? (
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
-                {pets.map((pet) => (
-                  <PetCard key={pet.id} pet={pet} />
+                {posts.map((post) => (
+                  <AdoptionPostCard key={post.id} post={post} />
                 ))}
               </div>
             ) : (

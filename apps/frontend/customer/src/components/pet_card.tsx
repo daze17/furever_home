@@ -15,6 +15,7 @@ import {
   CardTitle,
 } from "ui";
 
+// import { FavoriteButton } from "@/components/favorite_button";
 import ImageWithFallback from "@/components/image_with_fallback";
 
 export const PetCard: React.FC<{
@@ -68,6 +69,7 @@ export const PetCard: React.FC<{
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center justify-between gap-2 text-gray-900">
           <span className="truncate" title={pet.name}>{pet.name}</span>
+          {/* <FavoriteButton petId={pet.id} petName={pet.name} variant="icon" className="text-gray-400" /> */}
           <Heart className="h-5 w-5 shrink-0 text-[#11D0BC] transition-transform duration-200 group-hover:scale-110" fill="#11D0BC" />
         </CardTitle>
         <CardDescription className="text-gray-500">{`${petAge} настай`}</CardDescription>

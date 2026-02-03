@@ -8,6 +8,7 @@ import { cn } from "utils";
 
 import { GlobalTransition } from "@/components/global_transition";
 import { UserSessionProvider } from "@/contexts/auth";
+// import { FavoritesProvider } from "@/contexts/favorites";
 import { verifySession } from "@/utils/dal";
 
 import { Footer } from "./_layout/footer";
@@ -36,6 +37,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <UserSessionProvider sessionPromise={sessionPromise}>
+        {/* <FavoritesProvider> */}
         <body className={cn(nunito.className)}>
           <Header />
           <NuqsAdapter>
@@ -45,6 +47,7 @@ export default function RootLayout({
           <GlobalTransition />
           <Toaster />
         </body>
+        {/* </FavoritesProvider> */}
       </UserSessionProvider>
     </html>
   );

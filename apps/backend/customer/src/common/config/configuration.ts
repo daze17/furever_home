@@ -7,6 +7,12 @@ export const configuration = (overrides?: Partial<ENV>) => {
     app: {
       env: env.APP_ENV,
       port: env.APP_PORT,
+      assetHost: env.ASSET_HOST,
+    },
+    aws: {
+      accessKey: env.AWS_ACCESS_KEY,
+      region: env.AWS_REGION,
+      secretKey: env.AWS_SECRET_KEY,
     },
     database: {
       url: env.DATABASE_URL,
@@ -52,10 +58,10 @@ export const configuration = (overrides?: Partial<ENV>) => {
     // sentry: {
     //   dsn: env.SENTRY_DSN,
     // },
-    // s3: {
-    //   bucket: env.AWS_S3_BUCKET,
-    //   host: env.AWS_S3_HOST,
-    // },
+    s3: {
+      bucket: env.AWS_S3_BUCKET,
+      host: env.AWS_S3_HOST,
+    },
     // ses: {
     //   accessKey: env.SES_AWS_ACCESS_KEY,
     //   region: env.SES_AWS_REGION,

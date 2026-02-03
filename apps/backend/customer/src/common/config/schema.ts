@@ -3,6 +3,7 @@ import { z } from "zod";
 const commonSchema = z.object({
   APP_ENV: z.enum(["development", "production", "staging"]),
   APP_PORT: z.coerce.number(),
+  ASSET_HOST: z.string(),
   DATABASE_URL: z.string(),
   EMAIL_FROM_ADDRESS: z.string().email(),
   EMAIL_FROM_NAME: z.string(),
@@ -31,19 +32,19 @@ const developmentSchema = z.object({
   MINIO_PORT: z.coerce.number(),
 });
 const productionSchema = z.object({
-  //   AWS_ACCESS_KEY: z.string(),
-  //   AWS_REGION: z.string(),
-  //   AWS_SECRET_KEY: z.string(),
-  //   SES_AWS_ACCESS_KEY: z.string(),
-  //   SES_AWS_REGION: z.string(),
-  //   SES_AWS_SECRET_KEY: z.string(),
+  AWS_ACCESS_KEY: z.string(),
+  AWS_REGION: z.string(),
+  AWS_SECRET_KEY: z.string(),
+  // SES_AWS_ACCESS_KEY: z.string(),
+  // SES_AWS_REGION: z.string(),
+  // SES_AWS_SECRET_KEY: z.string(),
 });
 const stagingSchema = z.object({
-  //   AWS_ACCESS_KEY: z.string(),
-  //   AWS_REGION: z.string(),
-  //   AWS_SECRET_KEY: z.string(),
-  //   AWS_S3_BUCKET: z.string(),
-  //   AWS_S3_HOST: z.string(),
+  AWS_ACCESS_KEY: z.string(),
+  AWS_REGION: z.string(),
+  AWS_SECRET_KEY: z.string(),
+  AWS_S3_BUCKET: z.string(),
+  AWS_S3_HOST: z.string(),
   //   SES_AWS_ACCESS_KEY: z.string(),
   //   SES_AWS_REGION: z.string(),
   //   SES_AWS_SECRET_KEY: z.string(),

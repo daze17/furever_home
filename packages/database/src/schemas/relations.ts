@@ -15,6 +15,7 @@ import {
   adoption_reviews,
   messages,
   favorites,
+  vaccinations,
 } from "./schemas";
 
 // ============================================================
@@ -99,7 +100,7 @@ export const pet_extra_informationsRelations = relations(
  * - Belongs to one customer (owner) (many-to-one)
  * - Has one pet_extra_information (one-to-one)
  */
-export const petsRelations = relations(pets, ({ one }) => ({
+export const petsRelations = relations(pets, ({ one, many }) => ({
   customer: one(customers, {
     fields: [pets.customer_id],
     references: [customers.id],
@@ -108,6 +109,11 @@ export const petsRelations = relations(pets, ({ one }) => ({
     fields: [pets.pet_extra_information_id],
     references: [pet_extra_informations.id],
   }),
+  pet_medical_records: one(pet_medical_records, {
+    fields: [pets.id],
+    references: [pet_medical_records.pet_id],
+  }),
+  images: many(pet_images),
 }));
 
 /**
@@ -116,11 +122,12 @@ export const petsRelations = relations(pets, ({ one }) => ({
  */
 export const pet_medical_recordsRelations = relations(
   pet_medical_records,
-  ({ one }) => ({
+  ({ one, many }) => ({
     pet: one(pets, {
       fields: [pet_medical_records.pet_id],
       references: [pets.id],
     }),
+    vaccinations: many(vaccinations),
   }),
 );
 
@@ -247,8 +254,20 @@ export const favoritesRelations = relations(favorites, ({ one }) => ({
     fields: [favorites.customer_id],
     references: [customers.id],
   }),
-  pet: one(pets, {
-    fields: [favorites.pet_id],
+  adoption_posts: one(pets, {
+    fields: [favorites.adoption_post_id],
     references: [pets.id],
+  }),
+}));
+
+/**
+ * vaccinations Relations:
+ * - Belongs to one medical record (many-to-one)
+ * - References one pet (many-to-one)
+ */
+export const vaccinationsRelations = relations(vaccinations, ({ one }) => ({
+  medical_record: one(pet_medical_records, {
+    fields: [vaccinations.medical_record_id],
+    references: [pet_medical_records.id],
   }),
 }));
