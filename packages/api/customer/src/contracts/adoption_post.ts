@@ -70,7 +70,7 @@ export const adoptionPostContract = c.router({
   },
   getFavoriteAdoptionPostsTotal: {
     method: "GET",
-    path: "/favorite_adoption_posts",
+    path: "/favorite_adoption_posts/total",
     responses: {
       200: FavoriteAdoptionPostsTotalResponseBody,
       404: CustomError,

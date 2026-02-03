@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleUserRound, Heart, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
 
 import { CustomerProfileResponseBody } from "customer_api";
@@ -9,6 +9,8 @@ import { usePathname } from "next/navigation";
 
 import { Button } from "ui";
 import { cn } from "utils";
+
+import { FavoritesButton } from "@/components/favorites_button";
 
 import { navLinks } from "./navigation";
 import { ProfileSection } from "./profile_section";
@@ -61,12 +63,7 @@ export const MobileNav: React.FC<{
         <div className="flex h-36 w-full items-center justify-center bg-white">
           {profile ? (
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm" asChild>
-                <Link href="/favorites" className="flex items-center gap-2">
-                  <Heart size={20} strokeWidth={2} />
-                  <span className="font-medium">Таалагдсан</span>
-                </Link>
-              </Button>
+              <FavoritesButton />
               <ProfileSection profile={profile} />
             </div>
           ) : (

@@ -8,8 +8,9 @@ import { cn } from "utils";
 
 import { GlobalTransition } from "@/components/global_transition";
 import { UserSessionProvider } from "@/contexts/auth";
-// import { FavoritesProvider } from "@/contexts/favorites";
+import { FavoritesCountProvider } from "@/contexts/favorites_count";
 import { verifySession } from "@/utils/dal";
+import { getFavoritesCount } from "@/hooks/use_get_favorites_count";
 
 import { Footer } from "./_layout/footer";
 import { Header } from "./_layout/header";
@@ -33,21 +34,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const sessionPromise = verifySession();
+  const favoritesCountPromise = getFavoritesCount();
 
   return (
     <html lang="en">
       <UserSessionProvider sessionPromise={sessionPromise}>
-        {/* <FavoritesProvider> */}
-        <body className={cn(nunito.className)}>
-          <Header />
-          <NuqsAdapter>
-            <main className="mt-[80px]">{children}</main>
-          </NuqsAdapter>
-          <Footer />
-          <GlobalTransition />
-          <Toaster />
-        </body>
-        {/* </FavoritesProvider> */}
+        <FavoritesCountProvider favoritesCountPromise={favoritesCountPromise}>
+          <body className={cn(nunito.className)}>
+            <Header />
+            <NuqsAdapter>
+              <main className="mt-[80px]">{children}</main>
+            </NuqsAdapter>
+            <Footer />
+            <GlobalTransition />
+            <Toaster />
+          </body>
+        </FavoritesCountProvider>
       </UserSessionProvider>
     </html>
   );

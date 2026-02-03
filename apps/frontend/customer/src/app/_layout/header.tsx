@@ -1,12 +1,13 @@
 "use client";
 
-import { CircleUserRound, Heart, PawPrint } from "lucide-react";
+import { PawPrint } from "lucide-react";
 import { use } from "react";
 
 import Link from "next/link";
 
 import { Button } from "ui";
 
+import { FavoritesButton } from "@/components/favorites_button";
 import { useSession } from "@/contexts/auth";
 
 import { MobileNav } from "./mobile_nav";
@@ -38,12 +39,7 @@ export const Header = () => {
           <div className="hidden items-center gap-2 md:flex">
             {session ? (
               <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm" asChild>
-                  <Link href="/favorites" className="flex items-center gap-2">
-                    <Heart size={20} strokeWidth={2} />
-                    <span className="font-medium">Таалагдсан</span>
-                  </Link>
-                </Button>
+                <FavoritesButton />
                 <ProfileSection profile={session} />
               </div>
             ) : (
