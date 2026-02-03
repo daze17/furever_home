@@ -5,8 +5,6 @@ import { AlertTriangle, Settings } from "lucide-react";
 import { PetResponseBody } from "customer_api";
 import Link from "next/link";
 
-import { hasUpcomingVaccinations } from "@/utils/vaccination";
-
 import {
   Button,
   Card,
@@ -18,6 +16,13 @@ import {
 } from "ui";
 
 import ImageWithFallback from "@/components/image_with_fallback";
+import {
+  petStatusLabel,
+  sizeLabel,
+  speciesEmoji,
+  speciesLabel,
+} from "@/utils/pet_labels";
+import { hasUpcomingVaccinations } from "@/utils/vaccination";
 
 export const MyPetCard: React.FC<{
   pet: PetResponseBody;
@@ -29,34 +34,6 @@ export const MyPetCard: React.FC<{
   const petAge = pet.birth_date
     ? new Date().getFullYear() - new Date(pet.birth_date).getFullYear()
     : 0;
-
-  const speciesEmoji = {
-    dog: "🐕",
-    cat: "🐈",
-    bird: "🐦",
-    fish: "🐠",
-    other: "🐾",
-  };
-
-  const speciesLabel = {
-    dog: "Нохой",
-    cat: "Муур",
-    bird: "Шувуу",
-    fish: "Загас",
-    other: "Бусад",
-  };
-
-  const sizeLabel = {
-    small: "Жижиг",
-    medium: "Дунд",
-    large: "Том",
-  };
-
-  const statusLabel = {
-    adopting: "Үрчлүүлэх",
-    has_owner: "Эзэнтэй",
-    inactive: "Идэвхгүй",
-  };
 
   return (
     <Card className={`group flex h-full flex-col overflow-hidden border bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[#11D0BC] hover:shadow-lg ${vaccinationWarning ? "border-amber-400 bg-amber-50" : ""}`}>
@@ -84,7 +61,7 @@ export const MyPetCard: React.FC<{
                   : "bg-gray-100 text-gray-600"
             }`}
           >
-            {statusLabel[pet.pet_status]}
+            {petStatusLabel[pet.pet_status]}
           </span>
         </CardTitle>
         <CardDescription className="text-gray-500">

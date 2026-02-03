@@ -1,7 +1,5 @@
 "use client";
 
-import { HeartIcon } from "lucide-react";
-
 import { AdoptionPostResponseBody } from "customer_api";
 import Link from "next/link";
 
@@ -16,6 +14,7 @@ import {
 } from "ui";
 
 import ImageWithFallback from "@/components/image_with_fallback";
+import { sizeLabel, speciesEmoji, speciesLabel } from "@/utils/pet_labels";
 
 import { FavoriteAddButton } from "./favorite_add_button";
 import { FavoriteRemoveButton } from "./favorite_remove_button";
@@ -28,28 +27,6 @@ export const AdoptionPostCard: React.FC<{
   const petAge = pet.birth_date
     ? new Date().getFullYear() - new Date(pet.birth_date).getFullYear()
     : 0;
-
-  const speciesEmoji = {
-    dog: "🐕",
-    cat: "🐈",
-    bird: "🐦",
-    fish: "🐠",
-    other: "🐾",
-  };
-
-  const speciesLabel = {
-    dog: "Нохой",
-    cat: "Муур",
-    bird: "Шувуу",
-    fish: "Загас",
-    other: "Бусад",
-  };
-
-  const sizeLabel = {
-    small: "Жижиг",
-    medium: "Дунд",
-    large: "Том",
-  };
 
   const formatPrice = (price: number | null) => {
     if (price === null || price === 0) return "Үнэгүй";

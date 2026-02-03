@@ -6,5 +6,5 @@ export * from "./constants"; // Auth constants - safe everywhere
 export * from "./filter_valid_fields_from_object_by_schema";
 export * from "./remove_falsy_from_object";
 export * from "./remove_null_and_undefined";
-export * from "./species_emojis";
+export * from "./pet_labels";
 export * from "./status_utils";

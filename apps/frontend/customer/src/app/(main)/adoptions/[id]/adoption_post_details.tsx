@@ -22,16 +22,18 @@ import { useState } from "react";
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "ui";
 
 import ImageWithFallback from "@/components/image_with_fallback";
+import { client } from "@/services/client";
 import {
   energyLevelColors,
   energyLevelLabels,
   friendlinessColors,
   friendlinessLabels,
+  postStatusColors,
+  postStatusLabel,
   speciesEmoji,
   trainingLevelColors,
   trainingLevelLabels,
 } from "@/utils";
-import { client } from "@/services/client";
 
 export const AdoptionPostDetails: React.FC<{
   post: OwnAdoptionPostResponseBody;
@@ -43,18 +45,6 @@ export const AdoptionPostDetails: React.FC<{
   const petAge = pet.birth_date
     ? new Date().getFullYear() - new Date(pet.birth_date).getFullYear()
     : null;
-
-  const statusLabel = {
-    active: "Идэвхтэй",
-    inactive: "Идэвхгүй",
-    pending: "Хүлээгдэж буй",
-  };
-
-  const statusColors = {
-    active: "bg-green-100 text-green-800",
-    inactive: "bg-gray-100 text-gray-800",
-    pending: "bg-yellow-100 text-yellow-800",
-  };
 
   const primaryImage =
     pet.images?.find((img) => img.is_primary)?.image_url ||
@@ -141,8 +131,8 @@ export const AdoptionPostDetails: React.FC<{
                     </p>
                   )}
                 </div>
-                <Badge className={statusColors[post.post_status]}>
-                  {statusLabel[post.post_status]}
+                <Badge className={postStatusColors[post.post_status]}>
+                  {postStatusLabel[post.post_status]}
                 </Badge>
               </div>
             </CardHeader>

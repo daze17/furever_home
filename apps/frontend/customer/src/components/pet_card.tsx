@@ -17,6 +17,12 @@ import {
 
 // import { FavoriteButton } from "@/components/favorite_button";
 import ImageWithFallback from "@/components/image_with_fallback";
+import {
+  petStatusLabel,
+  sizeLabel,
+  speciesEmoji,
+  speciesLabel,
+} from "@/utils/pet_labels";
 
 export const PetCard: React.FC<{
   pet: PetResponseBody;
@@ -24,34 +30,6 @@ export const PetCard: React.FC<{
   const petAge = pet.birth_date
     ? new Date().getFullYear() - new Date(pet.birth_date).getFullYear()
     : 0;
-
-  const speciesEmoji = {
-    dog: "🐕",
-    cat: "🐈",
-    bird: "🐦",
-    fish: "🐠",
-    other: "🐾",
-  };
-
-  const speciesLabel = {
-    dog: "Нохой",
-    cat: "Муур",
-    bird: "Шувуу",
-    fish: "Загас",
-    other: "Бусад",
-  };
-
-  const sizeLabel = {
-    small: "Жижиг",
-    medium: "Дунд",
-    large: "Том",
-  };
-
-  const statusLabel = {
-    adopting: "Үрчлүүлэх",
-    has_owner: "Эзэнтэй",
-    inactive: "Идэвхгүй",
-  };
 
   return (
     <Card className="group flex h-full flex-col overflow-hidden border bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[#11D0BC] hover:shadow-lg">
@@ -91,7 +69,7 @@ export const PetCard: React.FC<{
                 : "bg-gray-100 text-gray-600"
             }`}
           >
-            {statusLabel[pet.pet_status]}
+            {petStatusLabel[pet.pet_status]}
           </span>
         </div>
         {pet.notes && <p className="mt-3 line-clamp-2 text-sm text-gray-500">{pet.notes}</p>}

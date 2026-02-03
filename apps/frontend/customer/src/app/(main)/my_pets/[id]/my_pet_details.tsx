@@ -40,16 +40,18 @@ import {
 } from "ui";
 
 import ImageWithFallback from "@/components/image_with_fallback";
-import { getUpcomingVaccinations } from "@/utils/vaccination";
 import {
   energyLevelColors,
   energyLevelLabels,
   friendlinessColors,
   friendlinessLabels,
+  petStatusColors,
+  petStatusLabel,
   speciesEmoji,
   trainingLevelColors,
   trainingLevelLabels,
 } from "@/utils";
+import { getUpcomingVaccinations } from "@/utils/vaccination";
 
 export const MyPetDetails: React.FC<{
   petDetail: OwnPetResponseBody;
@@ -63,18 +65,6 @@ export const MyPetDetails: React.FC<{
   const upcomingVaccinations = pet.pet_medical_records?.vaccinations
     ? getUpcomingVaccinations(pet.pet_medical_records.vaccinations)
     : [];
-
-  const statusLabel = {
-    adopting: "Үрчлүүлэх",
-    has_owner: "Эзэнтэй",
-    inactive: "Идэвхгүй",
-  };
-
-  const statusColors = {
-    adopting: "bg-green-100 text-green-800",
-    has_owner: "bg-blue-100 text-blue-800",
-    inactive: "bg-gray-100 text-gray-800",
-  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -154,8 +144,8 @@ export const MyPetDetails: React.FC<{
                     </p>
                   )}
                 </div>
-                <Badge className={statusColors[pet.pet_status]}>
-                  {statusLabel[pet.pet_status]}
+                <Badge className={petStatusColors[pet.pet_status]}>
+                  {petStatusLabel[pet.pet_status]}
                 </Badge>
               </div>
             </CardHeader>

@@ -1,6 +1,5 @@
 "use client";
 
-import { HeartOff } from "lucide-react";
 import { useState } from "react";
 
 import { AdoptionPostsListResponseBody, PetResponseBody } from "customer_api";
@@ -8,53 +7,24 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import {
-  Button,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-  toast,
 } from "ui";
 
 import { FavoriteRemoveButton } from "@/components/favorite_remove_button";
 import ImageWithFallback from "@/components/image_with_fallback";
 import { client } from "@/services/client";
-
-const speciesEmoji: Record<string, string> = {
-  dog: "🐕",
-  cat: "🐈",
-  bird: "🐦",
-  fish: "🐠",
-  other: "🐾",
-};
-
-const speciesLabel: Record<string, string> = {
-  dog: "Нохой",
-  cat: "Муур",
-  bird: "Шувуу",
-  fish: "Загас",
-  other: "Бусад",
-};
-
-const sizeLabel: Record<string, string> = {
-  small: "Жижиг",
-  medium: "Дунд",
-  large: "Том",
-};
-
-const statusLabel: Record<string, string> = {
-  adopting: "Үрчлүүлэх",
-  has_owner: "Эзэнтэй",
-  inactive: "Идэвхгүй",
-};
-
-const statusColors: Record<string, string> = {
-  adopting: "bg-green-100 text-green-700",
-  has_owner: "bg-blue-100 text-blue-700",
-  inactive: "bg-gray-100 text-gray-600",
-};
+import {
+  petStatusColors,
+  petStatusLabel,
+  sizeLabel,
+  speciesEmoji,
+  speciesLabel,
+} from "@/utils/pet_labels";
 
 const calculateAge = (birthDate: string | Date | null): string => {
   if (!birthDate) return "-";
@@ -165,9 +135,9 @@ export const FavoritesTable: React.FC<Props> = ({ posts }) => {
               </TableCell>
               <TableCell>
                 <span
-                  className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusColors[post.pet.pet_status] || "bg-gray-100 text-gray-600"}`}
+                  className={`rounded-full px-2.5 py-1 text-xs font-medium ${petStatusColors[post.pet.pet_status] || "bg-gray-100 text-gray-600"}`}
                 >
-                  {statusLabel[post.pet.pet_status] || post.pet.pet_status}
+                  {petStatusLabel[post.pet.pet_status] || post.pet.pet_status}
                 </span>
               </TableCell>
               <TableCell className="text-center">

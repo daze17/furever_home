@@ -18,6 +18,12 @@ import {
 
 import ImageWithFallback from "@/components/image_with_fallback";
 import { client } from "@/services/client";
+import {
+  postStatusColors,
+  postStatusLabel,
+  speciesEmoji,
+  speciesLabel,
+} from "@/utils/pet_labels";
 
 export const AdoptionPostCard: React.FC<{
   post: OwnAdoptionPostResponseBody;
@@ -29,34 +35,6 @@ export const AdoptionPostCard: React.FC<{
   const petAge = pet.birth_date
     ? new Date().getFullYear() - new Date(pet.birth_date).getFullYear()
     : 0;
-
-  const speciesEmoji = {
-    dog: "🐕",
-    cat: "🐈",
-    bird: "🐦",
-    fish: "🐠",
-    other: "🐾",
-  };
-
-  const speciesLabel = {
-    dog: "Нохой",
-    cat: "Муур",
-    bird: "Шувуу",
-    fish: "Загас",
-    other: "Бусад",
-  };
-
-  const statusLabel = {
-    active: "Идэвхтэй",
-    inactive: "Идэвхгүй",
-    pending: "Хүлээгдэж буй",
-  };
-
-  const statusColors = {
-    active: "bg-green-100 text-green-700",
-    inactive: "bg-gray-100 text-gray-600",
-    pending: "bg-yellow-100 text-yellow-700",
-  };
 
   const primaryImage = pet.images?.find((img) => img.is_primary)?.image_url
     || pet.images?.[0]?.image_url
@@ -97,9 +75,9 @@ export const AdoptionPostCard: React.FC<{
             {pet.name}
           </span>
           <span
-            className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${statusColors[post.post_status]}`}
+            className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${postStatusColors[post.post_status]}`}
           >
-            {statusLabel[post.post_status]}
+            {postStatusLabel[post.post_status]}
           </span>
         </CardTitle>
         <CardDescription className="text-gray-500">{`${petAge} настай`}</CardDescription>

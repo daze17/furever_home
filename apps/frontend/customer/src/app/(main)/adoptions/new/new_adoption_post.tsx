@@ -26,6 +26,7 @@ import {
 
 import ImageWithFallback from "@/components/image_with_fallback";
 import { client } from "@/services/client";
+import { speciesEmoji, speciesLabel } from "@/utils/pet_labels";
 
 const formSchema = z.object({
   pet_id: z.number().min(1, "Тэжээвэр амьтан сонгоно уу"),
@@ -54,22 +55,6 @@ export const NewAdoptionPost: React.FC<{
       notes: "",
     },
   });
-
-  const speciesEmoji = {
-    dog: "🐕",
-    cat: "🐈",
-    bird: "🐦",
-    fish: "🐠",
-    other: "🐾",
-  };
-
-  const speciesLabel = {
-    dog: "Нохой",
-    cat: "Муур",
-    bird: "Шувуу",
-    fish: "Загас",
-    other: "Бусад",
-  };
 
   const handlePetSelect = (petId: number) => {
     setSelectedPetId(petId);
