@@ -74,6 +74,22 @@ export class AdoptionPostsController {
     );
   }
 
+  @TsRestHandler(customerContract.adoptionPosts.getFavoriteAdoptionPostsTotal)
+  async getFavoriteAdoptionPostsTotal() {
+    return tsRestHandler(
+      customerContract.adoptionPosts.getFavoriteAdoptionPostsTotal,
+      async () => {
+        const total =
+          await this.adoptionPostsService.getFavoriteAdoptionPostsTotal();
+
+        return {
+          body: { total },
+          status: 200,
+        };
+      },
+    );
+  }
+
   @TsRestHandler(customerContract.adoptionPosts.getFavoriteAdoptionPostsList)
   async getFavoriteAdoptionPostsList() {
     return tsRestHandler(
@@ -109,7 +125,6 @@ export class AdoptionPostsController {
       },
     );
   }
-
 
   @TsRestHandler(customerContract.adoptionPosts.createAdoptionPost)
   async createAdoptionPost() {

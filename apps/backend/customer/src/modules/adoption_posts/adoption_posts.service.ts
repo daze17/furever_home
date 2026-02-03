@@ -126,6 +126,14 @@ export class AdoptionPostsService {
     return response;
   }
 
+  async getFavoriteAdoptionPostsTotal() {
+    const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);
+
+    return await this.adoptionPostsRepository.getFavoriteAdoptionPostsTotal(
+      accountProfile.id,
+    );
+  }
+
   async removeFavoriteAdoptionPost(id: number) {
     const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);
 
@@ -175,7 +183,9 @@ export class AdoptionPostsService {
     );
 
     // Update pet status to 'adopting'
-    await this.petsRepository.updatePet(data.pet_id, { pet_status: "adopting" });
+    await this.petsRepository.updatePet(data.pet_id, {
+      pet_status: "adopting",
+    });
 
     return {
       ...post,
@@ -189,11 +199,10 @@ export class AdoptionPostsService {
   async getOwnAdoptionPostsList(query: OwnAdoptionPostsQuery = {}) {
     const accountProfile = this.cls.get(CLS_KEYS.CUSTOMER_PROFILE);
 
-    const response =
-      await this.adoptionPostsRepository.getOwnAdoptionPostsList(
-        accountProfile.id,
-        query,
-      );
+    const response = await this.adoptionPostsRepository.getOwnAdoptionPostsList(
+      accountProfile.id,
+      query,
+    );
 
     return {
       data: response.data.map((post) => ({

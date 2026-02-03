@@ -8,6 +8,7 @@ import {
   AdoptionPostsListResponseBody,
   AdoptionPostsQuery,
   CreateAdoptionPostRequestBody,
+  FavoriteAdoptionPostsTotalResponseBody,
   OwnAdoptionPostResponseBody,
   OwnAdoptionPostsListResponseBody,
   OwnAdoptionPostsQuery,
@@ -66,6 +67,15 @@ export const adoptionPostContract = c.router({
       400: CustomError,
     },
     summary: "Get a list of favorite adoption posts",
+  },
+  getFavoriteAdoptionPostsTotal: {
+    method: "GET",
+    path: "/favorite_adoption_posts",
+    responses: {
+      200: FavoriteAdoptionPostsTotalResponseBody,
+      404: CustomError,
+    },
+    summary: "Get total number of favorite adoption posts",
   },
   //"Remove a pet from favorite pets list by ID",
   removeFavoriteAdoptionPost: {

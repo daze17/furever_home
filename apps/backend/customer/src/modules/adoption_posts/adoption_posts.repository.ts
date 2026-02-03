@@ -78,6 +78,18 @@ export class AdoptionPostsRepository {
     return await this.getAdoptionPostsListByCondition(query, condition);
   }
 
+  async getFavoriteAdoptionPostsTotal(customerId: string) {
+    const _count = await this.db
+      .select({ total: count() })
+      .from(favorites)
+      .where(eq(favorites.customer_id, customerId));
+
+    const favCount = _count.find(Boolean);
+    const total = favCount ? favCount.total : 0;
+
+    return total;
+  }
+
   async getAdoptionPost(id: number) {
     const post = await this.db.query.adoption_posts.findFirst({
       where: and(
@@ -423,7 +435,10 @@ export class AdoptionPostsRepository {
     return post;
   }
 
-  async updateAdoptionPost(postId: number, data: UpdateAdoptionPostRequestBody) {
+  async updateAdoptionPost(
+    postId: number,
+    data: UpdateAdoptionPostRequestBody,
+  ) {
     const { price, address, contact, notes, post_status } = data;
 
     await this.db

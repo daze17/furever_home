@@ -102,3 +102,10 @@ export const AdoptionPostsQuery = z
   .partial()
   .optional();
 export type AdoptionPostsQuery = z.infer<typeof AdoptionPostsQuery>;
+
+export const FavoriteAdoptionPostsTotalResponseBody = z.object({
+  total: z.number(),
+});
+export type FavoriteAdoptionPostsTotalResponseBody = z.infer<
+  typeof FavoriteAdoptionPostsTotalResponseBody
+>;
