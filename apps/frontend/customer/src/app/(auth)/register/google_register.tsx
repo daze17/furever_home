@@ -6,10 +6,14 @@ import { google } from "@/configs/default";
 //   redirectTo?: string;
 // };
 export const GoogleRegister: React.FC = () => {
-  const loginUrl = new URL(google.registerRedirectUrl!);
+  const loginUrl = google.registerRedirectUrl
+    ? new URL(google.registerRedirectUrl)
+    : null;
   // if (redirectTo) {
   //   loginUrl.searchParams.set("redirectTo", redirectTo);
   // }
+
+  if (!loginUrl) return null;
 
   return (
     <>
